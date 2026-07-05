@@ -22,139 +22,40 @@
 <div class="hiw">
   <div class="page-width">
     <ol class="hiw__steps">
-
-      {%- comment -%} ============ STEP 1 — CHOOSE ============ {%- endcomment -%}
-      <li class="hiw-step">
-        <div class="hiw-step__text">
-          <span class="hiw-step__num">01</span>
-          <h2>Choose your piece</h2>
-          <p>Start on any product page — a vertical coordinate bar, a pendant, a bracelet. Pick your metal and, on the bar necklace, how many sides you want engraved. Everything is made to order, so nothing is sitting in a warehouse waiting.</p>
-        </div>
-        <div class="hiw-step__viz" aria-hidden="true">
-          <svg viewBox="0 0 360 280" class="hiw-svg">
-            <rect x="40" y="30" width="280" height="220" rx="4" class="vz-card"/>
-            <rect x="40" y="30" width="280" height="150" rx="4" class="vz-img"/>
-            <circle cx="180" cy="105" r="34" class="vz-stroke-gold" fill="none"/>
-            <line x1="180" y1="61" x2="180" y2="149" class="vz-stroke-gold"/>
-            <line x1="136" y1="105" x2="224" y2="105" class="vz-stroke-gold"/>
-            <path d="M180 98 L187 105 L180 112 L173 105 Z" class="vz-fill-gold"/>
-            <rect x="60" y="196" width="120" height="10" rx="2" class="vz-line"/>
-            <rect x="60" y="214" width="70" height="10" rx="2" class="vz-line-soft"/>
-            <rect x="232" y="196" width="68" height="30" rx="3" class="vz-fill-ink"/>
-            <text x="266" y="216" text-anchor="middle" class="vz-mono-paper">PICK</text>
-            <g class="vz-swatches">
-              <circle cx="66" cy="240" r="7" class="vz-fill-ink"/>
-              <circle cx="88" cy="240" r="7" class="vz-fill-gold"/>
-              <circle cx="110" cy="240" r="7" class="vz-stroke-line" fill="#fff"/>
-            </g>
-          </svg>
-        </div>
-      </li>
-
-      {%- comment -%} ============ STEP 2 — FIND COORDS ============ {%- endcomment -%}
-      <li class="hiw-step hiw-step--flip">
-        <div class="hiw-step__text">
-          <span class="hiw-step__num">02</span>
-          <h2>Find your place — without leaving the page</h2>
-          <p>Tap <em>Find my coordinates</em> and a map opens right there. Search a place by name, or drop the pin exactly where it happened — the hospital, the trailhead, gate B12. We read the precise latitude and longitude so you don't have to know them.</p>
-        </div>
-        <div class="hiw-step__viz" aria-hidden="true">
-          <svg viewBox="0 0 360 280" class="hiw-svg">
-            <rect x="30" y="40" width="300" height="200" rx="4" class="vz-map"/>
-            <path d="M30 110 C 110 90, 180 140, 250 115 S 330 100, 330 110" class="vz-topo"/>
-            <path d="M30 150 C 110 130, 180 180, 250 155 S 330 140, 330 150" class="vz-topo"/>
-            <path d="M30 190 C 110 170, 180 220, 250 195 S 330 180, 330 190" class="vz-topo"/>
-            <line x1="180" y1="60" x2="180" y2="220" class="vz-stroke-gold vz-dash"/>
-            <line x1="60" y1="140" x2="300" y2="140" class="vz-stroke-gold vz-dash"/>
-            <circle cx="180" cy="140" r="26" class="vz-stroke-gold" fill="none"/>
-            <circle cx="180" cy="140" r="14" class="vz-stroke-gold" fill="none" opacity="0.6"/>
-            <path d="M180 130 L188 140 L180 150 L172 140 Z" class="vz-fill-gold"/>
-            <rect x="60" y="60" width="150" height="26" rx="3" class="vz-fill-paper vz-stroke-line"/>
-            <text x="74" y="77" class="vz-mono-ink-sm">Search a place…</text>
-          </svg>
-        </div>
-      </li>
-
-      {%- comment -%} ============ STEP 3 — PREVIEW ============ {%- endcomment -%}
-      <li class="hiw-step">
-        <div class="hiw-step__text">
-          <span class="hiw-step__num">03</span>
-          <h2>See it engraved, live</h2>
-          <p>The moment you pick the spot, your coordinates appear on the piece in our engraved-gold preview — the exact format and layout we'll cut. On the four-sided bar, each face updates on its own, so you can add a name, a date, and a place across the sides and read it before you ever pay.</p>
-        </div>
-        <div class="hiw-step__viz" aria-hidden="true">
-          <svg viewBox="0 0 360 280" class="hiw-svg">
-            <defs>
-              <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#23232a"/>
-                <stop offset="0.55" stop-color="#0c0c10"/>
-                <stop offset="1" stop-color="#1a1a20"/>
-              </linearGradient>
-            </defs>
-            <rect x="40" y="20" width="280" height="240" rx="6" class="vz-stage"/>
-            <g class="vz-bars">
-              <rect x="92" y="55" width="40" height="170" rx="4" fill="url(#barGrad)"/>
-              <rect x="160" y="55" width="40" height="170" rx="4" fill="url(#barGrad)"/>
-              <rect x="228" y="55" width="40" height="170" rx="4" fill="url(#barGrad)"/>
-            </g>
-            <text x="112" y="150" class="vz-engrave" transform="rotate(90 112 150)">27.7676° N</text>
-            <text x="180" y="150" class="vz-engrave" transform="rotate(90 180 150)">82.6403° W</text>
-            <text x="248" y="150" class="vz-engrave vz-engrave-dim" transform="rotate(90 248 150)">06 · 14 · 25</text>
-            <text x="180" y="248" text-anchor="middle" class="vz-mono-gold-sm">LIVE PREVIEW</text>
-          </svg>
-        </div>
-      </li>
-
-      {%- comment -%} ============ STEP 4 — SUBMIT ============ {%- endcomment -%}
-      <li class="hiw-step hiw-step--flip">
-        <div class="hiw-step__text">
-          <span class="hiw-step__num">04</span>
-          <h2>Add to cart &amp; check out</h2>
-          <p>Your exact coordinates ride along with the order — both the readable engraving and the precise decimals our team uses at the bench. Add a free handwritten gift note at checkout if it's a surprise. Secure payment, then you're done.</p>
-        </div>
-        <div class="hiw-step__viz" aria-hidden="true">
-          <svg viewBox="0 0 360 280" class="hiw-svg">
-            <rect x="50" y="40" width="260" height="200" rx="4" class="vz-card"/>
-            <rect x="70" y="62" width="120" height="11" rx="2" class="vz-line"/>
-            <rect x="70" y="84" width="80" height="9" rx="2" class="vz-line-soft"/>
-            <line x1="70" y1="112" x2="290" y2="112" class="vz-stroke-line-thin"/>
-            <text x="70" y="138" class="vz-mono-ink-sm">Engraving</text>
-            <text x="290" y="138" text-anchor="end" class="vz-mono-gold-sm">27.7676° N, 82.6403° W</text>
-            <text x="70" y="162" class="vz-mono-ink-sm">Gift note</text>
-            <text x="290" y="162" text-anchor="end" class="vz-mono-ink-sm">“Where it started.”</text>
-            <line x1="70" y1="180" x2="290" y2="180" class="vz-stroke-line-thin"/>
-            <rect x="70" y="198" width="220" height="34" rx="3" class="vz-fill-ink"/>
-            <text x="180" y="220" text-anchor="middle" class="vz-mono-paper">SECURE CHECKOUT</text>
-          </svg>
-        </div>
-      </li>
-
-      {%- comment -%} ============ STEP 5 — PROOF & SHIP ============ {%- endcomment -%}
-      <li class="hiw-step">
-        <div class="hiw-step__text">
-          <span class="hiw-step__num">05</span>
-          <h2>We engrave, prove, and ship</h2>
-          <p>Here's the part most stores skip: before anything ships, we laser-engrave your piece and send you a <strong>photo proof</strong>. You see the real engraving — your real coordinates — and approve it. Only then does it head out the door, backed by our 30-day happiness guarantee.</p>
-        </div>
-        <div class="hiw-step__viz" aria-hidden="true">
-          <svg viewBox="0 0 360 280" class="hiw-svg">
-            <defs>
-              <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#23232a"/>
-                <stop offset="0.55" stop-color="#0c0c10"/>
-                <stop offset="1" stop-color="#1a1a20"/>
-              </linearGradient>
-            </defs>
-            <rect x="60" y="40" width="180" height="180" rx="6" class="vz-stage"/>
-            <rect x="118" y="70" width="40" height="120" rx="4" fill="url(#barGrad)"/>
-            <text x="138" y="130" class="vz-engrave" transform="rotate(90 138 130)">27.7676° N</text>
-            <circle cx="240" cy="76" r="30" class="vz-fill-gold"/>
-            <path d="M227 76 l9 9 l17 -19" stroke="#0B0B0D" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <text x="150" y="248" text-anchor="middle" class="vz-mono-gold-sm">PHOTO PROOF · APPROVED · SHIPPED</text>
-          </svg>
-        </div>
-      </li>
-
+      {%- assign step_count = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'step' -%}
+          {%- assign step_count = step_count | plus: 1 -%}
+          {%- assign is_even = step_count | modulo: 2 -%}
+          <li class="hiw-step{% if is_even == 0 %} hiw-step--flip{% endif %}" {{ block.shopify_attributes }}>
+            <div class="hiw-step__text">
+              <span class="hiw-step__num">{% if step_count < 10 %}0{% endif %}{{ step_count }}</span>
+              <h2>{{ block.settings.title }}</h2>
+              <p>{{ block.settings.text }}</p>
+            </div>
+            <div class="hiw-step__viz">
+              <div class="hiw-step__image-wrapper">
+                {%- if block.settings.image != blank -%}
+                  <img class="hiw-step__image"
+                    src="{{ block.settings.image | image_url: width: 600 }}"
+                    alt="{{ block.settings.title | escape }}"
+                    loading="lazy"
+                    width="600"
+                    height="450">
+                {%- else -%}
+                  {%- capture fallback_img -%}how-it-works-step-{{ step_count }}.png{%- endcapture -%}
+                  <img class="hiw-step__image"
+                    src="{{ fallback_img | asset_url }}"
+                    alt="{{ block.settings.title | escape }}"
+                    loading="lazy"
+                    width="600"
+                    height="450">
+                {%- endif -%}
+              </div>
+            </div>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
     </ol>
   </div>
 </div>
@@ -206,7 +107,7 @@
   "name": "How it works",
   "settings": [
     { "type": "header", "content": "Intro" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Place to keepsake in five steps" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Place to keepsake in four steps" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "How it works" },
     { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "From the spot that matters to a piece you'll wear forever — here's exactly what happens, start to finish." },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Start with your coordinates" },
@@ -219,6 +120,15 @@
     { "type": "text", "id": "faq_heading", "label": "Heading", "default": "Common questions" }
   ],
   "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Description" },
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    },
     {
       "type": "promise",
       "name": "Promise",
@@ -240,6 +150,10 @@
     {
       "name": "How it works",
       "blocks": [
+        { "type": "step", "settings": { "title": "Find your coordinates", "text": "Search any place by name or drop a pin on our interactive map. We'll automatically translate it into precise latitude and longitude coordinates." } },
+        { "type": "step", "settings": { "title": "Choose your jewelry", "text": "Select your style, precious metal color, and coordinates layout. Customize up to four sides on our signature coordinate bars." } },
+        { "type": "step", "settings": { "title": "Crafted & engraved", "text": "Each piece is individually engraved with laser precision at our workbench. We send you a photo proof of the actual engraving to approve before shipping." } },
+        { "type": "step", "settings": { "title": "Cherished & delivered", "text": "Unbox a beautifully packaged keepsake, complete with an optional handwritten gift card. Wear your special memory close to you, forever." } },
         { "type": "promise", "settings": { "title": "Made to order", "text": "Every piece is engraved for one person — yours." } },
         { "type": "promise", "settings": { "title": "Photo proof first", "text": "You approve the real engraving before it ships." } },
         { "type": "promise", "settings": { "title": "30-day guarantee", "text": "Not right? We remake it or refund you." } },

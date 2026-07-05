@@ -597,8 +597,28 @@ h3 { font-size: 1.2rem; }
 }
 @media (max-width: 860px) { .hiw-step::after { left: 22px; top: 8px; } }
 
-.hiw-step__viz { display: flex; justify-content: center; }
-.hiw-svg { width: 100%; max-width: 360px; height: auto; border: 1px solid var(--c-line); border-radius: 4px; background: #fff; }
+.hiw-step__viz { display: flex; justify-content: center; width: 100%; }
+.hiw-step__image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--c-line);
+  box-shadow: 0 12px 32px rgba(11,11,13,0.06), 0 2px 8px rgba(11,11,13,0.02);
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  max-width: 460px;
+  background: var(--c-paper);
+}
+.hiw-step__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hiw-step__image-wrapper:hover .hiw-step__image {
+  transform: scale(1.05);
+}
 
 /* SVG explainer tokens */
 .vz-card { fill: #fff; stroke: var(--c-line); }
