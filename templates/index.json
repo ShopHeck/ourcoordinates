@@ -1,1 +1,202 @@
-{"sections":{"hero":{"type":"hero","settings":{"image":"shopify:\/\/shop_images\/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-8884822.png","eyebrow":"Free engraving on every piece","heading":"Some places deserve to be worn","subheading":"The exact latitude and longitude of the spot that changed your life - laser-engraved on jewelry made to order, one piece at a time.","button_label":"Find your coordinates","button_link":"shopify:\/\/collections\/coordinates-collection","fallback_collection":"","button_label_2":"How it works","button_link_2":"shopify:\/\/pages\/how-it-works","corner_coords":"27.7676 N \/ 82.6403 W - ST. PETERSBURG, FL"}},"marquee":{"type":"coords-marquee","blocks":{"m1":{"type":"place","settings":{"place":"Where you said yes","coords":"48.8584 N, 2.2945 E"}},"m2":{"type":"place","settings":{"place":"Where they were born","coords":"40.7128 N, 74.0060 W"}},"m3":{"type":"place","settings":{"place":"Your first apartment","coords":"41.8781 N, 87.6298 W"}},"m4":{"type":"place","settings":{"place":"The beach that summer","coords":"27.7676 N, 82.6403 W"}},"m5":{"type":"place","settings":{"place":"Grandma's front porch","coords":"36.1627 N, 86.7816 W"}},"m6":{"type":"place","settings":{"place":"Where it all started","coords":"34.0522 N, 118.2437 W"}}},"block_order":["m1","m2","m3","m4","m5","m6"],"settings":{}},"featured":{"type":"featured-collection","settings":{"eyebrow":"Best sellers","heading":"Most-gifted this month","collection":"best-sellers","limit":8,"hide_sold_out":true}},"manifesto":{"type":"manifesto","settings":{"eyebrow":"Why coordinates","text":"A photo fades. An address changes. But two numbers can hold a whole life - and nobody else will ever know what they mean."}},"moments":{"type":"moments","blocks":{"mo1":{"type":"moment","settings":{"coords":"THE QUESTION","title":"The proposal","text":"The exact spot you knelt down. Engraved where only you two will know what it means.","link":""}},"mo2":{"type":"moment","settings":{"coords":"DAY ONE","title":"Their birthplace","text":"The hospital, the town, the street. A first chapter they can carry.","link":""}},"mo3":{"type":"moment","settings":{"coords":"STILL HOME","title":"The hometown","text":"For the one who moved away but never really left.","link":""}},"mo4":{"type":"moment","settings":{"coords":"FIRST MEETING","title":"Where you met","text":"A coffee shop. A concert. Gate B12. The odds were impossible and it happened anyway.","link":""}},"mo5":{"type":"moment","settings":{"coords":"IN MEMORY","title":"A resting place","text":"Quiet, personal, always close. A way to keep someone with you.","link":""}},"mo6":{"type":"moment","settings":{"coords":"SOMEDAY","title":"The dream","text":"The place you haven't been yet. Wear it until you get there.","link":""}}},"block_order":["mo1","mo2","mo3","mo4","mo5","mo6"],"settings":{}},"how":{"type":"image-with-text","settings":{"image":"shopify:\/\/shop_images\/untitled_ChatGPT_Images_2.0_2026-06-12_15-39-34.png","flip":false,"eyebrow":"How it works","heading":"Pick the place. We engrave the rest.","text":"<p>Tell us your spot — a first date, a hometown, a summit. We convert it to exact coordinates, engrave it by laser, and send you a photo proof before it ships.<\/p>","button_label":"Create Your Coordinates Necklace","button_link":"shopify:\/\/products\/coordinates-necklace"}},"quote":{"type":"testimonial","settings":{"eyebrow":"Verified customer review","quote":"My husband and I love them. They have the coordinates of our first trip together.","attribution":"Lucy — United States","button_label":"Shop matching sets","button_link":"shopify:\/\/collections\/coordinates-collection"}},"featured2":{"type":"featured-collection","settings":{"eyebrow":"For him","heading":"Men's coordinates jewelry","collection":"mens","limit":4,"hide_sold_out":true}}},"order":["hero","marquee","featured","manifesto","moments","how","quote","featured2"]}
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-8884822.png",
+        "eyebrow": "Free engraving on every piece",
+        "heading": "Some places deserve to be worn",
+        "subheading": "The exact latitude and longitude of the spot that changed your life - laser-engraved on jewelry made to order, one piece at a time.",
+        "button_label": "Find your coordinates",
+        "button_link": "shopify:\/\/collections\/coordinates-collection",
+        "fallback_collection": "",
+        "button_label_2": "How it works",
+        "button_link_2": "shopify:\/\/pages\/how-it-works",
+        "corner_coords": "27.7676 N \/ 82.6403 W - ST. PETERSBURG, FL"
+      }
+    },
+    "marquee": {
+      "type": "coords-marquee",
+      "blocks": {
+        "m1": {
+          "type": "place",
+          "settings": {
+            "place": "Where you said yes",
+            "coords": "48.8584 N, 2.2945 E"
+          }
+        },
+        "m2": {
+          "type": "place",
+          "settings": {
+            "place": "Where they were born",
+            "coords": "40.7128 N, 74.0060 W"
+          }
+        },
+        "m3": {
+          "type": "place",
+          "settings": {
+            "place": "Your first apartment",
+            "coords": "41.8781 N, 87.6298 W"
+          }
+        },
+        "m4": {
+          "type": "place",
+          "settings": {
+            "place": "The beach that summer",
+            "coords": "27.7676 N, 82.6403 W"
+          }
+        },
+        "m5": {
+          "type": "place",
+          "settings": {
+            "place": "Grandma's front porch",
+            "coords": "36.1627 N, 86.7816 W"
+          }
+        },
+        "m6": {
+          "type": "place",
+          "settings": {
+            "place": "Where it all started",
+            "coords": "34.0522 N, 118.2437 W"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6"
+      ],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Best sellers",
+        "heading": "Most-gifted this month",
+        "collection": "best-sellers",
+        "limit": 8,
+        "hide_sold_out": true
+      }
+    },
+    "manifesto": {
+      "type": "manifesto",
+      "settings": {
+        "eyebrow": "Why coordinates",
+        "text": "A photo fades. An address changes. But two numbers can hold a whole life - and nobody else will ever know what they mean."
+      }
+    },
+    "moments": {
+      "type": "moments",
+      "blocks": {
+        "mo1": {
+          "type": "moment",
+          "settings": {
+            "coords": "THE QUESTION",
+            "title": "The proposal",
+            "text": "The exact spot you knelt down. Engraved where only you two will know what it means.",
+            "link": "shopify:\/\/collections\/coordinates-collection"
+          }
+        },
+        "mo2": {
+          "type": "moment",
+          "settings": {
+            "coords": "DAY ONE",
+            "title": "Their birthplace",
+            "text": "The hospital, the town, the street. A first chapter they can carry.",
+            "link": "shopify:\/\/collections\/coordinates-collection"
+          }
+        },
+        "mo3": {
+          "type": "moment",
+          "settings": {
+            "coords": "STILL HOME",
+            "title": "The hometown",
+            "text": "For the one who moved away but never really left.",
+            "link": "shopify:\/\/collections\/coordinates-collection"
+          }
+        },
+        "mo4": {
+          "type": "moment",
+          "settings": {
+            "coords": "FIRST MEETING",
+            "title": "Where you met",
+            "text": "A coffee shop. A concert. Gate B12. The odds were impossible and it happened anyway.",
+            "link": "shopify:\/\/collections\/coordinates-collection"
+          }
+        },
+        "mo5": {
+          "type": "moment",
+          "settings": {
+            "coords": "IN MEMORY",
+            "title": "A resting place",
+            "text": "Quiet, personal, always close. A way to keep someone with you.",
+            "link": "shopify:\/\/collections\/coordinates-collection"
+          }
+        },
+        "mo6": {
+          "type": "moment",
+          "settings": {
+            "coords": "SOMEDAY",
+            "title": "The dream",
+            "text": "The place you haven't been yet. Wear it until you get there.",
+            "link": "shopify:\/\/collections\/coordinates-collection"
+          }
+        }
+      },
+      "block_order": [
+        "mo1",
+        "mo2",
+        "mo3",
+        "mo4",
+        "mo5",
+        "mo6"
+      ],
+      "settings": {}
+    },
+    "how": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/untitled_ChatGPT_Images_2.0_2026-06-12_15-39-34.png",
+        "flip": false,
+        "eyebrow": "How it works",
+        "heading": "Pick the place. We engrave the rest.",
+        "text": "<p>Tell us your spot — a first date, a hometown, a summit. We convert it to exact coordinates, engrave it by laser, and send you a photo proof before it ships.<\/p>",
+        "button_label": "Create Your Coordinates Necklace",
+        "button_link": "shopify:\/\/products\/coordinates-necklace"
+      }
+    },
+    "quote": {
+      "type": "testimonial",
+      "settings": {
+        "eyebrow": "Verified customer review",
+        "quote": "My husband and I love them. They have the coordinates of our first trip together.",
+        "attribution": "Lucy — United States",
+        "button_label": "Shop matching sets",
+        "button_link": "shopify:\/\/collections\/coordinates-collection"
+      }
+    },
+    "featured2": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "For him",
+        "heading": "Men's coordinates jewelry",
+        "collection": "mens",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "marquee",
+    "featured",
+    "manifesto",
+    "moments",
+    "how",
+    "quote",
+    "featured2"
+  ]
+}
