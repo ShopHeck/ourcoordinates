@@ -1,0 +1,34 @@
+<div class="trust-strip">
+  <div class="page-width trust-strip__inner">
+    {%- for block in section.blocks -%}
+      <div class="trust-strip__item" {{ block.shopify_attributes }}>
+        <span class="coord-dot">◆</span>{{ block.settings.text }}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust strip",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "30-day happiness guarantee" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust strip",
+      "blocks": [
+        { "type": "badge", "settings": { "text": "Engraved to order in the USA" } },
+        { "type": "badge", "settings": { "text": "Photo proof before shipping" } },
+        { "type": "badge", "settings": { "text": "30-day happiness guarantee" } },
+        { "type": "badge", "settings": { "text": "Secure checkout" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

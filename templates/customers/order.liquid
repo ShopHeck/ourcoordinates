@@ -1,0 +1,13 @@
+<section class="section"><div class="page-width page-narrow">
+<h1>Order {{ order.name }}</h1>
+<p>{{ order.created_at | date: '%B %-d, %Y' }}</p>
+{% for line_item in order.line_items %}
+  <div class="cart-line">
+    <div></div>
+    <div>{{ line_item.title }} × {{ line_item.quantity }}</div>
+    <div>{{ line_item.final_line_price | money }}</div>
+  </div>
+{% endfor %}
+<p class="cart-footer__subtotal">Total: {{ order.total_price | money }}</p>
+<p><a href="{{ routes.account_url }}">← Back to account</a></p>
+</div></section>

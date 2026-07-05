@@ -1,0 +1,43 @@
+{%- comment -%}
+  Scrolling strip of real places + coordinates. Pure CSS animation,
+  duplicated track for a seamless loop. Respects reduced motion.
+{%- endcomment -%}
+<div class="coords-marquee" aria-hidden="true">
+  <div class="coords-marquee__track">
+    {%- for i in (1..2) -%}
+      {%- for block in section.blocks -%}
+        <span class="coords-marquee__item"><b>{{ block.settings.place }}</b> {{ block.settings.coords }}</span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Coordinates marquee",
+  "max_blocks": 10,
+  "blocks": [
+    {
+      "type": "place",
+      "name": "Place",
+      "settings": [
+        { "type": "text", "id": "place", "label": "Place", "default": "Where you said yes" },
+        { "type": "text", "id": "coords", "label": "Coordinates", "default": "48.8584 N, 2.2945 E" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coordinates marquee",
+      "blocks": [
+        { "type": "place", "settings": { "place": "Where you said yes", "coords": "48.8584 N, 2.2945 E" } },
+        { "type": "place", "settings": { "place": "Where they were born", "coords": "40.7128 N, 74.0060 W" } },
+        { "type": "place", "settings": { "place": "Your first apartment", "coords": "41.8781 N, 87.6298 W" } },
+        { "type": "place", "settings": { "place": "The beach that summer", "coords": "27.7676 N, 82.6403 W" } },
+        { "type": "place", "settings": { "place": "Grandma's front porch", "coords": "36.1627 N, 86.7816 W" } },
+        { "type": "place", "settings": { "place": "Where it all started", "coords": "34.0522 N, 118.2437 W" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

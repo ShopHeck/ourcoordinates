@@ -1,0 +1,16 @@
+<section class="section"><div class="page-width page-narrow">
+<h1>Sign in</h1>
+{% form 'customer_login' %}
+  <p><input type="email" name="customer[email]" placeholder="Email" required style="width:100%;padding:12px;border:1px solid var(--c-line)"></p>
+  <p><input type="password" name="customer[password]" placeholder="Password" required style="width:100%;padding:12px;border:1px solid var(--c-line)"></p>
+  <button type="submit" class="btn">Sign in</button>
+  <p><a href="{{ routes.account_register_url }}">Create account</a> · <a href="#recover">Forgot password?</a></p>
+{% endform %}
+<div id="recover">
+{% form 'recover_customer_password' %}
+  <h3>Reset password</h3>
+  <p><input type="email" name="email" placeholder="Email" style="width:100%;padding:12px;border:1px solid var(--c-line)"></p>
+  <button type="submit" class="btn btn--ghost">Send reset link</button>
+{% endform %}
+</div>
+</div></section>

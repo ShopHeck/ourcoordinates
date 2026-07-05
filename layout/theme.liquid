@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_ink }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
+  {%- endif -%}
+
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  {%- comment -%}
+    PERFORMANCE STRATEGY (target: 90+ PageSpeed)
+    1. Critical CSS inlined below - zero render-blocking stylesheets.
+    2. Full stylesheet loaded async via preload swap.
+    3. Fonts: 3 families, 5 weights total, display=swap, loaded async.
+       System fonts paint first; brand fonts swap in without blocking.
+    4. JS is one small deferred file, no dependencies, no jQuery.
+  {%- endcomment -%}
+
+  {% style %}
+    :root {
+      --c-ink: {{ settings.color_ink }};
+      --c-paper: {{ settings.color_paper }};
+      --c-gold: {{ settings.color_gold }};
+      --c-graphite: {{ settings.color_graphite }};
+      --c-line: {{ settings.color_ink | color_modify: 'alpha', 0.12 }};
+      --c-ink-soft: {{ settings.color_ink | color_modify: 'alpha', 0.64 }};
+      --f-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+      --f-body: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+      --f-coord: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+      --page-max: 1200px;
+      --gutter: clamp(16px, 4vw, 40px);
+    }
+  {% endstyle %}
+
+  <style>{% render 'critical-css' %}</style>
+
+  <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>{{ 'base.css' | asset_url | stylesheet_tag }}</noscript>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap"></noscript>
+
+  {{ content_for_header }}
+
+  <script src="{{ 'global.js' | asset_url }}" defer></script>
+
+  {%- comment -%} ── Organization + WebSite JSON-LD Schema (sitewide) ── {%- endcomment -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "url": "{{ shop.url }}",
+    "logo": "{{ shop.url }}/cdn/shop/files/OurCoordinates_Logo.png",
+    "description": {{ shop.description | json }},
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "email": "{{ shop.email }}"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Saint Petersburg",
+      "addressRegion": "FL",
+      "addressCountry": "US"
+    },
+    "sameAs": [
+      "https://www.pinterest.com/ourcoordinates/",
+      "https://www.instagram.com/ourcoordinates/",
+      "https://www.facebook.com/ourcoordinates/",
+      "https://www.etsy.com/shop/OurCoordinates"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": {{ shop.name | json }},
+    "url": "{{ shop.url }}",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ shop.url }}/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+
+<body class="template-{{ template.name }}">
+  <a class="skip-link" href="#MainContent">Skip to content</a>
+
+  {%- comment -%} Meridian ruler: fixed degree ticks down the right page edge (desktop only) {%- endcomment -%}
+  <div class="meridian-ruler" aria-hidden="true">
+    <span>30&deg;</span><span>20&deg;</span><span>10&deg;</span><span>0&deg;</span><span>10&deg;</span><span>20&deg;</span><span>30&deg;</span>
+  </div>
+
+  {% sections 'header-group' %}
+
+  <main id="MainContent" role="main">
+    {{ content_for_layout }}
+  </main>
+
+  {% sections 'footer-group' %}
+</body>
+</html>

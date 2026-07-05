@@ -1,0 +1,51 @@
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);font-size:16px;line-height:1.6;color:var(--c-ink);background:var(--c-paper);-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--f-display);font-weight:500;line-height:1.1;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5.4vw,3.6rem)}
+h2{font-size:clamp(1.5rem,3.5vw,2.4rem)}
+.page-width{max-width:var(--page-max);margin:0 auto;padding-inline:var(--gutter)}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100;background:var(--c-ink);color:var(--c-paper);padding:10px 16px}
+.skip-link:focus{left:0}
+:focus-visible{outline:2px solid var(--c-gold);outline-offset:2px}
+.coord-eyebrow{font-family:var(--f-coord);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.coord-eyebrow::before{content:"";width:28px;height:1px;background:var(--c-gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 28px;background:var(--c-ink);color:var(--c-paper);border:1px solid var(--c-ink);border-radius:2px;font-weight:600;font-size:.92rem;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s}
+.btn:hover{background:var(--c-gold);border-color:var(--c-gold);color:var(--c-ink)}
+.announcement{background:var(--c-ink);color:var(--c-paper);text-align:center;padding:9px var(--gutter);font-family:var(--f-coord);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase}
+.announcement strong{color:var(--c-gold);font-weight:500}
+.site-header{position:sticky;top:0;z-index:50;background:var(--c-paper);border-bottom:1px solid var(--c-line)}
+.site-header__inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-block:14px}
+.site-header__logo{justify-self:center;text-decoration:none;font-family:var(--f-display);font-size:1.35rem}
+.site-header__logo img{max-height:34px;width:auto}
+.site-nav{display:flex;gap:22px}
+.site-nav a{text-decoration:none;font-size:.86rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding-block:4px;border-bottom:1px solid transparent}
+.site-nav a:hover{border-bottom-color:var(--c-gold)}
+.site-header__actions{justify-self:end;display:flex;gap:16px;align-items:center}
+.site-header__actions a{text-decoration:none;font-size:.86rem;font-weight:600}
+.cart-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding-inline:4px;background:var(--c-gold);color:var(--c-ink);border-radius:999px;font-family:var(--f-coord);font-size:.68rem}
+.menu-toggle{display:none;background:none;border:0;padding:6px}
+.menu-toggle span{display:block;width:22px;height:2px;background:var(--c-ink);margin:5px 0}
+@media (max-width:860px){
+.site-header__inner{grid-template-columns:auto 1fr auto}
+.site-header__logo{justify-self:start}
+.menu-toggle{display:block}
+.site-nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--c-paper);border-bottom:1px solid var(--c-line);flex-direction:column;gap:0;padding:8px var(--gutter) 16px}
+.site-nav.is-open{display:flex}
+.site-nav a{padding-block:12px;border-bottom:1px solid var(--c-line)}
+}
+.hero{position:relative;color:#fff;background:var(--c-graphite);overflow:hidden;min-height:clamp(440px,68vh,660px);display:grid;align-items:center}
+.hero__media{position:absolute;inset:0}
+.hero__media img{width:100%;height:100%;object-fit:cover;opacity:.5}
+.hero__content{position:relative;max-width:640px;padding-block:64px}
+.hero h1{color:#fff}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.78);max-width:46ch}
+.hero .btn{background:var(--c-gold);border-color:var(--c-gold);color:var(--c-ink)}
+.meridian-ruler{display:none}
+@media (min-width:1100px){
+.meridian-ruler{position:fixed;right:10px;top:0;bottom:0;z-index:40;display:flex;flex-direction:column;justify-content:space-between;padding-block:120px;font-family:var(--f-coord);font-size:.58rem;color:var(--c-ink-soft);pointer-events:none}
+.meridian-ruler span{display:flex;align-items:center;gap:6px}
+.meridian-ruler span::after{content:"";width:10px;height:1px;background:var(--c-ink-soft)}
+}

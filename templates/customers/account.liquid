@@ -1,0 +1,12 @@
+<section class="section"><div class="page-width">
+<h1>Account</h1>
+<p>{{ customer.name }} · <a href="{{ routes.account_logout_url }}">Log out</a></p>
+<h3>Order history</h3>
+{% paginate customer.orders by 20 %}
+  {% for order in customer.orders %}
+    <p><a href="{{ order.customer_url }}">{{ order.name }}</a> — {{ order.created_at | date: '%b %-d, %Y' }} — {{ order.total_price | money }} — {{ order.financial_status_label }}</p>
+  {% else %}
+    <p>No orders yet.</p>
+  {% endfor %}
+{% endpaginate %}
+</div></section>

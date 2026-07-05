@@ -1,0 +1,50 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Meridian",
+    "theme_version": "1.0.0",
+    "theme_author": "OurCoordinates",
+    "theme_documentation_url": "https://ourcoordinates.com",
+    "theme_support_url": "https://ourcoordinates.com/pages/contact"
+  },
+  {
+    "name": "Brand colors",
+    "settings": [
+      { "type": "color", "id": "color_ink", "label": "Ink (near-black)", "default": "#0B0B0D" },
+      { "type": "color", "id": "color_paper", "label": "Paper (warm background)", "default": "#FAF7F2" },
+      { "type": "color", "id": "color_gold", "label": "Brushed gold accent", "default": "#B6976A" },
+      { "type": "color", "id": "color_graphite", "label": "Graphite (dark surfaces)", "default": "#1C1C20" },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" }
+    ]
+  },
+  {
+    "name": "The one shipping promise",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This text appears in the announcement bar, on every product page, and powers the cart progress bar. One promise, everywhere. No more conflicting offers."
+      },
+      { "type": "text", "id": "shipping_promise", "label": "Shipping promise", "default": "Free US shipping on orders over $50" },
+      { "type": "range", "id": "free_shipping_threshold", "label": "Free shipping threshold ($)", "min": 0, "max": 200, "step": 5, "default": 50 },
+      { "type": "range", "id": "production_days", "label": "Engraving lead time (business days)", "min": 1, "max": 14, "step": 1, "default": 3 },
+      { "type": "range", "id": "transit_days", "label": "Shipping transit time (days)", "min": 1, "max": 14, "step": 1, "default": 4 }
+    ]
+  },
+  {
+    "name": "Guarantees (under Add to cart)",
+    "settings": [
+      { "type": "text", "id": "guarantee_1", "label": "Guarantee 1", "default": "30-day happiness guarantee" },
+      { "type": "text", "id": "guarantee_2", "label": "Guarantee 2", "default": "Photo proof before we ship" },
+      { "type": "text", "id": "guarantee_3", "label": "Guarantee 3", "default": "Engraved to order in the USA" }
+    ]
+  },
+  {
+    "name": "Social links",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" }
+    ]
+  }
+]

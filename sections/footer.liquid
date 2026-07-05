@@ -1,0 +1,50 @@
+<footer class="site-footer">
+  <div class="page-width site-footer__inner">
+    <div class="site-footer__brand">
+      <h3>{{ shop.name }}</h3>
+      <p>{{ section.settings.blurb }}</p>
+      <ul style="display:flex;gap:18px;margin-top:14px">
+        {%- if settings.social_instagram != blank -%}<li><a href="{{ settings.social_instagram }}">Instagram</a></li>{%- endif -%}
+        {%- if settings.social_facebook != blank -%}<li><a href="{{ settings.social_facebook }}">Facebook</a></li>{%- endif -%}
+        {%- if settings.social_pinterest != blank -%}<li><a href="{{ settings.social_pinterest }}">Pinterest</a></li>{%- endif -%}
+        {%- if settings.social_tiktok != blank -%}<li><a href="{{ settings.social_tiktok }}">TikTok</a></li>{%- endif -%}
+      </ul>
+    </div>
+
+    <div>
+      <h3>{{ section.settings.menu_1_title }}</h3>
+      <ul>
+        {%- for link in section.settings.menu_1.links -%}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    <div>
+      <h3>{{ section.settings.menu_2_title }}</h3>
+      <ul>
+        {%- for link in section.settings.menu_2.links -%}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-width site-footer__bottom">
+    <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+    <span>{{ settings.shipping_promise }}</span>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "textarea", "id": "blurb", "label": "Brand blurb", "default": "Personalized coordinates jewelry, engraved to order. Carry your favorite place with you." },
+    { "type": "text", "id": "menu_1_title", "label": "Menu 1 title", "default": "Shop" },
+    { "type": "link_list", "id": "menu_1", "label": "Menu 1", "default": "main-menu" },
+    { "type": "text", "id": "menu_2_title", "label": "Menu 2 title", "default": "Help" },
+    { "type": "link_list", "id": "menu_2", "label": "Menu 2", "default": "footer" }
+  ]
+}
+{% endschema %}

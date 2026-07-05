@@ -1,0 +1,2677 @@
+{% layout none %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinate Story Builder — Live Preview (OurCoordinates Styles)</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Inlined Leaflet CSS to prevent local CORS file:// policy blocks */
+        .leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane > svg,.leaflet-pane > canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer {position: absolute;left: 0;top: 0;}.leaflet-container {overflow: hidden;}.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow {-webkit-user-select: none;-moz-user-select: none;user-select: none;-webkit-user-drag: none;}.leaflet-tile::selection {background: transparent;}.leaflet-safari .leaflet-tile {image-rendering: -webkit-optimize-contrast;}.leaflet-safari .leaflet-tile-container {width: 1600px;height: 1600px;-webkit-transform-origin: 0 0;}.leaflet-marker-icon,.leaflet-marker-shadow {display: block;}.leaflet-container .leaflet-overlay-pane svg {max-width: none !important;max-height: none !important;}.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer,.leaflet-container .leaflet-tile {max-width: none !important;max-height: none !important;width: auto;padding: 0;}.leaflet-container img.leaflet-tile {mix-blend-mode: plus-lighter;}.leaflet-container.leaflet-touch-zoom {zoom: 1;-ms-touch-action: pan-x pan-y;touch-action: pan-x pan-y;}.leaflet-container.leaflet-touch-drag {-ms-touch-action: pinch-zoom;touch-action: none;touch-action: pinch-zoom;}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {-ms-touch-action: none;touch-action: none;}.leaflet-container {-webkit-tap-highlight-color: transparent;}.leaflet-container a {-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);}.leaflet-tile {filter: inherit;visibility: hidden;}.leaflet-tile-loaded {visibility: inherit;}.leaflet-zoom-box {width: 0;height: 0;-moz-box-sizing: border-box;box-sizing: border-box;z-index: 800;}.leaflet-overlay-pane svg {-moz-user-select: none;}.leaflet-pane { z-index: 400; }.leaflet-tile-pane { z-index: 200; }.leaflet-overlay-pane { z-index: 400; }.leaflet-shadow-pane { z-index: 500; }.leaflet-marker-pane { z-index: 600; }.leaflet-tooltip-pane { z-index: 650; }.leaflet-popup-pane { z-index: 700; }.leaflet-map-pane canvas { z-index: 100; }.leaflet-map-pane svg { z-index: 200; }.leaflet-vml-shape {width: 1px;height: 1px;}.lvml {behavior: url(#default#VML);display: inline-block;position: absolute;}.leaflet-control {position: relative;z-index: 800;pointer-events: auto;}.leaflet-top,.leaflet-bottom {position: absolute;z-index: 1000;pointer-events: none;}.leaflet-top {top: 0;}.leaflet-right {right: 0;}.leaflet-bottom {bottom: 0;}.leaflet-left {left: 0;}.leaflet-control {float: left;clear: both;}.leaflet-right .leaflet-control {float: right;}.leaflet-top .leaflet-control {margin-top: 10px;}.leaflet-bottom .leaflet-control {margin-bottom: 10px;}.leaflet-left .leaflet-control {margin-left: 10px;}.leaflet-right .leaflet-control {margin-right: 10px;}.leaflet-fade-anim .leaflet-popup {opacity: 0;-webkit-transition: opacity 0.2s linear;transition: opacity 0.2s linear;}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {opacity: 1;}.leaflet-zoom-animated {-webkit-transform-origin: 0 0;-ms-transform-origin: 0 0;transform-origin: 0 0;}svg.leaflet-zoom-animated {will-change: transform;}.leaflet-zoom-anim .leaflet-zoom-animated {-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);transition: transform 0.25s cubic-bezier(0,0,0.25,1);}.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile {transition: none;}.leaflet-zoom-anim .leaflet-zoom-hide {visibility: hidden;}.leaflet-interactive {cursor: pointer;}.leaflet-grab {cursor: grab;}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive {cursor: crosshair;}.leaflet-popup-pane,.leaflet-control {cursor: auto;}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable {cursor: grabbing;}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane > svg path,.leaflet-tile-container {pointer-events: none;}.leaflet-marker-icon.leaflet-interactive,.leaflet-image-layer.leaflet-interactive,.leaflet-pane > svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path {pointer-events: auto;}.leaflet-container {background: #ddd;outline-offset: 1px;}.leaflet-container a {color: #0078A8;}.leaflet-zoom-box {border: 2px dotted #38f;background: rgba(255,255,255,0.5);}.leaflet-container {font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;font-size: 12px;line-height: 1.5;}.leaflet-bar {box-shadow: 0 1px 5px rgba(0,0,0,0.65);border-radius: 4px;}.leaflet-bar a {background-color: #fff;border-bottom: 1px solid #ccc;width: 26px;height: 26px;line-height: 26px;display: block;text-align: center;text-decoration: none;color: black;}.leaflet-bar a,.leaflet-control-layers-toggle {background-position: 50% 50%;background-repeat: no-repeat;display: block;}.leaflet-bar a:hover,.leaflet-bar a:focus {background-color: #f4f4f4;}.leaflet-bar a:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}.leaflet-bar a:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-bottom: none;}.leaflet-bar a.leaflet-disabled {cursor: default;background-color: #f4f4f4;color: #bbb;}.leaflet-touch .leaflet-bar a {width: 30px;height: 30px;line-height: 30px;}.leaflet-touch .leaflet-bar a:first-child {border-top-left-radius: 2px;border-top-right-radius: 2px;}.leaflet-touch .leaflet-bar a:last-child {border-bottom-left-radius: 2px;border-bottom-right-radius: 2px;}.leaflet-control-zoom-in,.leaflet-control-zoom-out {font: bold 18px 'Lucida Console', Monaco, monospace;text-indent: 1px;}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out {font-size: 22px;}.leaflet-control-layers {box-shadow: 0 1px 5px rgba(0,0,0,0.4);background: #fff;border-radius: 5px;}.leaflet-control-layers-toggle {background-image: url(https://unpkg.com/leaflet@1.9.4/dist/images/layers.png);width: 36px;height: 36px;}.leaflet-retina .leaflet-control-layers-toggle {background-image: url(https://unpkg.com/leaflet@1.9.4/dist/images/layers-2x.png);background-size: 26px 26px;}.leaflet-touch .leaflet-control-layers-toggle {width: 44px;height: 44px;}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle {display: none;}.leaflet-control-layers-expanded .leaflet-control-layers-list {display: block;position: relative;}.leaflet-control-layers-expanded {padding: 6px 10px 6px 6px;color: #333;background: #fff;}.leaflet-control-layers-scrollbar {overflow-y: scroll;overflow-x: hidden;padding-right: 5px;}.leaflet-control-layers-selector {margin-top: 2px;position: relative;top: 1px;}.leaflet-control-layers label {display: block;font-size: 13px;}.leaflet-control-layers-separator {height: 0;border-top: 1px solid #ddd;margin: 5px -10px 5px -6px;}.leaflet-default-icon-path {background-image: url(https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png);}.leaflet-container .leaflet-control-attribution {background: #fff;background: rgba(255, 255, 255, 0.8);margin: 0;}.leaflet-control-attribution,.leaflet-control-scale-line {padding: 0 5px;color: #333;line-height: 1.4;}.leaflet-control-attribution a {text-decoration: none;}.leaflet-control-attribution a:hover,.leaflet-control-attribution a:focus {text-decoration: underline;}.leaflet-attribution-flag {display: inline !important;vertical-align: baseline !important;width: 1em;height: 0.6669em;}.leaflet-left .leaflet-control-scale {margin-left: 5px;}.leaflet-bottom .leaflet-control-scale {margin-bottom: 5px;}.leaflet-control-scale-line {border: 2px solid #777;border-top: none;line-height: 1.1;padding: 2px 5px 1px;white-space: nowrap;box-sizing: border-box;background: rgba(255, 255, 255, 0.8);text-shadow: 1px 1px #fff;}.leaflet-control-scale-line:not(:first-child) {border-top: 2px solid #777;border-bottom: none;margin-top: -2px;}.leaflet-control-scale-line:not(:first-child):not(:last-child) {border-bottom: 2px solid #777;}.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar {box-shadow: none;}.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar {border: 2px solid rgba(0,0,0,0.2);background-clip: padding-box;}.leaflet-popup {position: absolute;text-align: center;margin-bottom: 20px;}.leaflet-popup-content-wrapper {padding: 1px;text-align: left;border-radius: 12px;}.leaflet-popup-content {margin: 13px 24px 13px 20px;line-height: 1.3;font-size: 13px;min-height: 1px;}.leaflet-popup-content p {margin: 17px 0;margin: 1.3em 0;}.leaflet-popup-tip-container {width: 40px;height: 20px;position: absolute;left: 50%;margin-top: -1px;margin-left: -20px;overflow: hidden;pointer-events: none;}.leaflet-popup-tip {width: 17px;height: 17px;padding: 1px;margin: -10px auto 0;pointer-events: auto;-webkit-transform: rotate(45deg);transform: rotate(45deg);}.leaflet-popup-content-wrapper,.leaflet-popup-tip {background: white;color: #333;box-shadow: 0 3px 14px rgba(0,0,0,0.4);}.leaflet-container a.leaflet-popup-close-button {position: absolute;top: 0;right: 0;border: none;text-align: center;width: 24px;height: 24px;font: 16px/24px Tahoma, Verdana, sans-serif;color: #757575;text-decoration: none;background: transparent;}.leaflet-container a.leaflet-popup-close-button:hover,.leaflet-container a.leaflet-popup-close-button:focus {color: #585858;}.leaflet-popup-scrolled {overflow: auto;}.leaflet-div-icon {background: #fff;border: 1px solid #666;}.leaflet-tooltip {position: absolute;padding: 6px;background-color: #fff;border: 1px solid #fff;border-radius: 3px;color: #222;white-space: nowrap;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;pointer-events: none;box-shadow: 0 1px 3px rgba(0,0,0,0.4);}.leaflet-tooltip.leaflet-interactive {cursor: pointer;pointer-events: auto;}.leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before {position: absolute;pointer-events: none;border: 6px solid transparent;background: transparent;content: "";}.leaflet-tooltip-bottom {margin-top: 6px;}.leaflet-tooltip-top {margin-top: -6px;}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before {left: 50%;margin-left: -6px;}.leaflet-tooltip-top:before {bottom: 0;margin-bottom: -12px;border-top-color: #fff;}.leaflet-tooltip-bottom:before {top: 0;margin-top: -12px;margin-left: -6px;border-bottom-color: #fff;}.leaflet-tooltip-left {margin-left: -6px;}.leaflet-tooltip-right {margin-left: 6px;}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before {top: 50%;margin-top: -6px;}.leaflet-tooltip-left:before {right: 0;margin-right: -12px;border-left-color: #fff;}.leaflet-tooltip-right:before {left: 0;margin-left: -12px;border-right-color: #fff;}@media print {.leaflet-control {-webkit-print-color-adjust: exact;print-color-adjust: exact;}}
+
+        :root {
+
+            --navy: #0A1128;
+            --navy-light: #152244;
+            --gold: #C5A880;
+            --gold-hover: #B59870;
+            --silver: #C0C4C7;
+            --rose: #D4A390;
+            --cream: #F9F6F0;
+            --white: #FFFFFF;
+            --text-dark: #1C2024;
+            --text-light: #606870;
+            --border: #E5E8EB;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--navy); /* Navy by default to blend footer and prevent bottom white bar */
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.4s ease;
+        }
+
+        body.quiz-active {
+            background: var(--cream); /* Transitions to light cream when quiz starts */
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--navy);
+            color: var(--white);
+            padding: 24px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--white);
+        }
+
+        .header-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            color: var(--gold);
+            margin-top: 6px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 80px 24px 60px;
+            background: linear-gradient(180deg, var(--navy) 0%, #050A1A 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(197, 168, 128, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 40px;
+            font-weight: 600;
+            line-height: 1.25;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto 36px;
+            font-weight: 300;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 40px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(197, 168, 128, 0.25);
+        }
+
+        .btn-teal {
+            background: var(--navy);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-teal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            display: none;
+            padding: 40px 0 20px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .progress-bar-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .progress-bar-background {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .progress-bar-fill {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--gold);
+            transform: translateY(-50%);
+            z-index: 2;
+            transition: width 0.4s ease;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 3;
+        }
+
+        .progress-step-node {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .progress-step-node.active {
+            border-color: var(--navy);
+            color: var(--navy);
+            background: var(--cream);
+            transform: scale(1.1);
+            font-weight: 700;
+        }
+
+        .progress-step-node.completed {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        /* QUIZ MAIN */
+        .quiz-container {
+            display: none;
+            padding: 50px 0 80px;
+        }
+
+        .quiz-step {
+            display: none;
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 48px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .quiz-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .step-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            line-height: 1.25;
+        }
+
+        .step-subtitle {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 36px;
+        }
+
+        /* FORM ELEMENTS */
+        .location-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
+        .location-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(197, 168, 128, 0.15);
+        }
+
+        /* MAP STYLING */
+        .map-preview-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .map-preview {
+            background: var(--cream);
+            height: 280px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .map-placeholder {
+            text-align: center;
+            color: var(--text-light);
+            padding: 40px;
+            z-index: 10;
+        }
+
+        .map-loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 17, 40, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .map-loading-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .map-drag-helper {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 17, 40, 0.85);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 500;
+            z-index: 999;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'Outfit', sans-serif;
+            display: none;
+        }
+
+        .map-drag-helper.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* COORDINATES BAR */
+        .coordinates-display {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+            margin-top: 16px;
+            background: var(--cream);
+            padding: 16px;
+            border-radius: 12px;
+            letter-spacing: 1px;
+            border: 1px dashed var(--gold);
+        }
+
+        .coordinates-display.visible {
+            opacity: 1;
+        }
+
+        /* OPTIONS CARDS */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .option-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(197, 168, 128, 0.1);
+        }
+
+        .option-card.selected {
+            border-color: var(--navy);
+            background: var(--cream);
+            box-shadow: 0 4px 15px rgba(10, 17, 40, 0.05);
+        }
+
+        .option-icon {
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .option-text h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .option-text p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* PRODUCT PREVIEW CARDS (STEP 4) */
+        .style-preview-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 30px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .style-preview-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+        }
+
+        .style-preview-card.selected {
+            border-color: var(--navy);
+            background: var(--cream);
+            box-shadow: 0 8px 20px rgba(10,17,40,0.05);
+        }
+
+        .style-preview-svg {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .style-preview-svg svg {
+            max-height: 100%;
+            width: auto;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+        }
+
+        .style-preview-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .style-preview-desc {
+            font-size: 13px;
+            color: var(--text-light);
+            flex-grow: 1;
+        }
+
+        /* TEXT INPUT IN STEP 6 */
+        .word-input {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+            transition: var(--transition);
+        }
+
+        .word-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(197, 168, 128, 0.15);
+        }
+
+        .word-preview {
+            text-align: center;
+            margin-top: 32px;
+            padding: 32px;
+            background: var(--white);
+            border-radius: 16px;
+            border: 2px dashed var(--gold);
+            display: none;
+        }
+
+        .word-preview.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .word-preview-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .word-preview-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: var(--navy);
+            font-style: italic;
+            letter-spacing: 1.5px;
+        }
+
+        /* EMAIL GATE STYLING */
+        .email-gate {
+            text-align: center;
+            padding: 24px 0;
+        }
+
+        .email-gate h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .email-gate p {
+            font-size: 16px;
+            color: var(--text-light);
+            max-width: 440px;
+            margin: 0 auto 32px;
+        }
+
+        .blurred-preview {
+            background: linear-gradient(135deg, #FFF, #ECE8E2);
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.03);
+        }
+
+        .blur-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .blur-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            color: var(--navy);
+            font-weight: 600;
+            background: var(--white);
+            padding: 16px 32px;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border);
+        }
+
+        .email-form {
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(197, 168, 128, 0.15);
+        }
+
+        .trust-line {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 24px;
+        }
+
+        /* STEP NAVIGATION BUTTONS */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .nav-btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--navy);
+            background: var(--cream);
+        }
+
+        .nav-btn.primary {
+            background: var(--navy);
+            color: var(--white);
+            border-color: var(--navy);
+        }
+
+        .nav-btn.primary:hover {
+            background: var(--navy-light);
+            box-shadow: 0 6px 15px rgba(10, 17, 40, 0.15);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #F1F3F5;
+            border-color: var(--border);
+            color: #ADB5BD;
+        }
+
+        .nav-btn:disabled:hover {
+            border-color: var(--border);
+            background: #F1F3F5;
+        }
+
+        /* RESULTS PAGE */
+        .results-page {
+            display: none;
+            padding: 60px 0 80px;
+        }
+
+        .results-page.active {
+            display: block;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* METAL SELECTOR */
+        .metal-selector-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .metal-selector-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+        }
+
+        .metal-switcher {
+            display: inline-flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 6px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            flex-shrink: 0 !important;
+        }
+
+        .metal-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 18px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
+
+        .metal-btn-gold::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #e8d5a0; border: 1px solid rgba(0,0,0,0.1); }
+        .metal-btn-silver::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #cfd2d4; border: 1px solid rgba(0,0,0,0.1); }
+        .metal-btn-rose::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #d28a72; border: 1px solid rgba(0,0,0,0.1); }
+
+        .metal-btn.active {
+            background: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: var(--navy);
+        }
+
+        /* CUSTOMIZER CONTROLS */
+        .customizer-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            .customizer-controls {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            text-align: left;
+        }
+
+        @media (min-width: 640px) {
+            .control-group {
+                width: auto !important;
+                flex-shrink: 0 !important;
+            }
+            .control-group-text {
+                width: auto !important;
+                flex-grow: 1 !important;
+                flex-shrink: 1 !important;
+                max-width: 330px !important;
+            }
+        }
+
+        .control-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+        }
+
+        .engraving-input-wrapper {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .engraving-editor-input {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            min-width: 0;
+            width: 100%;
+        }
+
+        .engraving-editor-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            background: var(--white);
+        }
+
+        .control-btn:hover {
+            border-color: var(--gold);
+            background: var(--cream);
+        }
+
+        .control-btn.danger {
+            color: #e0533c;
+            border-color: rgba(224, 83, 60, 0.2);
+        }
+
+        .control-btn.danger:hover {
+            background: rgba(224, 83, 60, 0.05);
+            border-color: #e0533c;
+        }
+
+        /* STORY CARD */
+        .story-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 48px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: var(--gold);
+        }
+
+        .story-card-icon {
+            font-size: 60px;
+            margin-bottom: 24px;
+        }
+
+        .story-card-coordinates {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .story-card-word {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--gold);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .story-card-date {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: var(--text-light);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .story-card-watermark {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            color: #CBD5E1;
+            margin-top: 36px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .results-headline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .results-subheadline {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 48px;
+            font-size: 16px;
+        }
+
+        /* PRODUCTS GRID */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        @media (min-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 36px rgba(0,0,0,0.08);
+        }
+
+        .product-card.featured {
+            border: 2px solid var(--gold);
+        }
+
+        .product-preview {
+            height: 280px;
+            background: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 24px;
+        }
+
+        .product-preview svg {
+            max-width: 100%;
+            max-height: 100%;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1));
+            transition: var(--transition);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: var(--gold);
+            color: var(--navy);
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 10px rgba(197, 168, 128, 0.2);
+            z-index: 10;
+        }
+
+        .product-card.featured .product-preview::after {
+            content: '⭐ Best For Your Story';
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: var(--navy);
+            color: var(--white);
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .product-info {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .product-price .original {
+            font-size: 15px;
+            text-decoration: line-through;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .product-description {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        /* COUNTDOWN STRIP */
+        .countdown-strip {
+            background: linear-gradient(135deg, #E0533C 0%, #F07E65 100%);
+            color: var(--white);
+            padding: 24px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 48px;
+            box-shadow: 0 8px 25px rgba(224, 83, 60, 0.15);
+        }
+
+        .countdown-strip p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .countdown-timer {
+            font-size: 32px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            margin-top: 6px;
+            letter-spacing: 2px;
+        }
+
+        /* REVIEWS */
+        .review-section {
+            margin-bottom: 60px;
+        }
+
+        .review-section h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .review-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .review-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .review-author {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* TRUST SECTION */
+        .trust-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 48px;
+            margin-bottom: 60px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+        }
+
+        .trust-section h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            text-align: center;
+        }
+
+        @media (min-width: 640px) {
+            .trust-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .trust-item {
+            padding: 8px;
+        }
+
+        .trust-item .icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .trust-item h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            color: var(--navy);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .trust-item p {
+            font-size: 13px;
+            color: var(--text-light);
+            max-width: 240px;
+            margin: 0 auto;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--navy);
+            color: var(--white);
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .footer p {
+            opacity: 0.7;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        /* DOWNLOAD BUTTON CARD */
+        .download-card {
+            text-align: center;
+            margin: -10px 0 40px;
+        }
+
+        .download-card-btn {
+            padding: 14px 28px;
+            background: transparent;
+            border: 2px solid var(--gold);
+            border-radius: 30px;
+            color: var(--navy);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .download-card-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        .engraving-note {
+            background: rgba(197, 168, 128, 0.12);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 14px;
+            color: var(--navy);
+            margin-bottom: 32px;
+            text-align: center;
+            border: 1px solid rgba(197, 168, 128, 0.25);
+        }
+
+        .engraving-note strong {
+            color: var(--gold-hover);
+        }
+
+        /* HIDE SVG METADATA */
+        svg .label, svg .caption {
+            display: none !important;
+        }
+        svg .bg {
+            fill: transparent !important;
+        }
+        
+        /* SVG RENDER FIXES */
+        svg path.chain {
+            fill: none !important;
+            stroke: #d2a04a;
+            stroke-width: 7px !important;
+            stroke-linecap: round !important;
+            stroke-dasharray: 2 18 !important;
+            opacity: 0.88 !important;
+        }
+        svg path.chain-silver {
+            fill: none !important;
+            stroke: #c8ccd0;
+            stroke-width: 7px !important;
+            stroke-linecap: round !important;
+            stroke-dasharray: 2 18 !important;
+            opacity: 0.9 !important;
+        }
+        svg .metal-stroke {
+            stroke: rgba(255, 255, 255, 0.66) !important;
+            stroke-width: 2px !important;
+        }
+        svg .engraving {
+            font-family: Avenir, Helvetica, Arial, sans-serif !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.4px !important;
+            opacity: 0.84 !important;
+            filter: url(#engraveInset) !important;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 30px; }
+            .step-title { font-size: 24px; }
+            .quiz-step { padding: 30px 24px; }
+            .product-grid { grid-template-columns: 1fr; }
+            .product-card.featured { transform: none; }
+            .trust-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Shared Global SVG Defs (Prevents gradient collisions) -->
+    <svg width="1" height="1" style="position: absolute; overflow: hidden; pointer-events: none; left: -9999px; top: -9999px;">
+      <defs>
+        <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fff3cf"/>
+          <stop offset="32%" stop-color="#d6a43e"/>
+          <stop offset="60%" stop-color="#f4d786"/>
+          <stop offset="100%" stop-color="#9d6f1e"/>
+        </linearGradient>
+        <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="35%" stop-color="#cfd2d4"/>
+          <stop offset="62%" stop-color="#f7f7f5"/>
+          <stop offset="100%" stop-color="#8f9497"/>
+        </linearGradient>
+        <linearGradient id="rose" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffe4d8"/>
+          <stop offset="38%" stop-color="#d28a72"/>
+          <stop offset="70%" stop-color="#ffd3bf"/>
+          <stop offset="100%" stop-color="#a95e4d"/>
+        </linearGradient>
+        <linearGradient id="leather" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2b211b"/>
+          <stop offset="50%" stop-color="#5b4030"/>
+          <stop offset="100%" stop-color="#231914"/>
+        </linearGradient>
+        <filter id="softShadow" x="-20%" y="-30%" width="140%" height="160%">
+          <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#3a2d1c" flood-opacity="0.16"/>
+        </filter>
+        <filter id="engraveInset" x="-10%" y="-30%" width="120%" height="160%">
+          <feDropShadow dx="0" dy="0.8" stdDeviation="0.3" flood-color="#fff8dc" flood-opacity="0.7"/>
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="header">
+        <div class="header-logo">OURCOORDINATES</div>
+        <div class="header-tagline">Your Story, Worn</div>
+    </div>
+    
+    <div class="hero" id="heroSection">
+        <div class="container">
+            <h1>Turn Your Favorite Memory Into Custom Engraved Jewelry</h1>
+            <p class="hero-subtitle">Answer 6 simple questions. See your coordinates calculated on our interactive map. View your exact piece engraved in real time.</p>
+            <button class="btn btn-primary" onclick="startQuiz()">Start Building My Story</button>
+        </div>
+    </div>
+
+    <!-- PROGRESS INDICATOR -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar-background"></div>
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+            <div class="progress-steps">
+                <div class="progress-step-node active" id="node1">1</div>
+                <div class="progress-step-node" id="node2">2</div>
+                <div class="progress-step-node" id="node3">3</div>
+                <div class="progress-step-node" id="node4">4</div>
+                <div class="progress-step-node" id="node5">5</div>
+                <div class="progress-step-node" id="node6">6</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-container" id="quizContainer">
+        <div class="container">
+            <!-- Step 1: Location -->
+            <div class="quiz-step active" id="step1">
+                <div class="step-label">Step 1 of 6 — Story Location</div>
+                <h2 class="step-title">Where did your story begin?</h2>
+                <p class="step-subtitle">Search the address of your special place. You can drag the pin on the map to get the exact spot.</p>
+                
+                <div class="search-container" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" class="location-input" id="locationInput" placeholder="Enter a beach, restaurant, hotel, hospital, or city..." style="margin-bottom: 0; flex: 1;" onkeypress="handleSearchKeyPress(event)">
+                    <button class="btn btn-primary" style="border-radius: 12px; padding: 16px 24px; font-size: 13px;" onclick="performSearch()">Search</button>
+                </div>
+                
+                <div id="searchLoading" class="map-loading-overlay">
+                    <div class="spinner"></div>
+                    <div>Finding coordinates...</div>
+                </div>
+                
+                <div id="searchError" style="display: none; text-align: center; margin: 8px 0 16px; font-size: 14px; color: #ff6b6b; font-weight: 500;">
+                    ❌ Location not found. Try entering a city name or a nearby landmark.
+                </div>
+
+                <div class="map-preview-wrapper">
+                    <div class="map-preview" id="mapPreview">
+                        <div class="map-placeholder" id="mapPlaceholder">
+                            <p style="font-size: 56px; margin-bottom: 8px;">🗺️</p>
+                            <p style="font-weight: 500;">Start typing your location above</p>
+                        </div>
+                    </div>
+                    <div class="map-drag-helper" id="mapDragHelper">📍 Drag the pin to adjust your coordinates</div>
+                </div>
+                
+                <div class="coordinates-display" id="coordinatesDisplay"></div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goBack()">Back</button>
+                    <button class="nav-btn primary" id="step1Next" onclick="nextStep(2)" disabled>Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Story Type -->
+            <div class="quiz-step" id="step2">
+                <div class="step-label">Step 2 of 6 — Your Story</div>
+                <h2 class="step-title">What makes this place unforgettable?</h2>
+                <p class="step-subtitle">Choose the moment that made this location Yours.</p>
+                <div class="options-grid" id="storyOptions">
+                    <div class="option-card" onclick="selectStoryType('first-date', this)"><div class="option-icon">🥂</div><div class="option-text"><h3>First Date</h3><p>Where sparks first flew</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('proposal', this)"><div class="option-icon">💍</div><div class="option-text"><h3>Proposal</h3><p>Where you said forever</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('wedding', this)"><div class="option-icon">💒</div><div class="option-text"><h3>Wedding</h3><p>Where two became one</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('first-home', this)"><div class="option-icon">🏠</div><div class="option-text"><h3>First Home</h3><p>Where your life together began</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('new-life', this)"><div class="option-icon">👶</div><div class="option-text"><h3>New Life</h3><p>Where your baby was born</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('achievement', this)"><div class="option-icon">🎓</div><div class="option-text"><h3>Achievement</h3><p>Where you graduated or triumphed</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('adventure', this)"><div class="option-icon">✈️</div><div class="option-text"><h3>Adventure</h3><p>Where the world changed for you</p></div></div>
+                    <div class="option-card" onclick="selectStoryType('something-else', this)"><div class="option-icon">💫</div><div class="option-text"><h3>Something Else</h3><p>A memory that's uniquely yours</p></div></div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="prevStep(1)">← Back</button>
+                    <button class="nav-btn primary" id="step2Next" onclick="nextStep(3)" disabled>Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Who Is It For -->
+            <div class="quiz-step" id="step3">
+                <div class="step-label">Step 3 of 6 — Who Wears the Memory</div>
+                <h2 class="step-title">Who will wear this memory?</h2>
+                <p class="step-subtitle">This helps us customize and scale the layout perfectly.</p>
+                <div class="options-grid" id="whoOptions">
+                    <div class="option-card" onclick="selectWho('partner', this)"><div class="option-icon">❤️</div><div class="option-text"><h3>My Partner</h3><p>A gift for the love of my life</p></div></div>
+                    <div class="option-card" onclick="selectWho('both', this)"><div class="option-icon">👫</div><div class="option-text"><h3>Both of Us</h3><p>Matching pieces for two hearts</p></div></div>
+                    <div class="option-card" onclick="selectWho('myself', this)"><div class="option-icon">🙋</div><div class="option-text"><h3>Myself</h3><p>A reminder of who I am and where I've been</p></div></div>
+                    <div class="option-card" onclick="selectWho('family', this)"><div class="option-icon">👨‍👩‍👧</div><div class="option-text"><h3>Family</h3><p>For a parent, sibling, or child</p></div></div>
+                    <div class="option-card" onclick="selectWho('friend', this)"><div class="option-icon">🤝</div><div class="option-text"><h3>A Friend</h3><p>For the person who was always there</p></div></div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="prevStep(2)">← Back</button>
+                    <button class="nav-btn primary" id="step3Next" onclick="nextStep(4)" disabled>Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Necklace Style Selection -->
+            <div class="quiz-step" id="step4">
+                <div class="step-label">Step 4 of 6 — Choose Your Style</div>
+                <h2 class="step-title">Which style speaks to you?</h2>
+                <p class="step-subtitle">Pick the shape that matches your story. We'll engrave your coordinates on it.</p>
+                <div class="options-grid" id="styleOptions">
+                    <!-- Round Charm -->
+                    <div class="style-preview-card" onclick="selectStyle('round-charm', this)">
+                        <div class="style-preview-svg" id="quiz-svg-round-charm"></div>
+                        <div class="style-preview-name">Round Charm</div>
+                        <div class="style-preview-desc">Classic, timeless, romantic. Coordinates engraved on a circular disc pendant.</div>
+                    </div>
+                    <!-- 4-Sided Vertical Bar -->
+                    <div class="style-preview-card" onclick="selectStyle('vertical-bar', this)">
+                        <div class="style-preview-svg" id="quiz-svg-vertical-bar"></div>
+                        <div class="style-preview-name">4-Sided Vertical Bar</div>
+                        <div class="style-preview-desc">Bold, modern, statement piece. 4-sided bar with coordinates on front face.</div>
+                    </div>
+                    <!-- Horizontal Bar -->
+                    <div class="style-preview-card" onclick="selectStyle('horizontal-bar', this)">
+                        <div class="style-preview-svg" id="quiz-svg-horizontal-bar"></div>
+                        <div class="style-preview-name">Horizontal Bar</div>
+                        <div class="style-preview-desc">Dainty, minimalist, delicate. Thin bar with coordinates engraved across.</div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="prevStep(3)">← Back</button>
+                    <button class="nav-btn primary" id="step4Next" onclick="nextStep(5)">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Date -->
+            <div class="quiz-step" id="step5">
+                <div class="step-label">Step 5 of 6 — When It Happened</div>
+                <h2 class="step-title">When did this moment happen?</h2>
+                <p class="step-subtitle">Optional — adding a date prints a beautiful keepsake card alongside your jewelry.</p>
+                <input type="date" class="location-input" id="dateInput" style="max-width: 340px; margin: 0 auto; display: block;">
+                <p style="font-size: 13px; color: var(--text-light); margin-top: 16px; text-align: center;">Leave blank if you prefer not to include a date.</p>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="prevStep(4)">← Back</button>
+                    <button class="nav-btn primary" onclick="nextStep(6)">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 6: One Word -->
+            <div class="quiz-step" id="step6">
+                <div class="step-label">Step 6 of 6 — The Feeling</div>
+                <h2 class="step-title">One word to describe this feeling?</h2>
+                <p class="step-subtitle">This word will be engraved alongside your coordinates (Home, Forever, Ours, Always...).</p>
+                <input type="text" class="word-input" id="wordInput" placeholder="FOREVER" maxlength="15" oninput="updateWordPreview()">
+                <p style="font-size: 13px; color: var(--text-light); margin-top: 16px; text-align: center;">Max 15 characters. Examples: Ours, Magic, Yes, Family, Home.</p>
+                
+                <div class="word-preview" id="wordPreview">
+                    <div class="word-preview-label">Your Custom Engraving</div>
+                    <div class="word-preview-text" id="wordPreviewText">FOREVER</div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="prevStep(5)">← Back</button>
+                    <button class="nav-btn primary" id="step6Next" onclick="showEmailGate()" disabled>Reveal My Story →</button>
+                </div>
+            </div>
+
+            <!-- Email Gate -->
+            <div class="quiz-step email-gate" id="emailGate">
+                <h2>Your Story Is Built. See Your Live Preview.</h2>
+                <p>Enter your email to unlock your realistic engraved jewelry preview and claim 20% off your coordinate piece.</p>
+                
+                <div class="blurred-preview">
+                    <div class="blur-overlay">
+                        <div class="blur-text">🔒 Enter email to unlock your engraved preview</div>
+                    </div>
+                    <div style="opacity: 0.35; text-align: center; padding: 40px;">
+                        <div style="font-size: 56px; margin-bottom: 20px;">📍</div>
+                        <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: var(--navy);">40.3923° N, 74.9711° W</div>
+                        <div style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; font-style: italic; margin-top: 8px; color: var(--gold);">FOREVER</div>
+                    </div>
+                </div>
+                
+                <div class="email-form">
+                    <input type="email" class="email-input" id="emailInput" placeholder="Enter your email address..." onkeypress="handleEmailKeyPress(event)">
+                    <button class="btn btn-primary btn-full" onclick="revealResults()">Reveal My Story & Get 20% Off</button>
+                </div>
+                <p class="trust-line">We hand-engrave every piece in our USA workshop. 12,000+ coordinates worn.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS PAGE -->
+    <div class="results-page" id="resultsPage">
+        <div class="container">
+            <div class="story-card" id="storyCard">
+                <div class="story-card-icon" id="storyIcon">🥂</div>
+                <div class="story-card-coordinates" id="resultCoordinates">40.3923° N, 74.9711° W</div>
+                <div class="story-card-word" id="resultWord">FOREVER</div>
+                <div class="story-card-date" id="resultDate">Est. June 14, 2019</div>
+                <div class="story-card-watermark">OurCoordinates — Your Story, Worn</div>
+            </div>
+            
+            <div class="download-card">
+                <button class="download-card-btn" onclick="downloadStoryCard()">📥 Download Keepsake Story Card</button>
+            </div>
+            
+            <h2 class="results-headline" id="resultsHeadline">This Is Where Your Story Lives</h2>
+            <p class="results-subheadline" id="resultsSubheadline">Now it is transformed into a gorgeous piece to keep close to your heart forever.</p>
+            
+            <div class="engraving-note" id="engravingNote">
+                👆 <strong>Below is your Horizontal Bar style</strong> in Gold with realistic engraved coordinates. Every piece is <strong>hand-engraved</strong> in our USA workshop with your exact coordinates and word.
+            </div>
+
+            <!-- CUSTOMIZER CONTROLS (METAL & TEXT) -->
+            <div class="customizer-controls">
+                <!-- Metal Selector -->
+                <div class="control-group">
+                    <span class="control-label">Metal Color:</span>
+                    <div class="metal-switcher" style="margin-bottom: 0;">
+                        <button class="metal-btn metal-btn-gold active" onclick="switchMetal('gold')">Gold</button>
+                        <button class="metal-btn metal-btn-silver" onclick="switchMetal('silver')">Silver</button>
+                        <button class="metal-btn metal-btn-rose" onclick="switchMetal('rose')">Rose Gold</button>
+                    </div>
+                </div>
+                
+                <!-- Engraving Text Editor -->
+                <div class="control-group control-group-text">
+                    <span class="control-label">Engraving Text (Max 15 Chars):</span>
+                    <div class="engraving-input-wrapper">
+                        <input type="text" class="engraving-editor-input" id="resultWordInput" placeholder="No Custom Text" maxlength="15" oninput="updateEngravingText(this.value)">
+                        <button class="control-btn danger" id="removeTextBtn" onclick="removeEngravingText()">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 600; color: var(--navy); text-align: center; margin-bottom: 12px;">Shop Your Engraved Coordinate Story</h2>
+            <p style="text-align: center; color: var(--text-light); margin-bottom: 40px; font-size: 15px;">Handcrafted to order. Packaged in a premium drawer gift box. Ships in 3-5 days.</p>
+            
+            <!-- PRODUCTS GRID -->
+            <div class="product-grid" id="productGrid"></div>
+            
+            <!-- COUNTDOWN STRIP -->
+            <div class="countdown-strip" id="countdownStrip">
+                <p>⏰ Your 20% off code <strong style="color: var(--navy); font-weight: 700; background: var(--white); padding: 2px 8px; border-radius: 4px; font-size: 14px;">STORY-20OFF</strong> expires in</p>
+                <div class="countdown-timer" id="countdownTimer">47:59:59</div>
+            </div>
+            
+            <!-- REVIEWS -->
+            <div class="review-section">
+                <h3>Customer Stories Like Yours</h3>
+                <div id="reviewContainer"></div>
+            </div>
+            
+            <!-- TRUST POINTS -->
+            <div class="trust-section">
+                <h3>Crafted With Love & Integrity</h3>
+                <div class="trust-grid">
+                    <div class="trust-item"><div class="icon">✅</div><h4>Verified Coordinates</h4><p>We double-check every coordinate format manually for absolute accuracy.</p></div>
+                    <div class="trust-item"><div class="icon">🔨</div><h4>Hand-Engraved in USA</h4><p>Every piece is precision hand-engraved by artisans in our USA workshop.</p></div>
+                    <div class="trust-item"><div class="icon">📦</div><h4>Ships in 3-5 Days</h4><p>Most personalized orders leave our workshop within 3 business days.</p></div>
+                    <div class="trust-item"><div class="icon">🛡️</div><h4>Lifetime Guarantee</h4><p>If your engraving fades or chain breaks, we replace it free of charge.</p></div>
+                </div>
+            </div>
+            
+            <!-- CALL TO ACTION FOOTER -->
+            <div style="text-align: center; padding: 60px 0; border-top: 1px solid var(--border);">
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 600; color: var(--navy); margin-bottom: 16px;">Carry Your Story Everywhere.</h2>
+                <p style="color: var(--text-light); margin-bottom: 32px; font-size: 16px;">Join 12,000+ people carrying their most cherished memories close.</p>
+                <button class="btn btn-primary btn-full" style="max-width: 400px; margin: 0 auto 16px;" onclick="addFeaturedToCart()">Add My Coordinate Piece to Cart — 20% Off</button>
+                <br>
+                <button class="btn" style="border: 2px solid var(--gold); color: var(--navy); font-size: 13px;" onclick="location.reload()">Build Another Story</button>
+                <p style="font-size: 12px; color: var(--text-light); margin-top: 20px;">Secure SSL checkout. Free shipping on orders over $75. 100% Satisfaction Guarantee.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" id="footer">
+        <div class="container">
+            <h2>OURCOORDINATES</h2>
+            <p>Your Story, Worn</p>
+            <p style="font-size: 12px; opacity: 0.5; margin-top: 24px;">Handmade in the USA • 4.9★ from 2,400+ reviews • Lifetime Warranty on Custom Pieces</p>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" async></script>
+
+    <script>
+        // ===== SHOPIFY PRODUCT CONFIGURATION =====
+        // Set variant IDs to connect this builder directly with your Shopify store inventory!
+        // Find these IDs in Shopify Admin: Products -> Choose Jewelry -> Look at URL or Options
+        const ShopifyConfig = {
+            'round-charm': {
+                gold: '35921363763357', // Fallback to Custom Coordinates Necklace (Gold / 1 side)
+                silver: '35921363435677', // Fallback to Custom Coordinates Necklace (Silver / 1 side)
+                rose: '35921363370141', // Fallback to Custom Coordinates Necklace (Rose gold / 1 side)
+                name: 'Custom Coordinates Necklace'
+            },
+            'vertical-bar': {
+                gold: '35921363763357', // Custom Coordinates Necklace (Gold / 1 side)
+                silver: '35921363435677', // Custom Coordinates Necklace (Silver / 1 side)
+                rose: '35921363370141', // Custom Coordinates Necklace (Rose gold / 1 side)
+                name: 'Custom Coordinates Necklace'
+            },
+            'horizontal-bar': {
+                gold: '40935089340573', // Personalized Horizontal Bar Necklace (Gold / 45cm)
+                silver: '40935089504413', // Personalized Horizontal Bar Necklace (Silver / 45cm)
+                rose: '40935089635485', // Personalized Horizontal Bar Necklace (Rose Gold / 45cm)
+                name: 'Personalized Horizontal Bar Necklace'
+            },
+            'cuff-bracelet': {
+                gold: '34777391726749', // Coordinates Cuff Bracelet (Gold)
+                silver: '34777391661213', // Coordinates Cuff Bracelet (Silver)
+                rose: '34777391693981', // Coordinates Cuff Bracelet (Rose gold)
+                name: 'Coordinates Cuff Bracelet'
+            },
+            'ring': {
+                gold: {
+                    '5': '47735799152898',
+                    '6': '47735799185666',
+                    '7': '47735799218434',
+                    '8': '47735799251202',
+                    '9': '47735799283970',
+                    '10': '47735799316738'
+                },
+                silver: {
+                    '5': '47735798759682',
+                    '6': '47735798792450',
+                    '7': '47735798825218',
+                    '8': '47735798857986',
+                    '9': '47735798890754',
+                    '10': '47735798923522'
+                },
+                rose: {
+                    '5': '47735799546114',
+                    '6': '47735799578882',
+                    '7': '47735799611650',
+                    '8': '47735799644418',
+                    '9': '47735799677186',
+                    '10': '47735799709954'
+                },
+                name: 'Coordinates Flat Band Ring'
+            },
+            'keychain': {
+                gold: '47735798497538', // Coordinates Keychain (Gold)
+                silver: '47735798464770', // Coordinates Keychain (Stainless Steel)
+                rose: '47735798530306', // Coordinates Keychain (Rose Gold)
+                name: 'Coordinates Keychain'
+            }
+        };
+
+        // ===== INLINED HIGH-QUALITY SVG MOCKUP TEMPLATES =====
+        // Extracted directly from workspace SVG assets. Cleaned of duplicate defs and labels for optimal memory use.
+        const SVG_TEMPLATES = {
+            'round-charm': `<svg width="100%" height="100%" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="200" fill="transparent"/>
+                <line x1="90" y1="10" x2="90" y2="55" stroke="var(--chain-color)" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="110" y1="10" x2="110" y2="55" stroke="var(--chain-color)" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="90" cy="58" r="3.5" fill="none" stroke="var(--chain-color)" stroke-width="1.5"/>
+                <circle cx="110" cy="58" r="3.5" fill="none" stroke="var(--chain-color)" stroke-width="1.5"/>
+                <circle id="engravingSurface" cx="100" cy="105" r="42" fill="url(#gold)" stroke="var(--chain-color)" stroke-width="2.5"/>
+                <circle cx="100" cy="105" r="37" fill="none" stroke="#d4b870" stroke-width="1" opacity="0.5"/>
+                <circle cx="100" cy="76" r="6" fill="none" stroke="#7a6a50" stroke-width="1"/>
+                <path d="M 100 70 L 100 82 M 94 76 L 106 76" stroke="#7a6a50" stroke-width="0.8"/>
+                <circle cx="100" cy="76" r="1.5" fill="#7a6a50"/>
+                <ellipse cx="78" cy="78" rx="14" ry="10" fill="white" opacity="0.35"/>
+                <ellipse cx="100" cy="152" rx="30" ry="4" fill="#000" opacity="0.1"/>
+            </svg>`,
+            
+            'vertical-bar': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="100%" height="100%" role="img">
+              <path class="chain" fill="none" d="M160 270 C260 95 640 95 740 270"/>
+              <circle cx="270" cy="296" r="18" fill="url(#gold)"/>
+              <circle cx="630" cy="296" r="18" fill="url(#gold)"/>
+              <g filter="url(#softShadow)" transform="rotate(90 450 310)">
+                <rect id="engravingSurface" x="245" y="270" width="410" height="80" rx="14" fill="url(#gold)" class="metal-stroke"/>
+              </g>
+            </svg>`,
+            
+            'horizontal-bar': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="100%" height="100%" role="img">
+              <path class="chain" fill="none" d="M160 270 C260 95 640 95 740 270"/>
+              <circle cx="270" cy="296" r="18" fill="url(#gold)"/>
+              <circle cx="630" cy="296" r="18" fill="url(#gold)"/>
+              <g filter="url(#softShadow)">
+                <rect id="engravingSurface" x="245" y="270" width="410" height="80" rx="14" fill="url(#gold)" class="metal-stroke"/>
+              </g>
+            </svg>`,
+            
+            'cuff-bracelet': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="100%" height="100%" role="img">
+              <g filter="url(#softShadow)">
+                <path id="engravingSurface" d="M240 250 C275 470 625 470 660 250" fill="none" stroke="url(#gold)" stroke-width="68" stroke-linecap="round"/>
+                <path d="M240 250 C275 470 625 470 660 250" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.65"/>
+                <path id="engravingPath" d="M300 350 C365 450 535 450 600 350" fill="none"/>
+              </g>
+            </svg>`,
+            
+            'ring': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="100%" height="100%" role="img">
+              <g filter="url(#softShadow)">
+                <ellipse cx="450" cy="335" rx="236" ry="118" fill="#8f641c" opacity="0.16"/>
+                <path d="M214 316 C240 234 327 188 450 188 C573 188 660 234 686 316 C665 411 572 475 450 475 C328 475 235 411 214 316 Z" fill="url(#gold)" class="metal-stroke"/>
+                <path d="M292 325 C315 274 375 247 450 247 C525 247 585 274 608 325 C584 377 525 406 450 406 C375 406 316 377 292 325 Z" fill="#fbf8f1" opacity="0.98"/>
+                <path d="M245 302 C292 214 608 214 655 302" fill="none" stroke="#fff1b7" stroke-width="24" stroke-linecap="round" opacity="0.46"/>
+                <path d="M258 372 C328 444 572 444 642 372" fill="none" stroke="#a06f1d" stroke-width="42" stroke-linecap="round" opacity="0.32"/>
+                <path id="engravingSurface" d="M285 392 C362 456 538 456 615 392" fill="none" stroke="url(#gold)" stroke-width="40" stroke-linecap="round" opacity="0.56"/>
+                <path id="engravingPath" d="M306 397 C378 446 522 446 594 397" fill="none"/>
+              </g>
+            </svg>`,
+            
+            'keychain': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="100%" height="100%" role="img">
+              <g filter="url(#softShadow)">
+                <circle cx="450" cy="170" r="70" fill="none" stroke="url(#gold)" stroke-width="22"/>
+                <rect x="426" y="220" width="48" height="62" rx="18" fill="url(#gold)"/>
+                <rect id="engravingSurface" x="235" y="292" width="430" height="128" rx="22" fill="url(#gold)" class="metal-stroke"/>
+              </g>
+            </svg>`
+        };
+
+        // ===== STATE =====
+        let currentStep = 1;
+        let emailSubmitted = false;
+        let quizData = {
+            location: '',
+            coordinates: '',
+            storyType: '',
+            who: '',
+            necklaceStyle: 'round-charm',
+            metal: 'gold', // Gold by default
+            date: '',
+            word: 'FOREVER',
+            ringSize: '7'
+        };
+
+        // ===== MAP OBJECTS =====
+        let leafletMap = null;
+        let mapMarker = null;
+
+        // ===== ARCHETYPES WITH PRODUCT MAPPINGS =====
+        const archetypes = {
+            'first-date': {
+                icon: '🥂', headline: 'This Is Where Your Love Story Began', subheadline: 'The place where you first connected, now transformed into a beautiful daily keepsake.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Horizontal Bar Coordinate Necklace', price: '$55.99', original: '$69.99', description: 'Your first date coordinates hand-engraved on a premium horizontal bar necklace.', type: 'horizontal-bar', featured: true },
+                    { label: 'Carry it on your finger', name: 'Coordinate Flat Band Ring', price: '$39.99', original: '$49.99', description: 'The coordinates of your meeting spot wrapping elegantly around your finger.', type: 'ring', featured: false },
+                    { label: 'Carry it on your keys', name: 'Coordinate Premium Keychain', price: '$23.99', original: '$29.99', description: 'Your special coordinates engraved on a heavy-duty luxury metal keychain.', type: 'keychain', featured: false }
+                ],
+                reviews: [
+                    { text: "My husband got the bar necklace with our first date coordinates. It sit right above my chest and I wear it daily. Quality is superb.", author: "Danielle L., Verified Buyer" },
+                    { text: "I bought the keychain with our coordinates for my boyfriend's car keys. It's solid metal and the engraving is very deep and precise.", author: "Mark R., Verified Buyer" }
+                ]
+            },
+            'proposal': {
+                icon: '💍', headline: 'This Is Where You Said Yes', subheadline: 'The place where forever officially began, engraved with absolute precision.',
+                products: [
+                    { label: 'Built For Your Story', name: '4-Sided Vertical Bar Necklace', price: '$59.99', original: '$74.99', description: 'A bold, elegant statement piece featuring your proposal coordinates and date on a vertical bar.', type: 'vertical-bar', featured: true },
+                    { label: 'Elegant wrist accent', name: 'Coordinate Cuff Bracelet', price: '$63.99', original: '$79.99', description: 'A minimalist open-face metal cuff bracelet featuring your custom engraving.', type: 'cuff-bracelet', featured: false },
+                    { label: 'Dainty classic look', name: 'Round Charm Coordinate Necklace', price: '$51.99', original: '$64.99', description: 'Your proposal coordinates printed on a romantic round charm pendant.', type: 'round-charm', featured: false }
+                ],
+                reviews: [
+                    { text: "I proposed in Maui and got my fiancée the vertical bar necklace. She cried when she saw the coordinates. Manually checked on Google Maps and they are 100% correct.", author: "Tyler V., Verified Buyer" },
+                    { text: "Stunning finish. The metal shines beautifully in the sunlight and doesn't tarnish. Perfect commemoration of our proposal.", author: "Sarah C., Verified Buyer" }
+                ]
+            },
+            'wedding': {
+                icon: '💒', headline: 'This Is Where Two Became One', subheadline: 'A sacred set of coordinates marking the launch of your life together.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Round Charm Coordinate Necklace', price: '$51.99', original: '$64.99', description: 'A timeless classic. Circular pendant engraved with your wedding venue coordinates.', type: 'round-charm', featured: true },
+                    { label: 'Elegant ring band', name: 'Coordinate Flat Band Ring', price: '$39.99', original: '$49.99', description: 'A coordinates wedding band companion to keep your location close to your finger.', type: 'ring', featured: false },
+                    { label: 'Keep it on your wrist', name: 'Coordinate Cuff Bracelet', price: '$63.99', original: '$79.99', description: 'A heavy metal premium cuff featuring your wedding location.', type: 'cuff-bracelet', featured: false }
+                ],
+                reviews: [
+                    { text: "My husband and I got matching coordinate bracelets with our wedding location. We wear them every single day. Lifetime warranty is an awesome bonus.", author: "Jessica & Rob, Verified Buyers" },
+                    { text: "Got the round charm necklace with my wedding coordinates as an anniversary present. Beautiful packaging, and the font is very elegant.", author: "Claire H., Verified Buyer" }
+                ]
+            },
+            'first-home': {
+                icon: '🏠', headline: 'Where Your Roots Run Deep', subheadline: 'Home is a feeling, but this place has physical coordinates. Wear them proudly.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Coordinate Premium Keychain', price: '$23.99', original: '$29.99', description: 'The keys to your castle. The coordinates to your home. The perfect daily companion.', type: 'keychain', featured: true },
+                    { label: 'A delicate necklace option', name: 'Horizontal Bar Coordinate Necklace', price: '$55.99', original: '$69.99', description: 'A clean, minimalist horizontal bar highlighting your home address.', type: 'horizontal-bar', featured: false },
+                    { label: 'Bold vertical statement', name: '4-Sided Vertical Bar Necklace', price: '$59.99', original: '$74.99', description: 'Your home coordinates and family name engraved vertically.', type: 'vertical-bar', featured: false }
+                ],
+                reviews: [
+                    { text: "Got this coordinate keychain as a housewarming gift. Hands down the most unique and thoughtful present we received.", author: "Megan F., Verified Buyer" },
+                    { text: "We carry our coordinates keychains everywhere we go. Excellent heavy metal weight, and very scratch resistant.", author: "Dave S., Verified Buyer" }
+                ]
+            },
+            'new-life': {
+                icon: '👶', headline: 'This Is Where Your World Changed', subheadline: 'The place where your little one breathed their first breath, worn close to your heart.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Horizontal Bar Coordinate Necklace', price: '$55.99', original: '$69.99', description: 'A delicate horizontal bar necklace featuring the birth coordinates and name.', type: 'horizontal-bar', featured: true },
+                    { label: 'The classic charm', name: 'Round Charm Coordinate Necklace', price: '$51.99', original: '$64.99', description: 'Your baby\'s birth coordinates beautifully engraved on a round charm.', type: 'round-charm', featured: false },
+                    { label: 'Beautiful cuff bracelet', name: 'Coordinate Cuff Bracelet', price: '$63.99', original: '$79.99', description: 'Wear your baby\'s birth place coordinates engraved on a sleek cuff bracelet.', type: 'cuff-bracelet', featured: false }
+                ],
+                reviews: [
+                    { text: "I bought the horizontal bar with my daughter's birth hospital coordinates. I haven't taken it off since she was born. Worth every dollar.", author: "Rebecca M., Verified Buyer" },
+                    { text: "Got this for my wife as a push present. She wept when she saw the engraved baby name and coordinates. Excellent craftmanship.", author: "Kevin W., Verified Buyer" }
+                ]
+            },
+            'achievement': {
+                icon: '🎓', headline: 'This Is Where You Conquered', subheadline: 'The coordinates of your triumph. A wearable reminder that you can do hard things.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Coordinate Flat Band Ring', price: '$39.99', original: '$49.99', description: 'A wearable ring of achievement. Coordinates of your finish line or graduation.', type: 'ring', featured: true },
+                    { label: 'Bold statement piece', name: '4-Sided Vertical Bar Necklace', price: '$59.99', original: '$74.99', description: 'A vertical pillar of strength. Your graduation or race coordinates.', type: 'vertical-bar', featured: false },
+                    { label: 'Classic round pendant', name: 'Round Charm Coordinate Necklace', price: '$51.99', original: '$64.99', description: 'Your victory spot coordinates engraved on a circular charm.', type: 'round-charm', featured: false }
+                ],
+                reviews: [
+                    { text: "Got the ring engraved with the finish line coordinates of my first marathon. It's a daily source of confidence and reminder of my dedication.", author: "Jordan P., Verified Buyer" },
+                    { text: "Perfect graduation gift. The coordinates represent the college campus where I spent 4 years. Fits comfortably and looks amazing.", author: "Chris E., Verified Buyer" }
+                ]
+            },
+            'adventure': {
+                icon: '✈️', headline: 'This Is Where Wonder Found You', subheadline: 'The coordinates that changed your perspective. An anchor to your favorite travel adventure.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Coordinate Cuff Bracelet', price: '$63.99', original: '$79.99', description: 'A bold, premium cuff bracelet carrying the coordinates of your favorite destination.', type: 'cuff-bracelet', featured: true },
+                    { label: 'Traveler\'s keychain', name: 'Coordinate Premium Keychain', price: '$23.99', original: '$29.99', description: 'A solid metal coordinate keychain to secure your travel keys and bags.', type: 'keychain', featured: false },
+                    { label: 'Minimalist travel neckpiece', name: 'Horizontal Bar Coordinate Necklace', price: '$55.99', original: '$69.99', description: 'Dainty and delicate bar featuring your favorite place on Earth.', type: 'horizontal-bar', featured: false }
+                ],
+                reviews: [
+                    { text: "I spent three months backpacking Bali and got the cuff bracelet with my favorite beach coordinates. It's durable, waterproof, and doesn't rust.", author: "Luke K., Verified Buyer" },
+                    { text: "Extremely cool and unique. People constantly ask me what the coordinates stand for. It's a great conversation starter about my travels.", author: "Emma S., Verified Buyer" }
+                ]
+            },
+            'something-else': {
+                icon: '💫', headline: 'A Story Uniquely Yours', subheadline: 'A custom location that holds a special meaning only you fully understand.',
+                products: [
+                    { label: 'Built For Your Story', name: 'Round Charm Coordinate Necklace', price: '$51.99', original: '$64.99', description: 'Classic circular design. Perfect shape to engrave a memory close to your heart.', type: 'round-charm', featured: true },
+                    { label: 'Minimalist horizontal look', name: 'Horizontal Bar Coordinate Necklace', price: '$55.99', original: '$69.99', description: 'A thin, elegant bar displaying your custom coordinate engraving.', type: 'horizontal-bar', featured: false },
+                    { label: 'Modern ring option', name: 'Coordinate Flat Band Ring', price: '$39.99', original: '$49.99', description: 'A coordinate band designed to be stacked or worn solo.', type: 'ring', featured: false }
+                ],
+                reviews: [
+                    { text: "I wanted to engrave the coordinates of the cabin where my grandmother lived. The round charm looks beautiful. I feel her with me always.", author: "Aria G., Verified Buyer" },
+                    { text: "The customisation options were amazing. Accurate location map search made it super easy to find the exact coordinate string.", author: "John D., Verified Buyer" }
+                ]
+            }
+        };
+
+        // ===== INITIALIZATION & QUIZ FLOW =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render quiz selectors thumbnail SVGs (pre-cached rendering)
+            renderQuizThumbnails();
+        });
+
+        function startQuiz() {
+            document.body.classList.add('quiz-active');
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('footer').style.display = 'none';
+            updateProgressBar();
+            
+            // Trigger Map setup asynchronously
+            setTimeout(() => {
+                initializeLeafletMap();
+            }, 100);
+        }
+
+        function updateProgressBar() {
+            const progressPercentage = ((currentStep - 1) / 5) * 100;
+            document.getElementById('progressBarFill').style.width = progressPercentage + '%';
+            
+            for (let i = 1; i <= 6; i++) {
+                const node = document.getElementById('node' + i);
+                if (node) {
+                    node.className = 'progress-step-node';
+                    if (i < currentStep) node.classList.add('completed');
+                    else if (i === currentStep) node.classList.add('active');
+                }
+            }
+        }
+
+        // ===== MAP & GEOCODING SYSTEM =====
+        function initializeLeafletMap() {
+            if (leafletMap) return;
+            
+            // Set default coordinates so the user is never blocked, even if Leaflet fails to load
+            updateCoordinates(27.7712, -82.6340);
+            
+            try {
+                if (typeof L === 'undefined') {
+                    throw new Error('Leaflet library is not loaded.');
+                }
+                
+                // Create map div if placeholder is active
+                const mapContainer = document.getElementById('mapPreview');
+                document.getElementById('mapPlaceholder').style.display = 'none';
+                
+                // Initialize Leaflet with clean minimalist CartoDB Positron tiles
+                leafletMap = L.map('mapPreview', {
+                    zoomControl: true,
+                    attributionControl: false,
+                    scrollWheelZoom: false
+                }).setView([27.7712, -82.6340], 13); // Center on default coordinates
+                
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    maxZoom: 19
+                }).addTo(leafletMap);
+                
+                // Custom gold/navy marker pin
+                const goldPinIcon = L.divIcon({
+                    className: 'custom-map-pin',
+                    html: '<div style="background-color: #C5A880; width: 18px; height: 18px; border-radius: 50%; border: 3px solid #0A1128; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transform: scale(1.2);"></div>',
+                    iconSize: [18, 18],
+                    iconAnchor: [9, 9]
+                });
+                
+                // Set up initial marker center
+                mapMarker = L.marker([27.7712, -82.6340], {
+                    draggable: true,
+                    icon: goldPinIcon
+                }).addTo(leafletMap);
+                
+                mapMarker.on('dragend', function() {
+                    const position = mapMarker.getLatLng();
+                    updateCoordinates(position.lat, position.lng);
+                });
+                
+                // Force recalculate dimensions since container may have transition styles
+                setTimeout(() => {
+                    leafletMap.invalidateSize();
+                }, 200);
+            } catch (err) {
+                console.warn("Leaflet failed to initialize (likely due to offline or sandbox restrictions):", err);
+                const placeholder = document.getElementById('mapPlaceholder');
+                if (placeholder) {
+                    placeholder.innerHTML = `
+                        <p style="font-size: 56px; margin-bottom: 8px;">📍</p>
+                        <p style="font-weight: 500; color: var(--navy);">Using Default Location: St. Petersburg, Florida</p>
+                        <p style="font-size: 13px; color: var(--text-light); margin-top: 6px;">You can type your location and search, or proceed to next steps.</p>
+                    `;
+                }
+            }
+        }
+
+        function handleSearchKeyPress(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        async function performSearch() {
+            const query = document.getElementById('locationInput').value.trim();
+            if (query.length < 3) {
+                alert('Please enter a location with at least 3 letters.');
+                return;
+            }
+            
+            const loader = document.getElementById('searchLoading');
+            const errorBox = document.getElementById('searchError');
+            loader.classList.add('visible');
+            errorBox.style.display = 'none';
+            
+            try {
+                // Fetch coordinates from free Nominatim geocoder (OpenStreetMap)
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+                const response = await fetch(url, {
+                    headers: { 'Accept-Language': 'en' }
+                });
+                
+                if (!response.ok) throw new Error('Geocoding search failed');
+                
+                const results = await response.json();
+                
+                if (results && results.length > 0) {
+                    const result = results[0];
+                    const lat = parseFloat(result.lat);
+                    const lon = parseFloat(result.lon);
+                    
+                    // Center map and marker on location
+                    leafletMap.setView([lat, lon], 14);
+                    mapMarker.setLatLng([lat, lon]);
+                    
+                    // Enable drag helper and sync coords
+                    document.getElementById('mapDragHelper').classList.add('visible');
+                    updateCoordinates(lat, lon);
+                } else {
+                    errorBox.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                errorBox.style.display = 'block';
+            } finally {
+                loader.classList.remove('visible');
+            }
+        }
+
+        function updateCoordinates(lat, lon) {
+            const latDir = lat >= 0 ? 'N' : 'S';
+            const lonDir = lon >= 0 ? 'E' : 'W';
+            const formattedString = `${Math.abs(lat).toFixed(4)}° ${latDir}, ${Math.abs(lon).toFixed(4)}° ${lonDir}`;
+            
+            quizData.coordinates = formattedString;
+            
+            const display = document.getElementById('coordinatesDisplay');
+            display.textContent = formattedString;
+            display.classList.add('visible');
+            
+            document.getElementById('step1Next').disabled = false;
+        }
+
+        // ===== QUIZ SELECTION EVENT HANDLERS =====
+        function selectStoryType(type, card) {
+            quizData.storyType = type;
+            document.querySelectorAll('#storyOptions .option-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            document.getElementById('step2Next').disabled = false;
+        }
+
+        function selectWho(who, card) {
+            quizData.who = who;
+            document.querySelectorAll('#whoOptions .option-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            document.getElementById('step3Next').disabled = false;
+        }
+
+        function selectStyle(style, card) {
+            quizData.necklaceStyle = style;
+            document.querySelectorAll('#styleOptions .style-preview-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            document.getElementById('step4Next').disabled = false;
+        }
+
+        function updateWordPreview() {
+            const input = document.getElementById('wordInput').value.toUpperCase().trim();
+            quizData.word = input || 'FOREVER';
+            document.getElementById('wordPreviewText').textContent = quizData.word;
+            document.getElementById('wordPreview').classList.add('visible');
+            document.getElementById('step6Next').disabled = false;
+        }
+
+        // ===== STEP FLOW ROUTING =====
+        function nextStep(step) {
+            if (currentStep === 1 && !quizData.coordinates) return;
+            if (currentStep === 2 && !quizData.storyType) return;
+            if (currentStep === 3 && !quizData.who) return;
+            
+            if (step === 5) {
+                // Record date if present
+                quizData.date = document.getElementById('dateInput').value;
+            }
+            
+            document.getElementById('step' + currentStep).classList.remove('active');
+            currentStep = step;
+            document.getElementById('step' + step).classList.add('active');
+            updateProgressBar();
+        }
+
+        function prevStep(step) {
+            document.getElementById('step' + currentStep).classList.remove('active');
+            currentStep = step;
+            document.getElementById('step' + step).classList.add('active');
+            updateProgressBar();
+        }
+
+        function showEmailGate() {
+            document.getElementById('step6').classList.remove('active');
+            document.getElementById('emailGate').classList.add('active');
+            // Hide progress container during marketing gates
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function goBack() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('heroSection').style.display = 'block';
+            document.getElementById('footer').style.display = 'block';
+            currentStep = 1;
+        }
+
+        // ===== RENDER SVGS DYNAMICALLY WITH CUSTOM ENGRAVING =====
+        function renderQuizThumbnails() {
+            // Renders static thumbnail versions for Step 4 selector cards
+            document.getElementById('quiz-svg-round-charm').innerHTML = generateSvgMarkup('round-charm', 'gold', '40.3923° N, 74.9711° W', 'FOREVER');
+            document.getElementById('quiz-svg-vertical-bar').innerHTML = generateSvgMarkup('vertical-bar', 'gold', '40.3923° N, 74.9711° W', 'FOREVER');
+            document.getElementById('quiz-svg-horizontal-bar').innerHTML = generateSvgMarkup('horizontal-bar', 'gold', '40.3923° N, 74.9711° W', 'FOREVER');
+        }
+
+        function generateSvgMarkup(style, metal, coords, word) {
+            let svg = SVG_TEMPLATES[style];
+            
+            // Adjust metal gradients
+            svg = svg.replace(/fill="url\(#gold\)"/g, `fill="url(#${metal})"`);
+            svg = svg.replace(/stroke="url\(#gold\)"/g, `stroke="url(#${metal})"`);
+            
+            const metalChainColors = {
+                gold: '#d2a04a',
+                silver: '#c8ccd0',
+                rose: '#d28a72'
+            };
+            
+            const chainColor = metalChainColors[metal];
+            const engravingColor = metal === 'silver' ? '#3C434A' : '#503c25';
+            
+            // Inject overrides styles to customize the SVG dynamically
+            const overrideStyle = `
+                <style>
+                    .chain, .chain-silver { stroke: ${chainColor} !important; fill: none !important; }
+                    .engraving { fill: ${engravingColor} !important; font-family: Avenir, Helvetica, Arial, sans-serif !important; font-weight: 700 !important; filter: url(#engraveInset) !important; }
+                    .metal-stroke { stroke: rgba(255,255,255,0.66) !important; }
+                    .bg { fill: transparent !important; }
+                </style>
+            `;
+            svg = svg.replace('<g', `${overrideStyle}<g`);
+            svg = svg.replace('--chain-color', chainColor); // Special case for round charm custom inline SVG
+            
+            // Insert coordinates and words on surfaces/paths
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(svg, 'image/svg+xml');
+            const svgElement = doc.documentElement;
+            
+            const surface = svgElement.querySelector('#engravingSurface');
+            const path = svgElement.querySelector('#engravingPath');
+            
+            const lat = coords.split(',')[0].trim();
+            const lng = coords.split(',')[1] ? coords.split(',')[1].trim() : '';
+            
+            if (path) {
+                // Curve text placement
+                const textNode = doc.createElementNS('http://www.w3.org/2000/svg', 'text');
+                textNode.setAttribute('class', 'engraving');
+                textNode.setAttribute('dy', style === 'ring' ? '12' : '10');
+                textNode.setAttribute('font-size', '20px');
+                textNode.setAttribute('letter-spacing', '1px');
+                
+                const textPathNode = doc.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+                textPathNode.setAttribute('href', '#' + path.id);
+                textPathNode.setAttribute('startOffset', '50%');
+                textPathNode.setAttribute('text-anchor', 'middle');
+                textPathNode.textContent = `${lat} ${lng}${word ? ' • ' + word : ''}`;
+                
+                textNode.appendChild(textPathNode);
+                path.parentNode.insertBefore(textNode, path.nextSibling);
+            } else if (surface) {
+                // Rectangular flat coordinates placement
+                const textNode = doc.createElementNS('http://www.w3.org/2000/svg', 'text');
+                textNode.setAttribute('class', 'engraving');
+                textNode.setAttribute('text-anchor', 'middle');
+                
+                if (style === 'round-charm') {
+                    // Custom layout for round charm circular pendant
+                    textNode.setAttribute('x', '100');
+                    textNode.setAttribute('y', word ? '98' : '101');
+                    textNode.setAttribute('font-size', '8px');
+                    textNode.setAttribute('letter-spacing', '0.5px');
+                    
+                    const tspan1 = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan1.setAttribute('x', '100');
+                    tspan1.setAttribute('dy', '0');
+                    tspan1.textContent = lat;
+                    
+                    const tspan2 = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan2.setAttribute('x', '100');
+                    tspan2.setAttribute('dy', '11');
+                    tspan2.textContent = lng;
+                    
+                    textNode.appendChild(tspan1);
+                    textNode.appendChild(tspan2);
+                    
+                    if (word) {
+                        const tspan3 = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan3.setAttribute('x', '100');
+                        tspan3.setAttribute('dy', '18');
+                        tspan3.setAttribute('font-style', 'italic');
+                        tspan3.setAttribute('font-size', '7.5px');
+                        tspan3.textContent = word;
+                        textNode.appendChild(tspan3);
+                    }
+                    
+                    surface.parentNode.appendChild(textNode);
+                } else {
+                    // Standard horizontal/vertical bar layout
+                    const rectX = parseFloat(surface.getAttribute('x'));
+                    const rectY = parseFloat(surface.getAttribute('y'));
+                    const rectW = parseFloat(surface.getAttribute('width'));
+                    const rectH = parseFloat(surface.getAttribute('height'));
+                    
+                    const centerX = rectX + rectW / 2;
+                    const centerY = rectY + rectH / 2;
+                    
+                    textNode.setAttribute('x', centerX);
+                    textNode.setAttribute('font-size', '20px');
+                    
+                    if (word && rectH >= 80) {
+                        // 2-Line engraving layout
+                        textNode.setAttribute('y', centerY + 4);
+                        
+                        const tspan1 = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan1.setAttribute('x', centerX);
+                        tspan1.setAttribute('dy', '-5');
+                        tspan1.textContent = `${lat} ${lng}`;
+                        
+                        const tspan2 = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan2.setAttribute('x', centerX);
+                        tspan2.setAttribute('dy', '32');
+                        tspan2.setAttribute('font-size', '16px');
+                        tspan2.setAttribute('font-style', 'italic');
+                        tspan2.textContent = word;
+                        
+                        textNode.appendChild(tspan1);
+                        textNode.appendChild(tspan2);
+                    } else {
+                        // 1-Line simple coordinate layout
+                        textNode.setAttribute('y', centerY + 8);
+                        textNode.textContent = `${lat} ${lng}${word ? ' • ' + word : ''}`;
+                    }
+                    surface.parentNode.insertBefore(textNode, surface.nextSibling);
+                }
+            }
+            
+            return new XMLSerializer().serializeToString(svgElement);
+        }
+
+        // ===== SHOW RESULTS =====
+        function handleEmailKeyPress(e) {
+            if (e.key === 'Enter') {
+                revealResults();
+            }
+        }
+
+        function revealResults() {
+            const email = document.getElementById('emailInput').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            emailSubmitted = true;
+            
+            // Submit email to Shopify in the background
+            submitLeadToShopify(email);
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsPage').classList.add('active');
+            
+            renderResultsData();
+        }
+
+        async function submitLeadToShopify(email) {
+            // Post email to Shopify's native Customer newsletter endpoint programmatically
+            const payload = new FormData();
+            payload.append('form_type', 'customer');
+            payload.append('utf8', '✓');
+            payload.append('contact[tags]', 'newsletter, Coordinate Story Lead Magnet');
+            payload.append('contact[email]', email);
+            
+            try {
+                // Send request in background. no-cors bypasses cross-origin redirect blocks
+                await fetch('/contact', {
+                    method: 'POST',
+                    body: payload,
+                    mode: 'no-cors'
+                });
+                console.log("Customer email lead registered in Shopify database.");
+            } catch (e) {
+                console.error("Lead fetch failed, moving forward:", e);
+            }
+        }
+
+        function renderResultsData() {
+            if (!emailSubmitted) return;
+            const archetype = archetypes[quizData.storyType] || archetypes['first-date'];
+            const coords = quizData.coordinates || '40.3923° N, 74.9711° W';
+            const word = quizData.word !== undefined ? quizData.word : 'FOREVER';
+            const dateStr = quizData.date ? 'Est. ' + new Date(quizData.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Your Coordinates';
+            
+            // Populating story card values
+            document.getElementById('storyIcon').textContent = archetype.icon;
+            document.getElementById('resultCoordinates').textContent = coords;
+            const wordElement = document.getElementById('resultWord');
+            if (word) {
+                wordElement.textContent = word;
+                wordElement.style.display = 'block';
+            } else {
+                wordElement.textContent = '';
+                wordElement.style.display = 'none';
+            }
+            document.getElementById('resultDate').textContent = dateStr;
+            
+            document.getElementById('resultsHeadline').textContent = archetype.headline;
+            document.getElementById('resultsSubheadline').textContent = archetype.subheadline;
+            
+            // Set word input value
+            const wordInput = document.getElementById('resultWordInput');
+            if (wordInput) {
+                wordInput.value = word;
+            }
+            
+            // Set remove button label and style
+            const removeBtn = document.getElementById('removeTextBtn');
+            if (removeBtn) {
+                if (word) {
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.className = 'control-btn danger';
+                } else {
+                    removeBtn.textContent = 'Add Text';
+                    removeBtn.className = 'control-btn';
+                }
+            }
+            
+            updatePreviewProducts();
+            
+            // Render Reviews
+            const reviewsContainer = document.getElementById('reviewContainer');
+            reviewsContainer.innerHTML = '';
+            archetype.reviews.forEach(rev => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `
+                    <div class="review-text">"${rev.text}"</div>
+                    <div class="review-author">— ${rev.author}</div>
+                `;
+                reviewsContainer.appendChild(card);
+            });
+            
+            startCountdownTimer();
+        }
+
+        function updatePreviewProducts() {
+            const archetype = archetypes[quizData.storyType] || archetypes['first-date'];
+            const coords = quizData.coordinates || '40.3923° N, 74.9711° W';
+            const word = quizData.word !== undefined ? quizData.word : 'FOREVER';
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            
+            // Remap primary product type to match selected style from step 4
+            const updatedProducts = archetype.products.map((p, index) => {
+                if (index === 0) {
+                    return {
+                        ...p,
+                        type: quizData.necklaceStyle,
+                        name: ShopifyConfig[quizData.necklaceStyle].name
+                    };
+                }
+                return p;
+            });
+            
+            // Set engraving note style text
+            const styleNames = {
+                'round-charm': 'Round Charm Pendant',
+                'vertical-bar': '4-Sided Vertical Bar',
+                'horizontal-bar': 'Horizontal Bar',
+                'cuff-bracelet': 'Cuff Bracelet',
+                'ring': 'Flat Band Ring',
+                'keychain': 'Keychain'
+            };
+            const metalNames = { gold: 'Gold', silver: 'Silver', rose: 'Rose Gold' };
+            
+            document.getElementById('engravingNote').innerHTML = `👆 <strong>Below is your ${styleNames[quizData.necklaceStyle]} style</strong> in <strong>${metalNames[quizData.metal]}</strong> with realistic engraved coordinates. Every piece is <strong>hand-engraved</strong> in our USA workshop with your exact coordinates and word.`;
+            
+            updatedProducts.forEach(prod => {
+                const svgMarkup = generateSvgMarkup(prod.type, quizData.metal, coords, word);
+                const card = document.createElement('div');
+                card.className = 'product-card' + (prod.featured ? ' featured' : '');
+                
+                card.innerHTML = `
+                    <div class="product-preview">
+                        ${prod.featured ? `<div class="product-badge">Built For Your Story</div>` : ''}
+                        ${svgMarkup}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-label">${prod.label}</div>
+                        <div class="product-name">${prod.name}</div>
+                        <div class="product-price">${prod.price} <span class="original">${prod.original}</span></div>
+                        <div class="product-description">${prod.description}</div>
+                        ${prod.type === 'ring' ? `
+                            <div class="ring-size-wrapper" style="margin-top: -5px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; background: rgba(10, 17, 40, 0.03); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(10, 17, 40, 0.08);">
+                                <span style="font-size: 13px; font-weight: 500; color: var(--navy);">Select Ring Size:</span>
+                                <select id="ringSizeSelect" onchange="updateRingSize(this.value)" style="padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(10, 17, 40, 0.15); background: white; font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--navy); font-weight: 600; cursor: pointer; outline: none;">
+                                    <option value="5" ${quizData.ringSize === '5' ? 'selected' : ''}>Size 5</option>
+                                    <option value="6" ${quizData.ringSize === '6' ? 'selected' : ''}>Size 6</option>
+                                    <option value="7" ${quizData.ringSize === '7' ? 'selected' : ''}>Size 7</option>
+                                    <option value="8" ${quizData.ringSize === '8' ? 'selected' : ''}>Size 8</option>
+                                    <option value="9" ${quizData.ringSize === '9' ? 'selected' : ''}>Size 9</option>
+                                    <option value="10" ${quizData.ringSize === '10' ? 'selected' : ''}>Size 10</option>
+                                </select>
+                            </div>
+                        ` : ''}
+                        <button class="btn ${prod.featured ? 'btn-primary' : 'btn-teal'} btn-full" onclick="addSingleProductToCart('${prod.type}')">
+                            ${prod.featured ? 'Add to Cart — 20% Off' : 'Add to Cart'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== METAL SELECTION TOGGLE =====
+        function switchMetal(metal) {
+            quizData.metal = metal;
+            
+            // Toggle active classes on selectors
+            document.querySelectorAll('.metal-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.metal-btn-${metal}`).classList.add('active');
+            
+            updatePreviewProducts();
+        }
+
+        function updateRingSize(val) {
+            quizData.ringSize = val;
+        }
+
+        // ===== ADD TO CART (SHOPIFY INTEGRATION) =====
+        function addFeaturedToCart() {
+            addSingleProductToCart(quizData.necklaceStyle);
+        }
+
+        async function addSingleProductToCart(styleType) {
+            const metal = quizData.metal;
+            const coords = quizData.coordinates || '40.3923° N, 74.9711° W';
+            const word = quizData.word !== undefined ? quizData.word : 'FOREVER';
+            
+            // Map selected style/metal to variant ID
+            const variantsMap = ShopifyConfig[styleType] || ShopifyConfig['round-charm'];
+            
+            let variantId;
+            let selectedSize = '';
+            if (styleType === 'ring') {
+                selectedSize = quizData.ringSize || '7';
+                const ringMetalMap = variantsMap[metal] || variantsMap.gold;
+                variantId = ringMetalMap[selectedSize] || ringMetalMap['7'];
+            } else {
+                variantId = variantsMap[metal] || variantsMap.gold;
+            }
+            
+            const productName = variantsMap.name;
+            
+            // Properties list that Shopify order panel displays
+            const itemProperties = {
+                'Coordinates': coords,
+                'Engraving Word': word || 'None',
+                'Metal': metal.charAt(0).toUpperCase() + metal.slice(1),
+                '_source': 'Coordinate Lead Magnet Builder'
+            };
+            if (selectedSize) {
+                itemProperties['Size'] = selectedSize;
+            }
+            
+            try {
+                // Post to Shopify's Add to Cart Endpoint
+                const response = await fetch('/cart/add.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: variantId,
+                        quantity: 1,
+                        properties: itemProperties
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Shopify ajax add to cart failed');
+                
+                // Redirect user directly to checkout page for highest conversion rates
+                window.location.href = '/checkout';
+            } catch (err) {
+                console.error(err);
+                
+                // Fallback permalink in case builder is hosted on a separate custom domain
+                const sizeParam = selectedSize ? `&properties[Size]=${encodeURIComponent(selectedSize)}` : '';
+                const permalink = `/cart/${variantId}:1?properties[Coordinates]=${encodeURIComponent(coords)}&properties[Engraving]=${encodeURIComponent(word || 'None')}&properties[Metal]=${encodeURIComponent(metal)}${sizeParam}`;
+                window.location.href = permalink;
+            }
+        }
+
+        // ===== COUNTDOWN TIMER =====
+        function startCountdownTimer() {
+            let hr = 47, min = 59, sec = 59;
+            const timer = setInterval(() => {
+                if (sec > 0) sec--;
+                else if (min > 0) { min--; sec = 59; }
+                else if (hr > 0) { hr--; min = 59; sec = 59; }
+                else { clearInterval(timer); document.getElementById('countdownTimer').textContent = 'EXPIRED'; return; }
+                
+                document.getElementById('countdownTimer').textContent = 
+                    `${hr.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // ===== CANVAS IMAGE DOWNLOAD =====
+        function downloadStoryCard() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 500;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const grad = ctx.createLinearGradient(0, 0, 800, 500);
+            grad.addColorStop(0, '#FAFAF8');
+            grad.addColorStop(1, '#F4EFE6');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 500);
+            
+            // Gold border strip at top
+            ctx.fillStyle = '#C5A880';
+            ctx.fillRect(0, 0, 800, 8);
+            
+            // Icon
+            ctx.font = '72px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(document.getElementById('storyIcon').textContent, 400, 110);
+            
+            // Coordinates
+            ctx.font = 'bold 26px "Courier New", monospace';
+            ctx.fillStyle = '#0A1128';
+            ctx.fillText(document.getElementById('resultCoordinates').textContent, 400, 180);
+            
+            // Word
+            const wordVal = document.getElementById('resultWord').textContent.trim();
+            if (wordVal) {
+                ctx.font = 'italic bold 36px "Cormorant Garamond", Georgia, serif';
+                ctx.fillStyle = '#C5A880';
+                ctx.fillText(wordVal, 400, 240);
+                
+                // Date
+                ctx.font = '600 13px "Outfit", sans-serif';
+                ctx.fillStyle = '#606870';
+                ctx.fillText(document.getElementById('resultDate').textContent, 400, 280);
+            } else {
+                // If there's no word, center the date in the space
+                ctx.font = '600 14px "Outfit", sans-serif';
+                ctx.fillStyle = '#606870';
+                ctx.fillText(document.getElementById('resultDate').textContent, 400, 245);
+            }
+            
+            // Decorative Divider lines
+            ctx.beginPath();
+            ctx.moveTo(350, 330);
+            ctx.lineTo(450, 330);
+            ctx.strokeStyle = '#E5E8EB';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            
+            // Watermark brand
+            ctx.font = '600 11px "Outfit", sans-serif';
+            ctx.fillStyle = '#A0AAB5';
+            ctx.fillText('OURCOORDINATES — YOUR STORY, WORN', 400, 440);
+            
+            // Trigger browser download anchor link
+            const anchor = document.createElement('a');
+            anchor.download = 'ourcoordinates-my-story-card.png';
+            anchor.href = canvas.toDataURL();
+            anchor.click();
+        }
+
+        function updateEngravingText(val) {
+            const cleanVal = val.toUpperCase().trim();
+            quizData.word = cleanVal;
+            
+            // Sync with results page data
+            const wordElement = document.getElementById('resultWord');
+            if (wordElement) {
+                if (cleanVal) {
+                    wordElement.textContent = cleanVal;
+                    wordElement.style.display = 'block';
+                } else {
+                    wordElement.textContent = '';
+                    wordElement.style.display = 'none';
+                }
+            }
+            
+            // Sync input button text/style
+            const removeBtn = document.getElementById('removeTextBtn');
+            if (removeBtn) {
+                if (cleanVal) {
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.className = 'control-btn danger';
+                } else {
+                    removeBtn.textContent = 'Add Text';
+                    removeBtn.className = 'control-btn';
+                }
+            }
+            
+            // Re-render mockups
+            updatePreviewProducts();
+        }
+
+        function removeEngravingText() {
+            const input = document.getElementById('resultWordInput');
+            
+            if (quizData.word) {
+                // Remove the word
+                input.value = '';
+                updateEngravingText('');
+            } else {
+                // Focus the input to add text
+                input.focus();
+            }
+        }
+
+        // Hide quiz container on load
+        document.getElementById('quizContainer').style.display = 'none';
+    </script>
+</body>
+</html>

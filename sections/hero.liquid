@@ -1,0 +1,80 @@
+<section class="hero">
+  {%- if section.settings.image != blank -%}
+    <div class="hero__media">
+      <img src="{{ section.settings.image | image_url: width: 1600 }}"
+           srcset="{{ section.settings.image | image_url: width: 750 }} 750w, {{ section.settings.image | image_url: width: 1200 }} 1200w, {{ section.settings.image | image_url: width: 1600 }} 1600w"
+           sizes="100vw" alt="{{ section.settings.image.alt | escape }}"
+           width="1600" height="900" fetchpriority="high" decoding="async">
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Topographic contour lines: inline SVG, zero network requests {%- endcomment -%}
+  <div class="hero__topo" aria-hidden="true">
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
+      <path d="M-50 480 C 150 420, 280 520, 460 460 S 760 380, 940 440 S 1180 520, 1280 470"/>
+      <path d="M-50 430 C 160 370, 300 470, 480 410 S 770 330, 950 390 S 1190 470, 1280 420"/>
+      <path d="M-50 380 C 180 320, 320 420, 500 360 S 780 280, 960 340 S 1200 420, 1280 370"/>
+      <path d="M-50 330 C 200 280, 340 370, 520 315 S 790 235, 970 295 S 1210 370, 1280 320"/>
+      <path d="M-50 280 C 220 240, 360 320, 540 270 S 800 195, 980 250 S 1220 320, 1280 270"/>
+      <path d="M-50 230 C 240 200, 380 270, 560 228 S 810 158, 990 205 S 1230 270, 1280 222"/>
+      <path d="M-50 180 C 260 160, 400 220, 580 185 S 820 122, 1000 162 S 1240 220, 1280 175"/>
+    </svg>
+  </div>
+
+  <div class="hero__reticle" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="hero__lat-rule" aria-hidden="true"></div>
+
+  <div class="page-width">
+    <div class="hero__content">
+      <p class="coord-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1><span class="engrave-reveal">{{ section.settings.heading }}</span></h1>
+      <p>{{ section.settings.subheading }}</p>
+
+      {%- comment -%}
+        Smart fallback chain so the CTA is NEVER dead:
+        1. Use the chosen Button link if set.
+        2. Else link to the featured collection if one is chosen.
+        3. Else link to all products.
+      {%- endcomment -%}
+      {%- liquid
+        if section.settings.button_link != blank
+          assign hero_link = section.settings.button_link
+        elsif section.settings.fallback_collection != blank
+          assign hero_link = section.settings.fallback_collection.url
+        else
+          assign hero_link = routes.all_products_collection_url
+        endif
+      -%}
+
+      <div class="hero__cta">
+        {%- if section.settings.button_label != blank -%}
+          <a class="btn" href="{{ hero_link }}">{{ section.settings.button_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank and section.settings.button_link_2 != blank -%}
+          <a class="btn btn--hero-ghost" href="{{ section.settings.button_link_2 }}">{{ section.settings.button_label_2 }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <span class="hero__coords" aria-hidden="true">{{ section.settings.corner_coords }}</span>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image (optional - topo lines show without it)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Free engraving on every piece" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Some places deserve to be worn" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "The exact latitude and longitude of the spot that changed your life - laser-engraved on jewelry made to order, one piece at a time." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Find your coordinates" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Where the main button goes. If left empty, it falls back to the collection below, then to all products — so it's never a dead link." },
+    { "type": "collection", "id": "fallback_collection", "label": "Fallback collection", "info": "Used only when Button link is empty. Set this to your best-selling collection." },
+    { "type": "text", "id": "button_label_2", "label": "Secondary button label", "info": "Optional. Leave blank to hide.", "default": "How it works" },
+    { "type": "url", "id": "button_link_2", "label": "Secondary button link" },
+    { "type": "text", "id": "corner_coords", "label": "Corner coordinates (decorative)", "default": "27.7676 N / 82.6403 W - ST. PETERSBURG, FL" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

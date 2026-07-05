@@ -1,0 +1,85 @@
+<section class="section">
+  <div class="page-width page-narrow">
+    <h1>Your cart</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <p>Your cart is empty — your favorite place is still out there.</p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">Shop jewelry</a>
+    {%- else -%}
+
+      {%- liquid
+        assign threshold = settings.free_shipping_threshold | times: 100
+        assign remaining = threshold | minus: cart.total_price
+        assign pct = cart.total_price | times: 100 | divided_by: threshold
+        if pct > 100
+          assign pct = 100
+        endif
+      -%}
+      {%- if threshold > 0 -%}
+        <div class="cart-progress">
+          <p class="cart-progress__label">
+            {%- if remaining > 0 -%}
+              You're <strong>{{ remaining | money }}</strong> away from {{ settings.shipping_promise | downcase }}.
+            {%- else -%}
+              <strong>You've unlocked free shipping.</strong>
+            {%- endif -%}
+          </p>
+          <div class="cart-progress__track"><div class="cart-progress__fill" style="width:{{ pct }}%"></div></div>
+        </div>
+      {%- endif -%}
+
+      <form action="{{ routes.cart_url }}" method="post">
+        {%- for item in cart.items -%}
+          <div class="cart-line">
+            <a href="{{ item.url }}">
+              <img src="{{ item.image | image_url: width: 176 }}" alt="{{ item.image.alt | escape }}" width="88" height="88">
+            </a>
+            <div>
+              <a class="cart-line__title" href="{{ item.url }}">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}
+                <p class="cart-line__props">{{ item.variant.title }}</p>
+              {%- endunless -%}
+              {%- for property in item.properties -%}
+                {%- assign prop_prefix = property.first | slice: 0, 1 -%}
+                {%- if property.last != blank and prop_prefix != '_' -%}
+                  <p class="cart-line__props">{{ property.first }}: {{ property.last }}</p>
+                {%- endif -%}
+              {%- endfor -%}
+              <div class="qty" data-qty>
+                <button type="button" data-dir="down" aria-label="Decrease quantity">−</button>
+                <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="Quantity">
+                <button type="button" data-dir="up" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <p class="cart-line__price">{{ item.final_line_price | money }}</p>
+              <a class="cart-line__remove" href="{{ item.url_to_remove }}">Remove</a>
+            </div>
+          </div>
+        {%- endfor -%}
+
+        <div class="cart-footer">
+          {%- if section.settings.show_gift_note -%}
+            <div class="gift-note">
+              <label class="option-group" for="CartNote">Gift note (free — we'll handwrite it on the card)</label>
+              <textarea id="CartNote" name="note" placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+
+          <p class="cart-footer__subtotal">Subtotal: {{ cart.total_price | money }}</p>
+          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Engraved orders ship in {{ settings.production_days }} business days.</p>
+          <button type="submit" name="checkout" class="btn">Check out</button>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart page",
+  "settings": [
+    { "type": "checkbox", "id": "show_gift_note", "label": "Show gift note field", "default": true }
+  ]
+}
+{% endschema %}

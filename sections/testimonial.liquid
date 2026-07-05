@@ -1,0 +1,25 @@
+<section class="section testimonial">
+  <div class="page-width">
+    <p class="coord-eyebrow" style="justify-content:center">{{ section.settings.eyebrow }}</p>
+    <p class="stars" aria-label="5 out of 5 stars">★★★★★</p>
+    <blockquote>{{ section.settings.quote }}</blockquote>
+    <cite>{{ section.settings.attribution }}</cite>
+    {%- if section.settings.button_label != blank -%}
+      <p style="margin-top:28px"><a class="btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonial",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Verified customer review" },
+    { "type": "textarea", "id": "quote", "label": "Quote", "default": "My husband and I love them. They have the coordinates of our first trip together." },
+    { "type": "text", "id": "attribution", "label": "Attribution", "default": "Lucy — United States" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop matching sets" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Testimonial" }]
+}
+{% endschema %}

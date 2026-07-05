@@ -1,0 +1,51 @@
+<article class="section">
+  <div class="page-width page-narrow">
+    <p class="coord-eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</p>
+    <h1>{{ article.title }}</h1>
+    {%- if article.image -%}
+      <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.image.alt | escape }}" style="margin-block:24px">
+    {%- endif -%}
+    <div class="rte">{{ article.content }}</div>
+  </div>
+</article>
+{%- comment -%} ── BlogPosting JSON-LD Schema ── {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ article.title | json }},
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  {%- if article.excerpt != blank -%}
+  "description": {{ article.excerpt | strip_html | truncate: 300 | json }},
+  {%- endif -%}
+  {%- if article.image -%}
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ article.image | image_url: width: 1200 }}"
+  },
+  {%- endif -%}
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ shop.url }}/cdn/shop/files/OurCoordinates_Logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}"
+  },
+  "wordCount": {{ article.content | strip_html | split: ' ' | size }}
+}
+</script>
+
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

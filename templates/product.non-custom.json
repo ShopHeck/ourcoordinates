@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>Material, sizing, and care instructions go here.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "details"
+      ],
+      "settings": {
+        "preview_type": "horizontal-bar",
+        "show_engraving": false,
+        "engraving_required": false,
+        "engraving_placeholder": "",
+        "engraving_max": 30,
+        "atc_label": "Add to cart"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "You may also like",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cross"
+  ]
+}

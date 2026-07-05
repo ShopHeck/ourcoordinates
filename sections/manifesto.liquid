@@ -1,0 +1,20 @@
+<section class="section manifesto">
+  <div class="page-width">
+    <p class="coord-eyebrow">{{ section.settings.eyebrow }}</p>
+    <p>{{ section.settings.text }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Manifesto",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why coordinates" },
+    {
+      "type": "textarea", "id": "text", "label": "Text",
+      "default": "A photo fades. An address changes. But two numbers can hold a whole life - and nobody else will ever know what they mean."
+    }
+  ],
+  "presets": [{ "name": "Manifesto" }]
+}
+{% endschema %}

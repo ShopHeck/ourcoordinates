@@ -1,0 +1,706 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign ships_by = 'now' | date: '%s' | plus: 0
+  assign prod_seconds = settings.production_days | times: 86400
+  assign transit_seconds = settings.transit_days | times: 86400
+  assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
+  assign delivery_high = delivery_low | plus: 259200
+  assign preview_type = section.settings.preview_type | default: 'horizontal-bar'
+-%}
+
+<section class="section" data-product data-preview-type="{{ preview_type }}">
+  <div class="page-width pdp">
+
+    {%- comment -%} ---------- GALLERY ---------- {%- endcomment -%}
+    <div class="pdp__gallery">
+      <div class="pdp__main-image">
+        <img data-main-image
+             src="{{ product.featured_image | image_url: width: 1200 }}"
+             alt="{{ product.featured_image.alt | escape }}" width="1200" height="1200">
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="pdp__thumbs">
+          {%- for image in product.images limit: 12 -%}
+            <button type="button" data-thumb data-full="{{ image | image_url: width: 1200 }}"
+                    {% if forloop.first %}aria-current="true"{% endif %}
+                    aria-label="View image {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 160 }}" alt="{{ image.alt | escape }}" loading="lazy" width="160" height="160">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---------- BUY BOX ---------- {%- endcomment -%}
+    <div data-buy-box>
+      <p class="pdp__vendor">{{ product.vendor }}</p>
+      <h1 class="pdp__title">{{ product.title }}</h1>
+
+      {%- comment -%} Review summary anchor — wire to your review app's snippet {%- endcomment -%}
+      <p class="pdp__reviews">
+        <span style="color:var(--c-gold)">★★★★★</span>
+        <a href="#reviews">Read customer reviews</a>
+      </p>
+
+      <p class="pdp__price" data-price>
+        {{ current_variant.price | money }}
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <s>{{ current_variant.compare_at_price | money }}</s>
+        {%- endif -%}
+      </p>
+
+      <p class="pdp__shipline">
+        <strong>{{ settings.shipping_promise }}.</strong>
+        {%- if section.settings.show_engraving -%}
+          Engraved to order — ships in {{ settings.production_days }} business days,
+        {%- else -%}
+          Made to order — ships in {{ settings.production_days }} business days,
+        {%- endif -%}
+        estimated delivery {{ delivery_low | date: '%b %-d' }}–{{ delivery_high | date: '%b %-d' }}.
+      </p>
+
+      {%- form 'product', product, data-product-form: '' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <fieldset class="swatches option-group" data-option-index="{{ forloop.index0 }}">
+              <legend>
+                {{ option.name }}
+                {%- if option.name == 'Engrave' or option.name contains 'side' %} <span>— engraving is free on every side</span>{% endif -%}
+              </legend>
+              {%- for value in option.values -%}
+                <input type="radio" id="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
+                       name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}"
+                       {% if option.selected_value == value %}checked{% endif %}>
+                <label for="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}">{{ value }}</label>
+              {%- endfor -%}
+            </fieldset>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {%- comment -%} ========== ENGRAVING PREVIEWS ========== {%- endcomment -%}
+        {%- if section.settings.show_engraving -%}
+
+          {%- comment -%} ---- FOUR-SIDED BAR ---- {%- endcomment -%}
+          {%- if preview_type == 'four-sided' -%}
+            <div class="engrave-field" data-four-sided-engraving>
+              <p class="option-group" style="margin-bottom:8px">Your engraving</p>
+
+              {%- comment -%} SVG preview — 4 bar faces side by side {%- endcomment -%}
+              <div class="ep ep--four-sided" aria-hidden="true">
+                <div class="ep__faces">
+                  {%- for i in (1..4) -%}
+                    <div class="ep__face" data-face="{{ i }}" data-face-active="{% if i <= 2 %}true{% else %}false{% endif %}">
+                      <svg viewBox="0 0 32 140" class="ep__face-svg" aria-hidden="true">
+                        <rect x="2" y="0" width="28" height="140" rx="2" class="ep__metal"/>
+                        <text x="16" y="70" data-four-preview="{{ i }}"
+                              class="ep__engrave-text ep__engrave-text--vertical"
+                              data-placeholder="Side {{ i }}">Side {{ i }}</text>
+                      </svg>
+                      <span class="ep__face-label">{% case i %}{% when 1 %}Front{% when 2 %}Back{% when 3 %}Left{% when 4 %}Right{% endcase %}</span>
+                    </div>
+                  {%- endfor -%}
+                </div>
+                <p class="ep__hint">Live preview — exactly as we engrave it</p>
+              </div>
+
+              {%- comment -%} Side count selector {%- endcomment -%}
+              <fieldset class="ep__side-picker option-group" data-side-count-picker>
+                <legend>How many sides?</legend>
+                {%- for n in (1..4) -%}
+                  <input type="radio" id="sides-{{ n }}" name="side-count" value="{{ n }}"
+                         {% if n == 2 %}checked{% endif %}>
+                  <label for="sides-{{ n }}">{{ n }} side{{ n | pluralize: '', 's' }}</label>
+                {%- endfor -%}
+              </fieldset>
+
+              {%- comment -%} Per-side inputs {%- endcomment -%}
+              {%- for i in (1..4) -%}
+                <div class="ep__side-input" data-side-field="{{ i }}"
+                     {% if i > 2 %}style="display:none"{% endif %}>
+                  <label for="engrave-side-{{ i }}">
+                    {% case i %}{% when 1 %}Front{% when 2 %}Back{% when 3 %}Left side{% when 4 %}Right side{% endcase %}
+                  </label>
+                  <input type="text" id="engrave-side-{{ i }}"
+                         data-engrave-input-side="{{ i }}"
+                         name="properties[Engraving — {% case i %}{% when 1 %}Front{% when 2 %}Back{% when 3 %}Left{% when 4 %}Right{% endcase %}]"
+                         maxlength="{{ section.settings.engraving_max }}"
+                         placeholder="{% if i == 1 %}{{ section.settings.engraving_placeholder | escape }}{% else %}Optional{% endif %}"
+                         {% if i == 1 and section.settings.engraving_required %}required{% endif %}
+                         autocomplete="off">
+                </div>
+              {%- endfor -%}
+
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+
+          {%- comment -%} ---- DOG TAG (multi-line) ---- {%- endcomment -%}
+          {%- elsif preview_type == 'dog-tag' -%}
+            <div class="engrave-field" data-dogtag-engraving>
+              <p class="option-group" style="margin-bottom:8px">Your engraving</p>
+
+              <div class="ep ep--dog-tag" aria-hidden="true">
+                <svg viewBox="0 0 180 220" class="ep__dog-tag-svg">
+                  {%- comment -%} Dog tag shape: rounded rect with notch {%- endcomment -%}
+                  <defs>
+                    <clipPath id="dt-clip">
+                      <path d="M20,0 h140 a20,20 0 0 1 20,20 v180 a20,20 0 0 1 -20,20 h-140 a20,20 0 0 1 -20,-20 v-180 a20,20 0 0 1 20,-20 z"/>
+                    </clipPath>
+                  </defs>
+                  <rect x="0" y="0" width="180" height="220" rx="20" class="ep__metal"/>
+                  {%- comment -%} Chain hole {%- endcomment -%}
+                  <circle cx="90" cy="18" r="7" fill="none" stroke="#999" stroke-width="1.5"/>
+                  {%- comment -%} Engraving lines {%- endcomment -%}
+                  <text x="90" y="90" data-dt-line="1" class="ep__engrave-text"
+                        data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
+                  <text x="90" y="118" data-dt-line="2" class="ep__engrave-text ep__engrave-text--dim"
+                        data-placeholder="">—</text>
+                  <text x="90" y="146" data-dt-line="3" class="ep__engrave-text ep__engrave-text--dim"
+                        data-placeholder="">—</text>
+                </svg>
+                <p class="ep__hint">Live preview — exactly as we engrave it</p>
+              </div>
+
+              <label for="engrave-dt-1">Line 1 — Latitude</label>
+              <input type="text" id="engrave-dt-1" data-engrave-input data-dt-input="1"
+                     name="properties[Engraving — Line 1]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="27.7676° N"
+                     {% if section.settings.engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <label for="engrave-dt-2" style="margin-top:8px">Line 2 — Longitude</label>
+              <input type="text" id="engrave-dt-2" data-dt-input="2"
+                     name="properties[Engraving — Line 2]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="82.6403° W"
+                     autocomplete="off">
+              <label for="engrave-dt-3" style="margin-top:8px">Line 3 — Location name <span style="color:var(--c-ink-soft)">(optional)</span></label>
+              <input type="text" id="engrave-dt-3" data-dt-input="3"
+                     name="properties[Engraving — Line 3]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="Saint Petersburg, FL"
+                     autocomplete="off">
+
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+
+          {%- comment -%} ---- VERTICAL BAR ---- {%- endcomment -%}
+          {%- elsif preview_type == 'vertical-bar' -%}
+            <div class="engrave-field">
+              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <div class="ep ep--vertical-bar" aria-hidden="true">
+                <svg viewBox="0 0 60 200" class="ep__vbar-svg">
+                  {%- comment -%} Chain {%- endcomment -%}
+                  <line x1="30" y1="0" x2="30" y2="20" stroke="#bbb" stroke-width="1"/>
+                  <circle cx="30" cy="22" r="4" fill="none" stroke="#bbb" stroke-width="1"/>
+                  {%- comment -%} Vertical bar pendant {%- endcomment -%}
+                  <rect x="16" y="30" width="28" height="160" rx="2" class="ep__metal"/>
+                  {%- comment -%} Engraved text runs top→bottom {%- endcomment -%}
+                  <text x="30" y="110" data-engrave-preview
+                        class="ep__engrave-text ep__engrave-text--vertical"
+                        data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
+                </svg>
+                <p class="ep__hint">Live preview — exactly as we engrave it</p>
+              </div>
+              <input type="text" id="engrave-input" data-engrave-input
+                     name="properties[Engraving]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                     {% if section.settings.engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+
+          {%- comment -%} ---- RING ---- {%- endcomment -%}
+          {%- elsif preview_type == 'ring' -%}
+            <div class="engrave-field">
+              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <div class="ep ep--ring" aria-hidden="true">
+                <svg viewBox="0 0 220 140" class="ep__ring-svg">
+                  {%- comment -%} Ring band — outer ellipse {%- endcomment -%}
+                  <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="#23232a" stroke-width="18" class="ep__ring-band"/>
+                  {%- comment -%} Inner highlight {%- endcomment -%}
+                  <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="16"/>
+                  {%- comment -%} Text along the outer curve — single line {%- endcomment -%}
+                  <defs>
+                    <path id="ring-text-path" d="M 15,70 A 95,55 0 0 1 205,70" fill="none"/>
+                  </defs>
+                  <text class="ep__engrave-text ep__engrave-text--curve">
+                    <textPath href="#ring-text-path" startOffset="50%" text-anchor="middle"
+                              data-engrave-preview
+                              data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</textPath>
+                  </text>
+                </svg>
+                <p class="ep__hint">Live preview — single line, exactly as we engrave it</p>
+              </div>
+              <input type="text" id="engrave-input" data-engrave-input
+                     name="properties[Engraving]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                     {% if section.settings.engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+
+          {%- comment -%} ---- BRACELET / CUFF ---- {%- endcomment -%}
+          {%- elsif preview_type == 'bracelet' -%}
+            <div class="engrave-field">
+              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <div class="ep ep--bracelet" aria-hidden="true">
+                <svg viewBox="0 0 340 130" class="ep__bracelet-svg">
+                  {%- comment -%} Front-facing cuff bracelet {%- endcomment -%}
+                  <defs>
+                    <linearGradient id="cuff-face" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#5a5a62"/>
+                      <stop offset="30%" stop-color="#4c4c54"/>
+                      <stop offset="100%" stop-color="#3e3e46"/>
+                    </linearGradient>
+                    <linearGradient id="cuff-arm" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#4a4a52"/>
+                      <stop offset="100%" stop-color="#42424a"/>
+                    </linearGradient>
+                    <path id="cuff-text-path" d="M 42,68 Q 170,86 298,68" fill="none"/>
+                  </defs>
+                  {%- comment -%} Left arm {%- endcomment -%}
+                  <path d="M 8,6 C 8,36 22,48 38,54 L 38,38 C 26,34 20,26 20,6 Z" fill="url(#cuff-arm)"/>
+                  <path d="M 8,6 C 8,36 22,48 38,54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                  {%- comment -%} Right arm {%- endcomment -%}
+                  <path d="M 332,6 C 332,36 318,48 302,54 L 302,38 C 314,34 320,26 320,6 Z" fill="url(#cuff-arm)"/>
+                  <path d="M 332,6 C 332,36 318,48 302,54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                  {%- comment -%} Front face band {%- endcomment -%}
+                  <path d="M 28,46 Q 170,76 312,46 L 312,70 Q 170,100 28,70 Z" fill="url(#cuff-face)"/>
+                  <path d="M 28,46 Q 170,76 312,46" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+                  <path d="M 28,70 Q 170,100 312,70" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="0.4"/>
+                  {%- comment -%} Engraved text — single line on front face {%- endcomment -%}
+                  <text class="ep__engrave-text ep__engrave-text--curve" text-anchor="middle"
+                        fill="rgba(255,255,255,0.82)" font-family="'Courier New', monospace" font-size="9.5" letter-spacing="1.6">
+                    <textPath href="#cuff-text-path" startOffset="50%"
+                              data-engrave-preview
+                              data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</textPath>
+                  </text>
+                </svg>
+                <p class="ep__hint">Live preview — single line, exactly as we engrave it</p>
+              </div>
+              <input type="text" id="engrave-input" data-engrave-input
+                     name="properties[Engraving]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                     {% if section.settings.engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+
+
+          {%- comment -%} ---- COORDINATES SET (multi-piece preview) ---- {%- endcomment -%}
+          {%- elsif preview_type == 'coordinates-set' -%}
+            {%- liquid
+              assign _sp = ''
+              for tag in product.tags
+                assign tag_down = tag | downcase | strip
+                if tag_down == 'necklace'
+                  assign _sp = _sp | append: 'necklace,'
+                elsif tag_down == 'bracelet'
+                  assign _sp = _sp | append: 'bracelet,'
+                elsif tag_down == 'ring'
+                  assign _sp = _sp | append: 'ring,'
+                elsif tag_down == 'keychain'
+                  assign _sp = _sp | append: 'keychain,'
+                endif
+              endfor
+              assign set_pieces_auto = _sp | split: ','
+              assign set_override = section.settings.set_pieces | strip
+              if set_override != blank and set_override != 'auto'
+                assign set_pieces = set_override | split: ','
+              else
+                assign set_pieces = set_pieces_auto
+              endif
+            -%}
+            <div class="engrave-field" data-set-engraving>
+              <p class="option-group" style="margin-bottom:4px">Your coordinates</p>
+              <p class="ep__set-sub">Enter once — engraved on every piece in this set</p>
+
+              <div class="ep ep--set" aria-hidden="true">
+                <div class="ep__set-pieces">
+                  {%- for piece_raw in set_pieces -%}
+                    {%- assign piece = piece_raw | strip -%}
+                    {%- if piece == blank -%}{%- continue -%}{%- endif -%}
+                    <div class="ep__set-piece" data-set-piece="{{ piece }}">
+                      {%- case piece -%}
+
+                        {%- when 'bracelet' -%}
+                          <svg viewBox="0 0 340 130" class="ep__set-svg ep__set-svg--bracelet" aria-hidden="true">
+                            <defs>
+                              <linearGradient id="set-cuff-face" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#5a5a62"/><stop offset="30%" stop-color="#4c4c54"/><stop offset="100%" stop-color="#3e3e46"/>
+                              </linearGradient>
+                              <linearGradient id="set-cuff-arm" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#4a4a52"/><stop offset="100%" stop-color="#42424a"/>
+                              </linearGradient>
+                              <path id="set-cuff-text" d="M 42,68 Q 170,86 298,68" fill="none"/>
+                            </defs>
+                            <path d="M 8,6 C 8,36 22,48 38,54 L 38,38 C 26,34 20,26 20,6 Z" fill="url(#set-cuff-arm)"/>
+                            <path d="M 8,6 C 8,36 22,48 38,54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                            <path d="M 332,6 C 332,36 318,48 302,54 L 302,38 C 314,34 320,26 320,6 Z" fill="url(#set-cuff-arm)"/>
+                            <path d="M 332,6 C 332,36 318,48 302,54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                            <path d="M 28,46 Q 170,76 312,46 L 312,70 Q 170,100 28,70 Z" fill="url(#set-cuff-face)"/>
+                            <path d="M 28,46 Q 170,76 312,46" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+                            <path d="M 28,70 Q 170,100 312,70" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="0.4"/>
+                            <text class="ep__engrave-text ep__engrave-text--curve" text-anchor="middle"
+                                  fill="rgba(255,255,255,0.82)" font-family="'Courier New',monospace" font-size="9.5" letter-spacing="1.6">
+                              <textPath href="#set-cuff-text" startOffset="50%"
+                                        data-set-preview="bracelet"
+                                        data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</textPath>
+                            </text>
+                          </svg>
+
+                        {%- when 'necklace' -%}
+                          <svg viewBox="0 0 60 200" class="ep__set-svg ep__set-svg--necklace" aria-hidden="true">
+                            <line x1="30" y1="0" x2="30" y2="20" stroke="#bbb" stroke-width="1"/>
+                            <circle cx="30" cy="22" r="4" fill="none" stroke="#bbb" stroke-width="1"/>
+                            <rect x="16" y="30" width="28" height="160" rx="2" class="ep__metal"/>
+                            <text x="30" y="110" dominant-baseline="central" data-set-preview="necklace"
+                                  class="ep__engrave-text ep__engrave-text--vertical"
+                                  data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
+                          </svg>
+
+                        {%- when 'ring' -%}
+                          <svg viewBox="0 0 220 140" class="ep__set-svg ep__set-svg--ring" aria-hidden="true">
+                            <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="#23232a" stroke-width="18" class="ep__ring-band"/>
+                            <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="16"/>
+                            <defs><path id="set-ring-text" d="M 15,70 A 95,55 0 0 1 205,70" fill="none"/></defs>
+                            <text class="ep__engrave-text ep__engrave-text--curve">
+                              <textPath href="#set-ring-text" startOffset="50%" text-anchor="middle"
+                                        data-set-preview="ring"
+                                        data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</textPath>
+                            </text>
+                          </svg>
+
+                        {%- when 'keychain' -%}
+                          <svg viewBox="0 0 120 200" class="ep__set-svg ep__set-svg--keychain" aria-hidden="true">
+                            <circle cx="60" cy="22" r="16" fill="none" stroke="#4a4a52" stroke-width="3.5"/>
+                            <line x1="60" y1="38" x2="60" y2="50" stroke="#4a4a52" stroke-width="2"/>
+                            <rect x="24" y="54" width="72" height="116" rx="8" class="ep__metal"/>
+                            <circle cx="60" cy="68" r="5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                            <text x="60" y="116" data-set-preview="keychain"
+                                  class="ep__engrave-text ep__engrave-text--vertical"
+                                  data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
+                          </svg>
+
+                      {%- endcase -%}
+                      <span class="ep__piece-label">{{ piece | capitalize }}</span>
+                    </div>
+                  {%- endfor -%}
+                </div>
+                <p class="ep__hint">Live preview — all pieces engraved with your coordinates</p>
+              </div>
+
+              <div data-set-unified>
+                <input type="text" id="engrave-input" data-engrave-input data-set-sync
+                       name="properties[Engraving]"
+                       maxlength="{{ section.settings.engraving_max }}"
+                       placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                       {% if section.settings.engraving_required %}required{% endif %}
+                       autocomplete="off">
+                <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+                <input type="hidden" data-prop-place name="properties[_Place Searched]">
+                <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+                <div class="field-row">
+                  <button type="button" class="find-coords" data-locator-open>Find my coordinates →</button>
+                  <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+                </div>
+              </div>
+
+              {%- for piece_raw in set_pieces -%}
+                {%- assign piece = piece_raw | strip -%}
+                {%- if piece == blank -%}{%- continue -%}{%- endif -%}
+                <input type="hidden" data-set-piece-prop="{{ piece }}"
+                       name="properties[Engraving — {{ piece | capitalize }}]">
+              {%- endfor -%}
+
+              <details class="ep__set-customize" data-set-customize>
+                <summary><span class="ep__set-toggle-icon">✦</span> Customize each piece separately</summary>
+                <div class="ep__set-custom-body">
+                  <p class="ep__set-custom-note">Enter different coordinates for each piece. Use "Find my coordinates" for each.</p>
+                  {%- for piece_raw in set_pieces -%}
+                    {%- assign piece = piece_raw | strip -%}
+                    {%- if piece == blank -%}{%- continue -%}{%- endif -%}
+                    <div class="ep__set-custom-field">
+                      <label for="set-engrave-{{ piece }}">{{ piece | capitalize }}</label>
+                      <input type="text" id="set-engrave-{{ piece }}"
+                             data-engrave-input data-set-piece-input="{{ piece }}"
+                             maxlength="{{ section.settings.engraving_max }}"
+                             placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                             autocomplete="off">
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </details>
+            </div>
+
+          {%- comment -%} ---- HORIZONTAL BAR (default) ---- {%- endcomment -%}
+          {%- else -%}
+            <div class="engrave-field">
+              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <div class="ep ep--horizontal-bar" aria-hidden="true">
+                <svg viewBox="0 0 280 70" class="ep__hbar-svg">
+                  {%- comment -%} Horizontal bar pendant {%- endcomment -%}
+                  <rect x="0" y="10" width="280" height="50" rx="3" class="ep__metal"/>
+                  {%- comment -%} Engraved text — single line left to right {%- endcomment -%}
+                  <text x="140" y="42" data-engrave-preview
+                        class="ep__engrave-text"
+                        data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
+                </svg>
+                <p class="ep__hint">Live preview — exactly as we engrave it</p>
+              </div>
+              <input type="text" id="engrave-input" data-engrave-input
+                     name="properties[Engraving]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                     {% if section.settings.engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+          {%- endif -%}
+
+        {%- endif -%}
+
+        <button type="submit" class="btn btn--full" data-atc
+                data-label-add="{{ section.settings.atc_label | escape }}"
+                data-label-sold-out="Back soon — notify me">
+          <span data-atc-label>{{ section.settings.atc_label }}</span>
+        </button>
+
+        <ul class="guarantees">
+          {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
+          {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
+          {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
+        </ul>
+      {%- endform -%}
+
+      {%- comment -%} ---------- ACCORDIONS ---------- {%- endcomment -%}
+      <div class="pdp__accordions">
+        <details open>
+          <summary>Description</summary>
+          <div class="accordion-body rte">{{ product.description }}</div>
+        </details>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'accordion' -%}
+            <details {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.title }}</summary>
+              <div class="accordion-body rte">{{ block.settings.content }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+        <details>
+          <summary>Shipping &amp; returns</summary>
+          <div class="accordion-body">
+            {%- if section.settings.show_engraving -%}
+              <p>{{ settings.shipping_promise }}. Each piece is engraved to order and ships within {{ settings.production_days }} business days. 30-day happiness guarantee — if it's not right, we'll remake it or refund you.</p>
+            {%- else -%}
+              <p>{{ settings.shipping_promise }}. Ships within {{ settings.production_days }} business days. 30-day happiness guarantee — if it's not right, we'll replace it or refund you.</p>
+            {%- endif -%}
+          </div>
+        </details>
+      </div>
+
+      <div id="reviews">
+        {%- comment -%} Paste your review app block here (Judge.me, Loox, etc.) {%- endcomment -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-product-json>{{ product | json }}</script>
+</section>
+
+{%- comment -%} ---------- ON-PAGE COORDINATES LOCATOR ---------- {%- endcomment -%}
+<dialog class="locator" data-locator>
+  <div class="locator__head">
+    <div>
+      <p class="coord-eyebrow" style="margin-bottom:4px">Pin your place</p>
+      <h3 style="margin:0">Find your coordinates</h3>
+    </div>
+    <button type="button" class="locator__close" data-locator-close aria-label="Close">✕</button>
+  </div>
+
+  <div class="locator__search">
+    <input type="search" data-locator-search placeholder="Search a place, address, or city…" aria-label="Search for a place">
+    <button type="button" class="btn" data-locator-go>Search</button>
+  </div>
+  <p class="locator__hint">Search, then drag the map or tap to drop the pin on your exact spot.</p>
+
+  <div class="locator__map" data-locator-map>
+    <p class="locator__loading">Loading map…</p>
+  </div>
+
+  <div class="locator__result">
+    <span class="locator__coords" data-locator-coords>—</span>
+    <button type="button" class="btn" data-locator-use disabled>Use these coordinates</button>
+  </div>
+</dialog>
+
+{%- comment -%} ---------- STICKY MOBILE ADD TO CART ---------- {%- endcomment -%}
+<div class="sticky-atc" data-sticky-atc>
+  <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
+  <button type="button" class="btn" data-sticky-submit data-atc
+          data-label-add="{{ section.settings.atc_label | escape }}"
+          data-label-sold-out="Back soon">
+    <span data-atc-label>{{ section.settings.atc_label }}</span>
+  </button>
+</div>
+
+{%- comment -%} ── Product JSON-LD Schema (rich snippets) ── {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 5000 | json }},
+  "url": "{{ shop.url }}{{ product.url }}",
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | json }}
+  },
+  {%- if product.featured_image -%}
+  "image": [
+    "{{ product.featured_image | image_url: width: 1200 }}"
+    {%- for image in product.images offset: 1 limit: 4 -%}
+    ,"{{ image | image_url: width: 1200 }}"
+    {%- endfor -%}
+  ],
+  {%- endif -%}
+  {%- if product.selected_or_first_available_variant.sku != blank -%}
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  {%- endif -%}
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "{{ cart.currency.iso_code }}",
+    "lowPrice": {{ product.price_min | money_without_currency | remove: ',' | json }},
+    "highPrice": {{ product.price_max | money_without_currency | remove: ',' | json }},
+    "offerCount": {{ product.variants.size }},
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}",
+    "seller": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }}
+    },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "US"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": {{ settings.production_days | default: 3 }},
+          "maxValue": {{ settings.production_days | default: 3 | plus: 2 }},
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": {{ settings.transit_days | default: 3 }},
+          "maxValue": {{ settings.transit_days | default: 5 | plus: 3 }},
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "US",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 30,
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "https://schema.org/FreeReturn"
+    }
+  }
+}
+</script>
+
+{% schema %}
+{
+  "name": "Product page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "preview_type",
+      "label": "Engraving preview shape",
+      "options": [
+        { "value": "horizontal-bar", "label": "Horizontal bar (flat bar pendant)" },
+        { "value": "vertical-bar", "label": "Vertical bar (tall pendant, text top→bottom)" },
+        { "value": "ring", "label": "Ring band (text along curve)" },
+        { "value": "bracelet", "label": "Bracelet / cuff (text along curve)" },
+        { "value": "four-sided", "label": "4-sided bar (multi-side inputs)" },
+        { "value": "dog-tag", "label": "Dog tag (2–3 lines)" },
+        { "value": "coordinates-set", "label": "Coordinates set (multi-piece preview)" }
+      ],
+      "default": "horizontal-bar"
+    },
+    { "type": "checkbox", "id": "show_engraving", "label": "Show engraving field + live preview", "default": true },
+    { "type": "checkbox", "id": "engraving_required", "label": "Require engraving before add to cart", "default": true },
+    { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "27.7676° N, 82.6403° W" },
+    { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 10, "max": 60, "step": 5, "default": 30 },
+    { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart — free engraving" },
+    { "type": "text", "id": "set_pieces", "label": "Set pieces (auto or comma-separated: bracelet,necklace,ring,keychain)", "default": "auto" }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Product details" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Material, sizing, and care details.</p>" }
+      ]
+    }
+  ]
+}
+{% endschema %}

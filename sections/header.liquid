@@ -1,0 +1,38 @@
+<header class="site-header">
+  <div class="page-width site-header__inner">
+    <button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="site-nav" data-site-nav aria-label="Main">
+      {%- for link in section.settings.menu.links -%}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <a class="site-header__logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: width: 320 }}" alt="{{ shop.name }}" width="160" height="34">
+      {%- else -%}
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+
+    <div class="site-header__actions">
+      <a href="{{ routes.search_url }}" aria-label="Search">Search</a>
+      <a href="{{ routes.cart_url }}" aria-label="Cart">
+        Cart <span class="cart-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu", "info": "Keep it to 5–6 links. Fewer choices, more buying." }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,25 @@
+{%- comment -%} Renders a product card. Accepts: card_product {%- endcomment -%}
+<a class="product-card" href="{{ card_product.url }}">
+  <div class="product-card__media">
+    {%- if card_product.featured_image != blank -%}
+      <img src="{{ card_product.featured_image | image_url: width: 600 }}"
+           srcset="{{ card_product.featured_image | image_url: width: 360 }} 360w, {{ card_product.featured_image | image_url: width: 600 }} 600w"
+           sizes="(max-width: 600px) 50vw, 280px"
+           alt="{{ card_product.featured_image.alt | escape }}"
+           loading="lazy" decoding="async" width="600" height="600">
+    {%- endif -%}
+    <span class="product-card__corners" aria-hidden="true"></span>
+    {%- if card_product.available == false -%}
+      <span class="product-card__badge">Back soon</span>
+    {%- elsif card_product.compare_at_price > card_product.price -%}
+      <span class="product-card__badge product-card__badge--sale">Save {{ card_product.compare_at_price | minus: card_product.price | times: 100 | divided_by: card_product.compare_at_price }}%</span>
+    {%- endif -%}
+  </div>
+  <p class="product-card__title">{{ card_product.title }}</p>
+  <p class="product-card__price">
+    {{ card_product.price | money }}
+    {%- if card_product.compare_at_price > card_product.price -%}
+      <s>{{ card_product.compare_at_price | money }}</s>
+    {%- endif -%}
+  </p>
+</a>
