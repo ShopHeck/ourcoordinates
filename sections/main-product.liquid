@@ -16,12 +16,16 @@
       <div class="pdp__main-image">
         <img data-main-image
              src="{{ product.featured_image | image_url: width: 1200 }}"
-             alt="{{ product.featured_image.alt | escape }}" width="1200" height="1200">
+             srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
+             sizes="(max-width: 880px) 100vw, min(52vw, 640px)"
+             alt="{{ product.featured_image.alt | escape }}" width="1200" height="1200"
+             fetchpriority="high" decoding="async">
       </div>
       {%- if product.images.size > 1 -%}
         <div class="pdp__thumbs">
           {%- for image in product.images limit: 12 -%}
             <button type="button" data-thumb data-full="{{ image | image_url: width: 1200 }}"
+                    data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
                     {% if forloop.first %}aria-current="true"{% endif %}
                     aria-label="View image {{ forloop.index }}">
               <img src="{{ image | image_url: width: 160 }}" alt="{{ image.alt | escape }}" loading="lazy" width="160" height="160">
@@ -36,11 +40,20 @@
       <p class="pdp__vendor">{{ product.vendor }}</p>
       <h1 class="pdp__title">{{ product.title }}</h1>
 
-      {%- comment -%} Review summary anchor — wire to your review app's snippet {%- endcomment -%}
-      <p class="pdp__reviews">
-        <span style="color:var(--c-gold)">★★★★★</span>
-        <a href="#reviews">Read customer reviews</a>
-      </p>
+      {%- comment -%}
+        Review summary. 'app' renders the Judge.me preview badge (stars +
+        count pulled from real reviews — the app embed fills the div).
+        'link' is the no-app fallback: a plain link to the reviews page.
+      {%- endcomment -%}
+      {%- if section.settings.review_style == 'app' -%}
+        <div class="pdp__reviews">
+          <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}"></div>
+        </div>
+      {%- elsif section.settings.review_style == 'link' -%}
+        <p class="pdp__reviews">
+          <a href="/pages/reviews">Read verified customer reviews</a>
+        </p>
+      {%- endif -%}
 
       <p class="pdp__price" data-price>
         {{ current_variant.price | money }}
@@ -58,6 +71,26 @@
         {%- endif -%}
         estimated delivery {{ delivery_low | date: '%b %-d' }}–{{ delivery_high | date: '%b %-d' }}.
       </p>
+
+      {%- comment -%}
+        Order-by reminder for the next gifting occasion. Order-by date =
+        occasion minus production, transit, and the same 3-day buffer used
+        in the delivery estimate. Hides itself once too late or past.
+        An unparseable date makes occasion_ts 0, so it fails closed.
+      {%- endcomment -%}
+      {%- if settings.occasion_label != blank and settings.occasion_date != blank -%}
+        {%- liquid
+          assign occasion_ts = settings.occasion_date | date: '%s' | plus: 0
+          assign lead_seconds = prod_seconds | plus: transit_seconds | plus: 259200
+          assign order_by_ts = occasion_ts | minus: lead_seconds
+        -%}
+        {%- if occasion_ts > ships_by and order_by_ts >= ships_by -%}
+          <p class="pdp__occasion">
+            <span class="pdp__occasion-dot" aria-hidden="true">◆</span>
+            Ordering for {{ settings.occasion_label }}? Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to unwrap it in time.
+          </p>
+        {%- endif -%}
+      {%- endif -%}
 
       {%- form 'product', product, data-product-form: '' -%}
         <input type="hidden" name="id" value="{{ current_variant.id }}">
@@ -513,6 +546,24 @@
 
         {%- endif -%}
 
+        {%- comment -%}
+          Gift packaging add-on. Progressive enhancement: rendered hidden,
+          revealed by the cart-drawer JS that also performs the extra add —
+          so it never appears without the code that makes it work.
+        {%- endcomment -%}
+        {%- liquid
+          assign gift_wrap = settings.gift_wrap_product
+        -%}
+        {%- if gift_wrap != blank and gift_wrap.available and product.id != gift_wrap.id -%}
+          <label class="gift-wrap-addon" data-gift-wrap-addon hidden>
+            <input type="checkbox" data-gift-wrap value="{{ gift_wrap.selected_or_first_available_variant.id }}">
+            <span class="gift-wrap-addon__text">
+              <strong>Make it gift-ready</strong> (+{{ gift_wrap.price | money }})
+              <em>{{ gift_wrap.title }} — wrapped and ready to hand over</em>
+            </span>
+          </label>
+        {%- endif -%}
+
         <button type="submit" class="btn btn--full" data-atc
                 data-label-add="{{ section.settings.atc_label | escape }}"
                 data-label-sold-out="Back soon — notify me">
@@ -553,13 +604,34 @@
       </div>
 
       <div id="reviews">
-        {%- comment -%} Paste your review app block here (Judge.me, Loox, etc.) {%- endcomment -%}
+        {%- if section.settings.review_style == 'app' -%}
+          {%- comment -%} Judge.me app embed fills this with the full review list {%- endcomment -%}
+          <div class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}"></div>
+        {%- endif -%}
       </div>
     </div>
   </div>
 
   <script type="application/json" data-product-json>{{ product | json }}</script>
 </section>
+
+{%- comment -%}
+  Recently viewed — localStorage only, populated client-side from
+  /products/{handle}.js. Stays hidden until there is something to show.
+{%- endcomment -%}
+{%- if section.settings.show_recently_viewed -%}
+<section class="section" data-recently-viewed data-current-handle="{{ product.handle }}" hidden>
+  <div class="page-width">
+    <div class="section-head">
+      <div>
+        <p class="coord-eyebrow">Retrace your steps</p>
+        <h2 style="margin:0">Recently viewed</h2>
+      </div>
+    </div>
+    <div class="product-grid" data-rv-grid></div>
+  </div>
+</section>
+{%- endif -%}
 
 {%- comment -%} ---------- ON-PAGE COORDINATES LOCATOR ---------- {%- endcomment -%}
 <dialog class="locator" data-locator>
@@ -685,11 +757,24 @@
       ],
       "default": "horizontal-bar"
     },
+    {
+      "type": "select",
+      "id": "review_style",
+      "label": "Review summary under title",
+      "options": [
+        { "value": "app", "label": "Judge.me badge (real star rating)" },
+        { "value": "link", "label": "Plain link to reviews page" },
+        { "value": "none", "label": "Hidden" }
+      ],
+      "default": "app",
+      "info": "'Judge.me badge' requires the Judge.me app embed to be enabled — it shows the product's real rating and review count."
+    },
     { "type": "checkbox", "id": "show_engraving", "label": "Show engraving field + live preview", "default": true },
     { "type": "checkbox", "id": "engraving_required", "label": "Require engraving before add to cart", "default": true },
     { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "27.7676° N, 82.6403° W" },
     { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 10, "max": 60, "step": 5, "default": 30 },
     { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart — free engraving" },
+    { "type": "checkbox", "id": "show_recently_viewed", "label": "Show 'Recently viewed' strip", "default": true },
     { "type": "text", "id": "set_pieces", "label": "Set pieces (auto or comma-separated: bracelet,necklace,ring,keychain)", "default": "auto" }
   ],
   "blocks": [

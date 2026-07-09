@@ -119,5 +119,10 @@
   </main>
 
   {% sections 'footer-group' %}
+
+  {% section 'cart-drawer' %}
+
+  {%- comment -%} Screen-reader announcements for cart updates {%- endcomment -%}
+  <div class="visually-hidden" aria-live="polite" role="status" data-cart-live></div>
 </body>
 </html>
