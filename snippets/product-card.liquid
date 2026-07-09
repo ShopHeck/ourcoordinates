@@ -22,4 +22,10 @@
       <s>{{ card_product.compare_at_price | money }}</s>
     {%- endif -%}
   </p>
+  {%- if settings.card_note != blank -%}
+    {%- assign card_tags = card_product.tags | join: ',' | downcase -%}
+    {%- unless card_tags contains 'no-personalization' -%}
+      <p class="product-card__note">{{ settings.card_note }}</p>
+    {%- endunless -%}
+  {%- endif -%}
 </a>

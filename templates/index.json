@@ -81,6 +81,17 @@
         "hide_sold_out": true
       }
     },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "t1": { "type": "badge", "settings": { "text": "Engraved to order in the USA" } },
+        "t2": { "type": "badge", "settings": { "text": "Photo proof before shipping" } },
+        "t3": { "type": "badge", "settings": { "text": "30-day happiness guarantee" } },
+        "t4": { "type": "badge", "settings": { "text": "Free engraving on every piece" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
+      "settings": {}
+    },
     "manifesto": {
       "type": "manifesto",
       "settings": {
@@ -97,7 +108,7 @@
             "coords": "THE QUESTION",
             "title": "The proposal",
             "text": "The exact spot you knelt down. Engraved where only you two will know what it means.",
-            "link": "shopify:\/\/collections\/coordinates-collection"
+            "link": "shopify:\/\/collections\/for-couples"
           }
         },
         "mo2": {
@@ -124,7 +135,7 @@
             "coords": "FIRST MEETING",
             "title": "Where you met",
             "text": "A coffee shop. A concert. Gate B12. The odds were impossible and it happened anyway.",
-            "link": "shopify:\/\/collections\/coordinates-collection"
+            "link": "shopify:\/\/collections\/shop-couples-necklaces"
           }
         },
         "mo5": {
@@ -155,6 +166,18 @@
         "mo6"
       ],
       "settings": {}
+    },
+    "story": {
+      "type": "story-cta",
+      "settings": {
+        "eyebrow": "Don't know the coordinates?",
+        "heading": "Start with the story. We'll find the spot.",
+        "text": "Tell us about the person and the moment — a first date, a hometown, the place you said yes. Our 60-second gift finder turns the story into the right piece, exact coordinates and all.",
+        "button_label": "Find the perfect piece",
+        "button_link": "\/pages\/gift-finder",
+        "button_label_2": "See how it works",
+        "button_link_2": "shopify:\/\/pages\/how-it-works"
+      }
     },
     "how": {
       "type": "image-with-text",
@@ -193,8 +216,10 @@
     "hero",
     "marquee",
     "featured",
+    "trust",
     "manifesto",
     "moments",
+    "story",
     "how",
     "quote",
     "featured2"

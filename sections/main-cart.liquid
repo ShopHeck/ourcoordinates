@@ -10,7 +10,10 @@
       {%- liquid
         assign threshold = settings.free_shipping_threshold | times: 100
         assign remaining = threshold | minus: cart.total_price
-        assign pct = cart.total_price | times: 100 | divided_by: threshold
+        assign pct = 0
+        if threshold > 0
+          assign pct = cart.total_price | times: 100 | divided_by: threshold
+        endif
         if pct > 100
           assign pct = 100
         endif
@@ -26,6 +29,35 @@
           </p>
           <div class="cart-progress__track"><div class="cart-progress__fill" style="width:{{ pct }}%"></div></div>
         </div>
+      {%- endif -%}
+
+      {%- comment -%}
+        Gift packaging upsell — plain /cart/add form, works without JS.
+        Hidden automatically once the packaging product is in the cart.
+      {%- endcomment -%}
+      {%- liquid
+        assign gift_wrap = settings.gift_wrap_product
+        assign gift_wrap_in_cart = false
+        if gift_wrap != blank
+          for item in cart.items
+            if item.product_id == gift_wrap.id
+              assign gift_wrap_in_cart = true
+            endif
+          endfor
+        endif
+      -%}
+      {%- if gift_wrap != blank and gift_wrap_in_cart == false and gift_wrap.available -%}
+        <form action="{{ routes.cart_add_url }}" method="post" class="gift-wrap-upsell">
+          <input type="hidden" name="id" value="{{ gift_wrap.selected_or_first_available_variant.id }}">
+          {%- if gift_wrap.featured_image -%}
+            <img src="{{ gift_wrap.featured_image | image_url: width: 128 }}" alt="{{ gift_wrap.featured_image.alt | default: gift_wrap.title | escape }}" width="64" height="64" loading="lazy">
+          {%- endif -%}
+          <div class="gift-wrap-upsell__text">
+            <p class="gift-wrap-upsell__title">Arriving as a gift?</p>
+            <p class="gift-wrap-upsell__sub">{{ gift_wrap.title }} — wrapped and ready to hand over.</p>
+          </div>
+          <button type="submit" class="btn btn--ghost gift-wrap-upsell__btn">Add · {{ gift_wrap.price | money }}</button>
+        </form>
       {%- endif -%}
 
       <form action="{{ routes.cart_url }}" method="post">
@@ -69,6 +101,12 @@
           <p class="cart-footer__subtotal">Subtotal: {{ cart.total_price | money }}</p>
           <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Engraved orders ship in {{ settings.production_days }} business days.</p>
           <button type="submit" name="checkout" class="btn">Check out</button>
+
+          <ul class="guarantees guarantees--cart">
+            {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
+            {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
+            {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
+          </ul>
         </div>
       </form>
     {%- endif -%}

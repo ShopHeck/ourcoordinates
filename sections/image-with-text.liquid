@@ -3,7 +3,7 @@
     <div class="img-text {% if section.settings.flip %}img-text--flip{% endif %}">
       <div class="img-text__media">
         {%- if section.settings.image != blank -%}
-          <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy">
+          <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy" width="{{ section.settings.image.width | at_most: 1000 }}" height="{{ section.settings.image.width | at_most: 1000 | divided_by: section.settings.image.aspect_ratio | round }}">
         {%- endif -%}
       </div>
       <div>

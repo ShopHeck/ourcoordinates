@@ -113,6 +113,8 @@
       btn.addEventListener('click', function () {
         if (mainImg) {
           mainImg.src = btn.dataset.full;
+          if (btn.dataset.fullSrcset) mainImg.srcset = btn.dataset.fullSrcset;
+          else mainImg.removeAttribute('srcset');
           mainImg.alt = btn.querySelector('img') ? btn.querySelector('img').alt : '';
         }
         root.querySelectorAll('[data-thumb]').forEach(function (b) { b.removeAttribute('aria-current'); });
@@ -679,4 +681,333 @@
       }
     });
   }
+})();
+
+
+/* ============================================================
+   CART DRAWER
+   AJAX add-to-cart + Section Rendering API. Liquid stays the
+   source of truth: every mutation re-renders the drawer section
+   server-side and this code only swaps the HTML in.
+   Registered AFTER the validation IIFEs above, so an invalid
+   engraving (e.defaultPrevented) never reaches the network.
+   ============================================================ */
+(function () {
+  'use strict';
+  var drawer = document.querySelector('[data-cart-drawer]');
+  if (!drawer) return; /* drawer disabled → classic /cart flow */
+
+  var SECTION_ID = 'cart-drawer';
+  var urlAdd = (drawer.dataset.urlAdd || '/cart/add') + '.js';
+  var urlChange = (drawer.dataset.urlChange || '/cart/change') + '.js';
+  var urlUpdate = (drawer.dataset.urlUpdate || '/cart/update') + '.js';
+  var urlRoot = drawer.dataset.urlRoot || '/';
+  var busy = false;
+
+  /* the gift-wrap add-on only works with this code, so only now reveal it */
+  document.querySelectorAll('[data-gift-wrap-addon]').forEach(function (el) {
+    el.hidden = false;
+  });
+
+  function inner() { return drawer.querySelector('[data-drawer-inner]'); }
+
+  function announce(msg) {
+    var live = document.querySelector('[data-cart-live]');
+    if (live) live.textContent = msg;
+  }
+
+  function syncHeaderCount() {
+    var el = inner();
+    if (!el) return;
+    var count = el.dataset.cartItemCount || '0';
+    document.querySelectorAll('[data-cart-count]').forEach(function (badge) {
+      badge.textContent = count;
+    });
+  }
+
+  function swapInner(sectionHtml) {
+    var doc = new DOMParser().parseFromString(sectionHtml, 'text/html');
+    var fresh = doc.querySelector('[data-drawer-inner]');
+    var current = inner();
+    if (fresh && current) {
+      current.replaceWith(fresh);
+      syncHeaderCount();
+      if (drawer.open) {
+        var closeBtn = drawer.querySelector('[data-drawer-close]');
+        if (closeBtn) closeBtn.focus();
+      }
+    }
+  }
+
+  function refresh() {
+    return fetch(urlRoot + '?sections=' + SECTION_ID)
+      .then(function (r) { return r.json(); })
+      .then(function (data) { if (data && data[SECTION_ID]) swapInner(data[SECTION_ID]); })
+      .catch(function () {});
+  }
+
+  function openDrawer() {
+    if (!drawer.open) drawer.showModal();
+    var closeBtn = drawer.querySelector('[data-drawer-close]');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function setLoading(on) {
+    busy = on;
+    drawer.classList.toggle('is-loading', on);
+    var el = inner();
+    if (el) el.setAttribute('aria-busy', on ? 'true' : 'false');
+  }
+
+  /* ---- mutations ---- */
+  function changeLine(line, quantity) {
+    if (busy) return;
+    setLoading(true);
+    fetch(urlChange, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ line: line, quantity: quantity, sections: SECTION_ID })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.sections && data.sections[SECTION_ID]) swapInner(data.sections[SECTION_ID]);
+        else return refresh();
+      })
+      .then(function () { announce('Cart updated'); })
+      .catch(function () { return refresh(); })
+      .finally(function () { setLoading(false); });
+  }
+
+  function quickAdd(variantId) {
+    if (busy) return;
+    setLoading(true);
+    fetch(urlAdd, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: [{ id: parseInt(variantId, 10), quantity: 1 }], sections: SECTION_ID })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.sections && data.sections[SECTION_ID]) swapInner(data.sections[SECTION_ID]);
+        else return refresh();
+      })
+      .then(function () { announce('Added to cart'); })
+      .catch(function () { return refresh(); })
+      .finally(function () { setLoading(false); });
+  }
+
+  /* ---- add-to-cart from any product form ---- */
+  function showFormError(form, message) {
+    var err = form.querySelector('[data-atc-error]');
+    if (!err) {
+      err = document.createElement('p');
+      err.setAttribute('data-atc-error', '');
+      err.className = 'atc-error';
+      err.setAttribute('role', 'alert');
+      var atc = form.querySelector('[data-atc]');
+      if (atc) atc.insertAdjacentElement('beforebegin', err);
+      else form.appendChild(err);
+    }
+    err.textContent = message;
+    err.hidden = false;
+    setTimeout(function () { err.hidden = true; }, 6000);
+  }
+
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form.matches || !form.matches('form[data-product-form]')) return;
+    if (e.defaultPrevented) return; /* engraving validation already blocked it */
+    e.preventDefault();
+
+    var atcBtns = document.querySelectorAll('[data-atc]');
+    atcBtns.forEach(function (b) { b.disabled = true; });
+
+    var giftWrap = form.querySelector('[data-gift-wrap]:checked');
+    var pre = Promise.resolve();
+    if (giftWrap) {
+      /* add the gift packaging first so one drawer render shows both */
+      pre = fetch(urlAdd, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ items: [{ id: parseInt(giftWrap.value, 10), quantity: 1 }] })
+      }).catch(function () {});
+    }
+
+    var fd = new FormData(form);
+    fd.append('sections', SECTION_ID);
+
+    pre
+      .then(function () {
+        return fetch(urlAdd, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: fd
+        });
+      })
+      .then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
+      .then(function (res) {
+        if (!res.ok) {
+          showFormError(form, res.data.description || res.data.message || 'Could not add to cart — please try again.');
+          return refresh();
+        }
+        if (res.data.sections && res.data.sections[SECTION_ID]) swapInner(res.data.sections[SECTION_ID]);
+        announce('Added to cart');
+        atcBtns.forEach(function (b) {
+          var label = b.querySelector('[data-atc-label]');
+          if (label) {
+            label.dataset.restore = label.textContent;
+            label.textContent = 'Added ✓';
+            setTimeout(function () {
+              if (label.dataset.restore) { label.textContent = label.dataset.restore; delete label.dataset.restore; }
+            }, 2200);
+          }
+        });
+        openDrawer();
+      })
+      .catch(function () {
+        /* network hiccup → fall back to the classic cart page */
+        window.location.href = urlRoot.replace(/\/$/, '') + '/cart';
+      })
+      .finally(function () {
+        atcBtns.forEach(function (b) { b.disabled = false; });
+      });
+  });
+
+  /* ---- delegated clicks ---- */
+  document.addEventListener('click', function (e) {
+    var opener = e.target.closest('[data-cart-open]');
+    if (opener) {
+      e.preventDefault();
+      openDrawer();
+      refresh(); /* re-sync in the background in case the cart changed elsewhere */
+      return;
+    }
+    if (e.target.closest('[data-drawer-close]')) { drawer.close(); return; }
+
+    var add = e.target.closest('[data-drawer-add]');
+    if (add) { quickAdd(add.dataset.drawerAdd); return; }
+
+    var qtyBtn = e.target.closest('[data-drawer-qty]');
+    if (qtyBtn) {
+      var wrap = qtyBtn.closest('[data-line-qty]');
+      var current = wrap ? parseInt(wrap.dataset.lineQty, 10) : 1;
+      var next = qtyBtn.dataset.drawerQty === 'up' ? current + 1 : current - 1;
+      changeLine(parseInt(qtyBtn.dataset.line, 10), Math.max(0, next));
+      return;
+    }
+
+    var removeBtn = e.target.closest('[data-drawer-remove]');
+    if (removeBtn) { changeLine(parseInt(removeBtn.dataset.line, 10), 0); return; }
+  });
+
+  /* close on backdrop click, mirroring the locator dialog */
+  drawer.addEventListener('click', function (e) {
+    if (e.target === drawer) drawer.close();
+  });
+
+  /* persist the gift note as soon as the customer leaves the field */
+  document.addEventListener('change', function (e) {
+    if (!e.target.matches || !e.target.matches('[data-drawer-note]')) return;
+    fetch(urlUpdate, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ note: e.target.value })
+    }).catch(function () {});
+  });
+
+  /* returning from checkout via back button: bfcache serves stale HTML */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) refresh();
+  });
+})();
+
+
+/* ============================================================
+   RECENTLY VIEWED — localStorage handles, cards fetched from
+   /products/{handle}.js. Built with createElement (no innerHTML).
+   ============================================================ */
+(function () {
+  'use strict';
+  var section = document.querySelector('[data-recently-viewed]');
+  if (!section) return;
+
+  var KEY = 'oc:recently-viewed';
+  var current = section.dataset.currentHandle;
+  var grid = section.querySelector('[data-rv-grid]');
+
+  function read() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch (err) { return []; }
+  }
+  function write(list) {
+    try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (err) { /* private mode */ }
+  }
+
+  function money(cents) {
+    return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
+  }
+
+  function sizedImage(src, width) {
+    if (!src) return '';
+    return src + (src.indexOf('?') === -1 ? '?' : '&') + 'width=' + width;
+  }
+
+  function card(p) {
+    var a = document.createElement('a');
+    a.className = 'product-card';
+    a.href = '/products/' + p.handle;
+
+    var media = document.createElement('div');
+    media.className = 'product-card__media';
+    if (p.featured_image) {
+      var img = document.createElement('img');
+      img.src = sizedImage(p.featured_image, 600);
+      img.alt = p.title;
+      img.loading = 'lazy';
+      img.width = 600;
+      img.height = 600;
+      media.appendChild(img);
+    }
+    var corners = document.createElement('span');
+    corners.className = 'product-card__corners';
+    corners.setAttribute('aria-hidden', 'true');
+    media.appendChild(corners);
+    a.appendChild(media);
+
+    var title = document.createElement('p');
+    title.className = 'product-card__title';
+    title.textContent = p.title;
+    a.appendChild(title);
+
+    var price = document.createElement('p');
+    price.className = 'product-card__price';
+    price.textContent = money(p.price);
+    a.appendChild(price);
+
+    return a;
+  }
+
+  /* render up to 4 previously seen products (excluding this one) */
+  var seen = read().filter(function (h) { return h && h !== current; }).slice(0, 4);
+  var pending = seen.length;
+  seen.forEach(function (handle) {
+    fetch('/products/' + encodeURIComponent(handle) + '.js')
+      .then(function (r) { if (!r.ok) throw new Error('gone'); return r.json(); })
+      .then(function (p) {
+        if (p.available === false) return;
+        grid.appendChild(card(p));
+        section.hidden = false;
+      })
+      .catch(function () {})
+      .finally(function () {
+        pending -= 1;
+        /* prune handles that 404ed so they stop taking up slots */
+        if (pending === 0 && grid.children.length === 0) section.hidden = true;
+      });
+  });
+
+  /* record this visit last, so the strip never shows the current product */
+  var list = read().filter(function (h) { return h && h !== current; });
+  list.unshift(current);
+  write(list.slice(0, 8));
 })();

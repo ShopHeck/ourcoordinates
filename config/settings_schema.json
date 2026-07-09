@@ -39,6 +39,51 @@
     ]
   },
   {
+    "name": "Gifting & upsells",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "These power the gift-packaging add-on on product pages, the upsells in the cart drawer and cart page, and the order-by date for the next gifting occasion."
+      },
+      {
+        "type": "product",
+        "id": "gift_wrap_product",
+        "label": "Gift packaging product",
+        "info": "Pick your Premium Gift Packaging product. It becomes a one-tap add-on on every product page and in the cart."
+      },
+      {
+        "type": "collection",
+        "id": "upsell_collection",
+        "label": "Cart upsell collection",
+        "info": "Products suggested in the cart drawer (items already in the cart are skipped). Best sellers work well."
+      },
+      {
+        "type": "text",
+        "id": "occasion_label",
+        "label": "Next gifting occasion",
+        "info": "e.g. Christmas, Valentine's Day, Mother's Day. Leave blank to hide the order-by reminder."
+      },
+      {
+        "type": "text",
+        "id": "occasion_date",
+        "label": "Occasion date (YYYY-MM-DD)",
+        "info": "The reminder computes the last safe order date from your lead + transit times and hides itself once it has passed."
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "text",
+        "id": "card_note",
+        "label": "Note under card prices",
+        "default": "Free engraving",
+        "info": "Shown on every product card. Hidden on products tagged 'no-personalization'. Leave blank to disable."
+      }
+    ]
+  },
+  {
     "name": "Social links",
     "settings": [
       { "type": "url", "id": "social_instagram", "label": "Instagram" },

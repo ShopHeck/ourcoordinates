@@ -6,7 +6,7 @@
         <a class="product-card" href="{{ collection.url }}">
           <div class="product-card__media">
             {%- if collection.featured_image -%}
-              <img src="{{ collection.featured_image | image_url: width: 600 }}" alt="{{ collection.title | escape }}" loading="lazy">
+              <img src="{{ collection.featured_image | image_url: width: 600 }}" alt="{{ collection.title | escape }}" loading="lazy" width="600" height="600">
             {%- endif -%}
           </div>
           <p class="product-card__title">{{ collection.title }}</p>

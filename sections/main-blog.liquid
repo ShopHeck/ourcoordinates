@@ -8,7 +8,7 @@
           <a class="product-card" href="{{ article.url }}">
             <div class="product-card__media">
               {%- if article.image -%}
-                <img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.image.alt | escape }}" loading="lazy">
+                <img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.image.alt | escape }}" loading="lazy" width="{{ article.image.width | at_most: 600 }}" height="{{ article.image.width | at_most: 600 | divided_by: article.image.aspect_ratio | round }}">
               {%- endif -%}
             </div>
             <p class="product-card__title">{{ article.title }}</p>

@@ -3,7 +3,7 @@
     <p class="coord-eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</p>
     <h1>{{ article.title }}</h1>
     {%- if article.image -%}
-      <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.image.alt | escape }}" style="margin-block:24px">
+      <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.image.alt | escape }}" style="margin-block:24px" width="{{ article.image.width | at_most: 1400 }}" height="{{ article.image.width | at_most: 1400 | divided_by: article.image.aspect_ratio | round }}">
     {%- endif -%}
     <div class="rte">{{ article.content }}</div>
   </div>

@@ -1,0 +1,238 @@
+{%- comment -%}
+  CART DRAWER — slide-out cart with upsells.
+  Rendered statically from theme.liquid; the inner markup is re-rendered
+  through the Section Rendering API after every cart mutation, so Liquid
+  stays the single source of truth (JS only swaps HTML).
+  If disabled, JS never intercepts add-to-cart and the theme falls back
+  to the classic /cart page flow.
+{%- endcomment -%}
+
+{%- if section.settings.enable_drawer -%}
+<dialog class="cart-drawer" data-cart-drawer aria-label="Shopping cart"
+        data-url-add="{{ routes.cart_add_url }}"
+        data-url-change="{{ routes.cart_change_url }}"
+        data-url-update="{{ routes.cart_update_url }}"
+        data-url-root="{{ routes.root_url }}">
+  <div data-drawer-inner data-cart-item-count="{{ cart.item_count }}">
+
+    <header class="cart-drawer__head">
+      <h2 class="cart-drawer__title">
+        {{ section.settings.heading }}
+        <span class="cart-drawer__count">{{ cart.item_count }}</span>
+      </h2>
+      <button type="button" class="cart-drawer__close" data-drawer-close aria-label="Close cart">✕</button>
+    </header>
+
+    {%- if cart.item_count == 0 -%}
+
+      <div class="cart-drawer__empty">
+        <p class="coord-eyebrow" style="justify-content:center">0.0000° N, 0.0000° W</p>
+        <p class="cart-drawer__empty-title">Your cart is empty</p>
+        <p class="cart-drawer__empty-text">Your favorite place is still out there — pick a piece and pin it forever.</p>
+        <a class="btn" href="{{ section.settings.empty_primary_link | default: routes.all_products_collection_url }}">{{ section.settings.empty_primary_label }}</a>
+        {%- if section.settings.empty_secondary_label != blank and section.settings.empty_secondary_link != blank -%}
+          <a class="cart-drawer__empty-alt" href="{{ section.settings.empty_secondary_link }}">{{ section.settings.empty_secondary_label }}</a>
+        {%- endif -%}
+      </div>
+
+    {%- else -%}
+
+      {%- liquid
+        assign threshold = settings.free_shipping_threshold | times: 100
+        assign remaining = threshold | minus: cart.total_price
+        assign pct = 0
+        if threshold > 0
+          assign pct = cart.total_price | times: 100 | divided_by: threshold
+        endif
+        if pct > 100
+          assign pct = 100
+        endif
+      -%}
+      {%- if threshold > 0 -%}
+        <div class="cart-progress cart-drawer__progress" aria-live="polite">
+          <p class="cart-progress__label">
+            {%- if remaining > 0 -%}
+              You're <strong>{{ remaining | money }}</strong> away from free shipping.
+            {%- else -%}
+              <strong>You've unlocked free shipping.</strong>
+            {%- endif -%}
+          </p>
+          <div class="cart-progress__track"><div class="cart-progress__fill" style="width:{{ pct }}%"></div></div>
+        </div>
+      {%- endif -%}
+
+      <div class="cart-drawer__lines">
+        {%- for item in cart.items -%}
+          <div class="cart-drawer__line">
+            <a href="{{ item.url }}" tabindex="-1">
+              <img src="{{ item.image | image_url: width: 144 }}" alt="{{ item.image.alt | escape }}" width="72" height="72" loading="lazy">
+            </a>
+            <div class="cart-drawer__line-info">
+              <a class="cart-drawer__line-title" href="{{ item.url }}">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}
+                <p class="cart-drawer__line-props">{{ item.variant.title }}</p>
+              {%- endunless -%}
+              {%- for property in item.properties -%}
+                {%- assign prop_prefix = property.first | slice: 0, 1 -%}
+                {%- if property.last != blank and prop_prefix != '_' -%}
+                  <p class="cart-drawer__line-props">{{ property.first }}: {{ property.last }}</p>
+                {%- endif -%}
+              {%- endfor -%}
+              <div class="cart-drawer__line-actions">
+                <div class="qty qty--drawer" data-line-qty="{{ item.quantity }}">
+                  <button type="button" data-drawer-qty="down" data-line="{{ forloop.index }}" aria-label="Decrease quantity of {{ item.product.title | escape }}">−</button>
+                  <span aria-hidden="true">{{ item.quantity }}</span>
+                  <button type="button" data-drawer-qty="up" data-line="{{ forloop.index }}" aria-label="Increase quantity of {{ item.product.title | escape }}">+</button>
+                </div>
+                <button type="button" class="cart-drawer__remove" data-drawer-remove data-line="{{ forloop.index }}">Remove</button>
+              </div>
+            </div>
+            <div class="cart-drawer__line-price">
+              {%- if item.original_line_price > item.final_line_price -%}
+                <s>{{ item.original_line_price | money }}</s>
+              {%- endif -%}
+              <span>{{ item.final_line_price | money }}</span>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} ---- Gift packaging one-tap upsell ---- {%- endcomment -%}
+      {%- liquid
+        assign gift_wrap = settings.gift_wrap_product
+        assign gift_wrap_in_cart = false
+        if gift_wrap != blank
+          for item in cart.items
+            if item.product_id == gift_wrap.id
+              assign gift_wrap_in_cart = true
+            endif
+          endfor
+        endif
+      -%}
+      {%- if gift_wrap != blank and gift_wrap_in_cart == false and gift_wrap.available -%}
+        <div class="gift-wrap-upsell gift-wrap-upsell--drawer">
+          {%- if gift_wrap.featured_image -%}
+            <img src="{{ gift_wrap.featured_image | image_url: width: 112 }}" alt="{{ gift_wrap.featured_image.alt | default: gift_wrap.title | escape }}" width="56" height="56" loading="lazy">
+          {%- endif -%}
+          <div class="gift-wrap-upsell__text">
+            <p class="gift-wrap-upsell__title">Arriving as a gift?</p>
+            <p class="gift-wrap-upsell__sub">Add {{ gift_wrap.title | downcase }} — wrapped and ready to give.</p>
+          </div>
+          <button type="button" class="btn btn--ghost gift-wrap-upsell__btn" data-drawer-add="{{ gift_wrap.selected_or_first_available_variant.id }}">
+            Add · {{ gift_wrap.price | money }}
+          </button>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} ---- Cross-sell: complete the gift ---- {%- endcomment -%}
+      {%- if section.settings.show_upsells -%}
+        {%- liquid
+          assign upsell_col = settings.upsell_collection
+          if upsell_col == blank
+            assign upsell_col = collections['best-sellers']
+          endif
+        -%}
+        {%- if upsell_col != blank and upsell_col.products.size > 0 -%}
+          {%- assign shown = 0 -%}
+          {%- capture upsell_cards -%}
+            {%- for prod in upsell_col.products limit: 12 -%}
+              {%- if shown >= 2 -%}{%- break -%}{%- endif -%}
+              {%- unless prod.available -%}{%- continue -%}{%- endunless -%}
+              {%- if gift_wrap != blank and prod.id == gift_wrap.id -%}{%- continue -%}{%- endif -%}
+              {%- assign in_cart = false -%}
+              {%- for item in cart.items -%}
+                {%- if item.product_id == prod.id -%}{%- assign in_cart = true -%}{%- break -%}{%- endif -%}
+              {%- endfor -%}
+              {%- if in_cart -%}{%- continue -%}{%- endif -%}
+              {%- assign shown = shown | plus: 1 -%}
+              {%- assign prod_tags = prod.tags | join: ',' | downcase -%}
+              {%- assign quick_addable = false -%}
+              {%- if prod.has_only_default_variant -%}
+                {%- if prod_tags contains 'no-personalization' or prod_tags contains 'quick-add' -%}
+                  {%- assign quick_addable = true -%}
+                {%- endif -%}
+              {%- endif -%}
+              <div class="cart-upsell__card">
+                <a href="{{ prod.url }}" tabindex="-1">
+                  <img src="{{ prod.featured_image | image_url: width: 128 }}" alt="{{ prod.featured_image.alt | escape }}" width="64" height="64" loading="lazy">
+                </a>
+                <div class="cart-upsell__info">
+                  <a class="cart-upsell__title" href="{{ prod.url }}">{{ prod.title }}</a>
+                  <p class="cart-upsell__price">{{ prod.price | money }}{% if prod.compare_at_price > prod.price %} <s>{{ prod.compare_at_price | money }}</s>{% endif %}</p>
+                </div>
+                {%- if quick_addable -%}
+                  <button type="button" class="cart-upsell__btn" data-drawer-add="{{ prod.selected_or_first_available_variant.id }}">Add</button>
+                {%- else -%}
+                  <a class="cart-upsell__btn" href="{{ prod.url }}">Personalize</a>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if shown > 0 -%}
+            <div class="cart-upsell">
+              <p class="cart-upsell__heading">{{ section.settings.upsell_heading }}</p>
+              {{ upsell_cards }}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- comment -%}
+        Footer: note + checkout share one real form so the gift note
+        rides along with the checkout POST — no async race.
+      {%- endcomment -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart-drawer__footer">
+        {%- if section.settings.show_gift_note -%}
+          <details class="cart-drawer__note" {% if cart.note != blank %}open{% endif %}>
+            <summary>{% if cart.note != blank %}Edit gift note{% else %}Add a free gift note{% endif %} ✎</summary>
+            <textarea name="note" rows="3" data-drawer-note aria-label="Gift note" placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
+          </details>
+        {%- endif -%}
+
+        <div class="cart-drawer__subtotal">
+          <span>Subtotal</span>
+          <span>
+            {%- if cart.original_total_price > cart.total_price -%}
+              <s>{{ cart.original_total_price | money }}</s>
+            {%- endif -%}
+            {{ cart.total_price | money }}
+          </span>
+        </div>
+        <p class="cart-drawer__meta">Engraved to order — ships in {{ settings.production_days }} business days. Taxes &amp; shipping calculated at checkout.</p>
+
+        <button type="submit" name="checkout" class="btn btn--full cart-drawer__checkout">Check out</button>
+        <a class="cart-drawer__viewcart" href="{{ routes.cart_url }}">View full cart</a>
+
+        <ul class="guarantees guarantees--drawer">
+          {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
+          {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
+        </ul>
+      </form>
+
+    {%- endif -%}
+  </div>
+</dialog>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_drawer",
+      "label": "Enable cart drawer",
+      "default": true,
+      "info": "Adding to cart opens a slide-out cart instead of leaving the product page. Turn off to fall back to the classic cart page."
+    },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your cart" },
+    { "type": "checkbox", "id": "show_upsells", "label": "Show 'complete the gift' suggestions", "default": true },
+    { "type": "text", "id": "upsell_heading", "label": "Suggestions heading", "default": "Complete the gift" },
+    { "type": "checkbox", "id": "show_gift_note", "label": "Show gift note field", "default": true },
+    { "type": "text", "id": "empty_primary_label", "label": "Empty cart button label", "default": "Shop best sellers" },
+    { "type": "url", "id": "empty_primary_link", "label": "Empty cart button link" },
+    { "type": "text", "id": "empty_secondary_label", "label": "Empty cart secondary label", "default": "Not sure? Take the 60-second gift finder" },
+    { "type": "url", "id": "empty_secondary_link", "label": "Empty cart secondary link" }
+  ]
+}
+{% endschema %}
