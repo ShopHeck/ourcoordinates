@@ -766,7 +766,7 @@ h3 { font-size: 1.2rem; }
   .ep__faces { gap: 10px; }
   .ep__face-svg { width: 38px; }
   .ep__ring-svg { max-width: 200px; }
-  .ep__bracelet-svg { max-width: 240px; }
+  .ep--bracelet .ep__set-svg--bracelet { max-width: 240px; }
 }
 
 /* ---- numbered buy steps: 01 Metal · 02 Sides · 03 Your engraving ---- */
