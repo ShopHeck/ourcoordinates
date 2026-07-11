@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "Grandparents Day · Sep 13",
+        "occasion_label": "Grandparents Day",
+        "occasion_date": "2026-09-13"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "t1": {
+          "type": "badge",
+          "settings": {
+            "text": "Engraved to order in the USA"
+          }
+        },
+        "t2": {
+          "type": "badge",
+          "settings": {
+            "text": "Photo proof before shipping"
+          }
+        },
+        "t3": {
+          "type": "badge",
+          "settings": {
+            "text": "30-day happiness guarantee"
+          }
+        },
+        "t4": {
+          "type": "badge",
+          "settings": {
+            "text": "Free engraving on every piece"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "story": {
+      "type": "story-cta",
+      "settings": {
+        "eyebrow": "Where the family story started",
+        "heading": "Grandma's front porch has coordinates.",
+        "text": "The farmhouse, the old street, the town they built a life in — two little numbers only your family understands, engraved to order.",
+        "button_label": "Find their place",
+        "button_link": "/pages/gift-finder",
+        "button_label_2": "See how it works",
+        "button_link_2": "shopify://pages/how-it-works"
+      }
+    },
+    "quote": {
+      "type": "testimonial",
+      "settings": {
+        "eyebrow": "Verified customer review",
+        "quote": "My husband and I love them. They have the coordinates of our first trip together.",
+        "attribution": "Lucy — United States",
+        "button_label": "Shop matching sets",
+        "button_link": "shopify://products/matching-coordinates-necklaces"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trust",
+    "story",
+    "quote"
+  ]
+}

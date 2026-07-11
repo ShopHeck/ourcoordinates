@@ -78,6 +78,11 @@ the customer keeps their emotional momentum and the drawer does the selling:
 ## 5. Merchandising recommendations (beyond theme code)
 
 ### New collections to create
+
+> **Update:** the occasion set below is now built out — landing templates
+> with order-by banners ship in the theme, and the full admin setup guide
+> (handles, tags, seed products, seasonal calendar) lives in
+> [`docs/occasion-collections.md`](docs/occasion-collections.md).
 The Moments section converts best when each card lands on a matching, curated
 collection. You already sell the right products for all of these:
 

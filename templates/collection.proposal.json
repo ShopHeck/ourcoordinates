@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "Proposal season",
+        "occasion_label": "your holiday proposal",
+        "occasion_date": "2026-12-24"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "t1": {
+          "type": "badge",
+          "settings": {
+            "text": "Engraved to order in the USA"
+          }
+        },
+        "t2": {
+          "type": "badge",
+          "settings": {
+            "text": "Photo proof before shipping"
+          }
+        },
+        "t3": {
+          "type": "badge",
+          "settings": {
+            "text": "30-day happiness guarantee"
+          }
+        },
+        "t4": {
+          "type": "badge",
+          "settings": {
+            "text": "Free engraving on every piece"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "story": {
+      "type": "story-cta",
+      "settings": {
+        "eyebrow": "X marks the moment",
+        "heading": "The spot you'll kneel — engraved before you do.",
+        "text": "Half of all proposals happen between Thanksgiving and New Year's. Pin the exact place you'll ask (or the place you already did) and give it to them while the yes still echoes.",
+        "button_label": "Plan the piece",
+        "button_link": "/pages/gift-finder",
+        "button_label_2": "See how it works",
+        "button_link_2": "shopify://pages/how-it-works"
+      }
+    },
+    "quote": {
+      "type": "testimonial",
+      "settings": {
+        "eyebrow": "Verified customer review",
+        "quote": "My husband and I love them. They have the coordinates of our first trip together.",
+        "attribution": "Lucy — United States",
+        "button_label": "Shop matching sets",
+        "button_link": "shopify://products/matching-coordinates-necklaces"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trust",
+    "story",
+    "quote"
+  ]
+}

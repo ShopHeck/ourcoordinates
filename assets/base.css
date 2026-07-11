@@ -342,6 +342,7 @@ h3 { font-size: 1.2rem; }
 .page-narrow { max-width: 760px; margin: 0 auto; }
 .rte img { margin-block: 20px; }
 .collection-head { margin-bottom: 32px; }
+.collection-occasion { max-width: 62ch; margin: 14px 0 0; }
 .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; font-family: var(--f-coord); }
 .pagination a, .pagination span { padding: 8px 13px; border: 1px solid var(--c-line); text-decoration: none; }
 .pagination span.current { background: var(--c-ink); color: var(--c-paper); }

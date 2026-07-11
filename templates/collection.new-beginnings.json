@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "New year, new coordinates",
+        "occasion_label": "New Year's Day",
+        "occasion_date": "2027-01-01"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "t1": {
+          "type": "badge",
+          "settings": {
+            "text": "Engraved to order in the USA"
+          }
+        },
+        "t2": {
+          "type": "badge",
+          "settings": {
+            "text": "Photo proof before shipping"
+          }
+        },
+        "t3": {
+          "type": "badge",
+          "settings": {
+            "text": "30-day happiness guarantee"
+          }
+        },
+        "t4": {
+          "type": "badge",
+          "settings": {
+            "text": "Free engraving on every piece"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "story": {
+      "type": "story-cta",
+      "settings": {
+        "eyebrow": "For what comes next",
+        "heading": "New year. New coordinates.",
+        "text": "The city you're moving to, the summit on this year's list, the place you promised you'd finally go — wear it until you get there.",
+        "button_label": "Find your place",
+        "button_link": "/pages/gift-finder",
+        "button_label_2": "See how it works",
+        "button_link_2": "shopify://pages/how-it-works"
+      }
+    },
+    "quote": {
+      "type": "testimonial",
+      "settings": {
+        "eyebrow": "Verified customer review",
+        "quote": "My husband and I love them. They have the coordinates of our first trip together.",
+        "attribution": "Lucy — United States",
+        "button_label": "Shop matching sets",
+        "button_link": "shopify://products/matching-coordinates-necklaces"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trust",
+    "story",
+    "quote"
+  ]
+}
