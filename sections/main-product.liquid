@@ -98,9 +98,10 @@
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             <fieldset class="swatches option-group" data-option-index="{{ forloop.index0 }}">
-              <legend>
+              <legend class="buy-step">
                 {{ option.name }}
-                {%- if option.name == 'Engrave' or option.name contains 'side' %} <span>— engraving is free on every side</span>{% endif -%}
+                {%- assign opt_name_down = option.name | downcase -%}
+                {%- if opt_name_down == 'engrave' or opt_name_down contains 'side' %} <span>— engraving is free on every side</span>{% endif -%}
               </legend>
               {%- for value in option.values -%}
                 <input type="radio" id="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
@@ -115,55 +116,136 @@
         {%- comment -%} ========== ENGRAVING PREVIEWS ========== {%- endcomment -%}
         {%- if section.settings.show_engraving -%}
 
+          {%- comment -%}
+            Shared brushed-metal gradients. Every preview's .ep__metal fill
+            switches between these via CSS when the shopper picks a metal
+            variant (data-metal on the section root, set by global.js).
+          {%- endcomment -%}
+          <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="ep-metal-black" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#3a3a42"/><stop offset="0.5" stop-color="#1c1c24"/><stop offset="1" stop-color="#101016"/>
+              </linearGradient>
+              <linearGradient id="ep-metal-gold" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#e7cd8f"/><stop offset="0.45" stop-color="#c4a26d"/><stop offset="1" stop-color="#997a4e"/>
+              </linearGradient>
+              <linearGradient id="ep-metal-rose-gold" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#f0c8b2"/><stop offset="0.45" stop-color="#d49b84"/><stop offset="1" stop-color="#b0765f"/>
+              </linearGradient>
+              <linearGradient id="ep-metal-silver" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#f0f0f4"/><stop offset="0.45" stop-color="#c9c9d1"/><stop offset="1" stop-color="#a2a2ac"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
           {%- comment -%} ---- FOUR-SIDED BAR ---- {%- endcomment -%}
           {%- if preview_type == 'four-sided' -%}
-            <div class="engrave-field" data-four-sided-engraving>
-              <p class="option-group" style="margin-bottom:8px">Your engraving</p>
+            {%- comment -%}
+              How many sides can be engraved is a PRODUCT VARIANT whenever a
+              variant option value looks like "2 Sides" — the inputs and the
+              preview follow the shopper's selection (and its price). The
+              manual "How many sides?" picker renders only for products
+              without such an option.
+            {%- endcomment -%}
+            {%- liquid
+              assign sides_option = -1
+              for option in product.options_with_values
+                assign joined_values = option.values | join: ' '
+                assign opt_probe = option.name | append: ' ' | append: joined_values | downcase
+                if opt_probe contains 'side'
+                  assign sides_option = forloop.index0
+                  break
+                endif
+              endfor
 
-              {%- comment -%} SVG preview — 4 bar faces side by side {%- endcomment -%}
+              assign initial_sides = 0
+              if sides_option >= 0
+                assign side_val = current_variant.options[sides_option] | downcase
+                if side_val contains '4'
+                  assign initial_sides = 4
+                elsif side_val contains '3'
+                  assign initial_sides = 3
+                elsif side_val contains '2'
+                  assign initial_sides = 2
+                elsif side_val contains '1'
+                  assign initial_sides = 1
+                endif
+              endif
+              if initial_sides == 0
+                assign initial_sides = 2
+                assign sides_source = 'manual'
+              else
+                assign sides_source = 'variant'
+              endif
+            -%}
+
+            <div class="engrave-field" data-four-sided-engraving
+                 data-sides-source="{{ sides_source }}" data-active-sides="{{ initial_sides }}"
+                 data-sides-option="{{ sides_option }}">
+              <p class="option-group buy-step" style="margin-bottom:8px">Your engraving</p>
+
+              {%- comment -%} One pendant shown from every engraved side {%- endcomment -%}
               <div class="ep ep--four-sided" aria-hidden="true">
+                <div class="ep__chain">
+                  <svg viewBox="0 0 300 42" preserveAspectRatio="xMidYMax meet">
+                    <path d="M 6,0 L 150,32 L 294,0" fill="none" class="ep__chain-line"/>
+                    <circle cx="150" cy="35" r="4.5" fill="none" class="ep__chain-line"/>
+                  </svg>
+                </div>
                 <div class="ep__faces">
                   {%- for i in (1..4) -%}
-                    <div class="ep__face" data-face="{{ i }}" data-face-active="{% if i <= 2 %}true{% else %}false{% endif %}">
-                      <svg viewBox="0 0 32 140" class="ep__face-svg" aria-hidden="true">
-                        <rect x="2" y="0" width="28" height="140" rx="2" class="ep__metal"/>
-                        <text x="16" y="70" data-four-preview="{{ i }}"
+                    <div class="ep__face" data-face="{{ i }}" data-face-active="{% if i <= initial_sides %}true{% else %}false{% endif %}">
+                      <svg viewBox="0 0 44 190" class="ep__face-svg" aria-hidden="true">
+                        <rect x="4" y="6" width="36" height="178" rx="3" class="ep__metal"/>
+                        <rect x="6.5" y="8.5" width="12" height="173" rx="2.5" class="ep__sheen"/>
+                        <rect x="4.7" y="6.7" width="34.6" height="176.6" rx="2.6" class="ep__bevel" fill="none"/>
+                        {%- if i <= 2 -%}<circle cx="22" cy="17" r="3" class="ep__hole"/>{%- endif -%}
+                        <text x="22" y="{% if i <= 2 %}103{% else %}98{% endif %}" data-four-preview="{{ i }}"
                               class="ep__engrave-text ep__engrave-text--vertical"
-                              data-placeholder="Side {{ i }}">Side {{ i }}</text>
+                              data-fit="150" data-fit-chars="12" lengthAdjust="spacingAndGlyphs"
+                              data-placeholder="{% case i %}{% when 1 %}{{ section.settings.engraving_placeholder | escape }}{% when 2 %}82.6403° W{% else %}· · ·{% endcase %}">
+                          {%- case i %}{% when 1 %}{{ section.settings.engraving_placeholder }}{% when 2 %}82.6403° W{% else %}· · ·{% endcase -%}
+                        </text>
                       </svg>
                       <span class="ep__face-label">{% case i %}{% when 1 %}Front{% when 2 %}Back{% when 3 %}Left{% when 4 %}Right{% endcase %}</span>
                     </div>
                   {%- endfor -%}
                 </div>
-                <p class="ep__hint">Live preview — exactly as we engrave it</p>
+                <p class="ep__hint" data-four-hint>Live preview — one pendant, engraved on {{ initial_sides }} side{% if initial_sides != 1 %}s{% endif %}</p>
               </div>
 
-              {%- comment -%} Side count selector {%- endcomment -%}
-              <fieldset class="ep__side-picker option-group" data-side-count-picker>
-                <legend>How many sides?</legend>
-                {%- for n in (1..4) -%}
-                  <input type="radio" id="sides-{{ n }}" name="side-count" value="{{ n }}"
-                         {% if n == 2 %}checked{% endif %}>
-                  <label for="sides-{{ n }}">{{ n }} side{{ n | pluralize: '', 's' }}</label>
-                {%- endfor -%}
-              </fieldset>
+              {%- comment -%} Manual side picker — fallback only {%- endcomment -%}
+              {%- if sides_source == 'manual' -%}
+                <fieldset class="ep__side-picker option-group" data-side-count-picker>
+                  <legend>How many sides?</legend>
+                  {%- for n in (1..4) -%}
+                    <input type="radio" id="sides-{{ n }}" name="side-count" value="{{ n }}"
+                           {% if n == 2 %}checked{% endif %}>
+                    <label for="sides-{{ n }}">{{ n }} side{{ n | pluralize: '', 's' }}</label>
+                  {%- endfor -%}
+                </fieldset>
+              {%- endif -%}
 
-              {%- comment -%} Per-side inputs {%- endcomment -%}
+              {%- comment -%} Per-side inputs — hidden sides are disabled so they never submit {%- endcomment -%}
               {%- for i in (1..4) -%}
                 <div class="ep__side-input" data-side-field="{{ i }}"
-                     {% if i > 2 %}style="display:none"{% endif %}>
+                     {% if i > initial_sides %}style="display:none"{% endif %}>
                   <label for="engrave-side-{{ i }}">
                     {% case i %}{% when 1 %}Front{% when 2 %}Back{% when 3 %}Left side{% when 4 %}Right side{% endcase %}
+                    {%- if i > 1 %} <span class="ep__side-optional">optional</span>{% endif -%}
                   </label>
                   <input type="text" id="engrave-side-{{ i }}"
                          data-engrave-input-side="{{ i }}"
                          name="properties[Engraving — {% case i %}{% when 1 %}Front{% when 2 %}Back{% when 3 %}Left{% when 4 %}Right{% endcase %}]"
                          maxlength="{{ section.settings.engraving_max }}"
-                         placeholder="{% if i == 1 %}{{ section.settings.engraving_placeholder | escape }}{% else %}Optional{% endif %}"
+                         placeholder="{% case i %}{% when 1 %}{{ section.settings.engraving_placeholder | escape }}{% when 2 %}e.g. 82.6403° W{% when 3 %}e.g. EST. 2021{% else %}e.g. a name, a date{% endcase %}"
                          {% if i == 1 and section.settings.engraving_required %}required{% endif %}
+                         {% if i > initial_sides %}disabled{% endif %}
                          autocomplete="off">
                 </div>
               {%- endfor -%}
+
+              <p class="ep__side-tip" data-four-tip hidden>Tip: coordinates read best split over two sides — latitude on the front, longitude on the back.</p>
 
               <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
               <input type="hidden" data-prop-place name="properties[_Place Searched]">
@@ -179,7 +261,7 @@
           {%- comment -%} ---- DOG TAG (multi-line) ---- {%- endcomment -%}
           {%- elsif preview_type == 'dog-tag' -%}
             <div class="engrave-field" data-dogtag-engraving>
-              <p class="option-group" style="margin-bottom:8px">Your engraving</p>
+              <p class="option-group buy-step" style="margin-bottom:8px">Your engraving</p>
 
               <div class="ep ep--dog-tag" aria-hidden="true">
                 <svg viewBox="0 0 180 220" class="ep__dog-tag-svg">
@@ -194,10 +276,13 @@
                   <circle cx="90" cy="18" r="7" fill="none" stroke="#999" stroke-width="1.5"/>
                   {%- comment -%} Engraving lines {%- endcomment -%}
                   <text x="90" y="90" data-dt-line="1" class="ep__engrave-text"
+                        data-fit="140" data-fit-chars="14" lengthAdjust="spacingAndGlyphs"
                         data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
                   <text x="90" y="118" data-dt-line="2" class="ep__engrave-text ep__engrave-text--dim"
+                        data-fit="140" data-fit-chars="14" lengthAdjust="spacingAndGlyphs"
                         data-placeholder="">—</text>
                   <text x="90" y="146" data-dt-line="3" class="ep__engrave-text ep__engrave-text--dim"
+                        data-fit="140" data-fit-chars="14" lengthAdjust="spacingAndGlyphs"
                         data-placeholder="">—</text>
                 </svg>
                 <p class="ep__hint">Live preview — exactly as we engrave it</p>
@@ -237,7 +322,7 @@
           {%- comment -%} ---- VERTICAL BAR ---- {%- endcomment -%}
           {%- elsif preview_type == 'vertical-bar' -%}
             <div class="engrave-field">
-              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
               <div class="ep ep--vertical-bar" aria-hidden="true">
                 <svg viewBox="0 0 60 200" class="ep__vbar-svg">
                   {%- comment -%} Chain {%- endcomment -%}
@@ -247,6 +332,7 @@
                   <rect x="16" y="30" width="28" height="160" rx="2" class="ep__metal"/>
                   {%- comment -%} Engraved text runs top→bottom {%- endcomment -%}
                   <text x="30" y="110" data-engrave-preview
+                        data-fit="150" data-fit-chars="12" lengthAdjust="spacingAndGlyphs"
                         class="ep__engrave-text ep__engrave-text--vertical"
                         data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
                 </svg>
@@ -272,7 +358,7 @@
           {%- comment -%} ---- RING ---- {%- endcomment -%}
           {%- elsif preview_type == 'ring' -%}
             <div class="engrave-field">
-              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
               <div class="ep ep--ring" aria-hidden="true">
                 <svg viewBox="0 0 220 140" class="ep__ring-svg">
                   {%- comment -%} Ring band — outer ellipse {%- endcomment -%}
@@ -311,7 +397,7 @@
           {%- comment -%} ---- BRACELET / CUFF ---- {%- endcomment -%}
           {%- elsif preview_type == 'bracelet' -%}
             <div class="engrave-field">
-              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
               <div class="ep ep--bracelet" aria-hidden="true">
                 <svg viewBox="0 0 340 130" class="ep__bracelet-svg">
                   {%- comment -%} Front-facing cuff bracelet {%- endcomment -%}
@@ -390,7 +476,7 @@
               endif
             -%}
             <div class="engrave-field" data-set-engraving>
-              <p class="option-group" style="margin-bottom:4px">Your coordinates</p>
+              <p class="option-group buy-step" style="margin-bottom:4px">Your coordinates</p>
               <p class="ep__set-sub">Enter once — engraved on every piece in this set</p>
 
               <div class="ep ep--set" aria-hidden="true">
@@ -433,6 +519,7 @@
                             <circle cx="30" cy="22" r="4" fill="none" stroke="#bbb" stroke-width="1"/>
                             <rect x="16" y="30" width="28" height="160" rx="2" class="ep__metal"/>
                             <text x="30" y="110" dominant-baseline="central" data-set-preview="necklace"
+                                  data-fit="140" data-fit-chars="12" lengthAdjust="spacingAndGlyphs"
                                   class="ep__engrave-text ep__engrave-text--vertical"
                                   data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
                           </svg>
@@ -456,6 +543,7 @@
                             <rect x="24" y="54" width="72" height="116" rx="8" class="ep__metal"/>
                             <circle cx="60" cy="68" r="5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
                             <text x="60" y="116" data-set-preview="keychain"
+                                  data-fit="95" data-fit-chars="9" lengthAdjust="spacingAndGlyphs"
                                   class="ep__engrave-text ep__engrave-text--vertical"
                                   data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
                           </svg>
@@ -514,13 +602,14 @@
           {%- comment -%} ---- HORIZONTAL BAR (default) ---- {%- endcomment -%}
           {%- else -%}
             <div class="engrave-field">
-              <label class="option-group" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
               <div class="ep ep--horizontal-bar" aria-hidden="true">
                 <svg viewBox="0 0 280 70" class="ep__hbar-svg">
                   {%- comment -%} Horizontal bar pendant {%- endcomment -%}
                   <rect x="0" y="10" width="280" height="50" rx="3" class="ep__metal"/>
                   {%- comment -%} Engraved text — single line left to right {%- endcomment -%}
                   <text x="140" y="42" data-engrave-preview
+                        data-fit="250" data-fit-chars="22" lengthAdjust="spacingAndGlyphs"
                         class="ep__engrave-text"
                         data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
                 </svg>
