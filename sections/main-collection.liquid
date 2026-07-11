@@ -1,10 +1,33 @@
 <section class="section">
   <div class="page-width">
     <div class="collection-head">
-      <p class="coord-eyebrow">Collection</p>
+      <p class="coord-eyebrow">{{ section.settings.eyebrow | default: 'Collection' }}</p>
       <h1>{{ collection.title }}</h1>
       {%- if collection.description != blank -%}
         <div class="rte" style="max-width:62ch">{{ collection.description }}</div>
+      {%- endif -%}
+
+      {%- comment -%}
+        Occasion order-by banner for seasonal collection templates.
+        Order-by date = occasion minus production, transit, and the same
+        3-day buffer as the PDP delivery estimate. Hides itself once too
+        late or past; an unparseable date fails closed.
+      {%- endcomment -%}
+      {%- if section.settings.occasion_label != blank and section.settings.occasion_date != blank -%}
+        {%- liquid
+          assign now_ts = 'now' | date: '%s' | plus: 0
+          assign occasion_ts = section.settings.occasion_date | date: '%s' | plus: 0
+          assign prod_s = settings.production_days | times: 86400
+          assign transit_s = settings.transit_days | times: 86400
+          assign lead_s = prod_s | plus: transit_s | plus: 259200
+          assign order_by_ts = occasion_ts | minus: lead_s
+        -%}
+        {%- if occasion_ts > now_ts and order_by_ts >= now_ts -%}
+          <p class="pdp__occasion collection-occasion">
+            <span class="pdp__occasion-dot" aria-hidden="true">◆</span>
+            Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to have it engraved, proofed, and delivered for {{ section.settings.occasion_label }}.
+          </p>
+        {%- endif -%}
       {%- endif -%}
     </div>
 
@@ -35,5 +58,28 @@
 </section>
 
 {% schema %}
-{ "name": "Collection page", "settings": [] }
+{
+  "name": "Collection page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Collection",
+      "info": "Small label above the title, e.g. 'Holiday 2026 gift guide'."
+    },
+    {
+      "type": "text",
+      "id": "occasion_label",
+      "label": "Occasion (order-by banner)",
+      "info": "e.g. Christmas. Shows 'Order by <date>…' computed from your lead + transit times. Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "occasion_date",
+      "label": "Occasion date (YYYY-MM-DD)",
+      "info": "The banner hides itself automatically once it's too late to deliver in time, or after the date passes."
+    }
+  ]
+}
 {% endschema %}
