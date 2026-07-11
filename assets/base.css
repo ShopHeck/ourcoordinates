@@ -679,9 +679,10 @@ h3 { font-size: 1.2rem; }
 [data-metal="gold"] .ep .ep__engrave-text,
 [data-metal="rose-gold"] .ep .ep__engrave-text { fill: rgba(62, 45, 20, 0.8); }
 [data-metal="silver"] .ep .ep__engrave-text { fill: rgba(48, 50, 60, 0.8); }
-/* the cuff artwork keeps its own dark band — keep its text light */
-[data-metal] .ep--bracelet .ep__engrave-text,
-[data-metal] .ep__set-svg--bracelet .ep__engrave-text { fill: rgba(255, 255, 255, 0.82); }
+
+/* cuff depth layers (piece SVG snippet) */
+.ep__cuff-shade { fill: rgba(0, 0, 0, 0.16); }
+.ep__cuff-sheen { fill: rgba(255, 255, 255, 0.12); }
 
 /* ring band + chain recolor with the metal too */
 [data-metal="gold"] .ep .ep__ring-band { stroke: #ab8c5e; }
@@ -708,8 +709,7 @@ h3 { font-size: 1.2rem; }
 
 /* ---- BRACELET / CUFF ---- */
 .ep--bracelet { padding: 24px 8px 12px; }
-.ep__bracelet-svg { max-width: 300px; width: 100%; height: auto; display: block; margin: 0 auto; }
-.ep__cuff-band { stroke: #1a1a22; }
+.ep--bracelet .ep__set-svg--bracelet { width: 100%; max-width: 300px; height: auto; display: block; margin: 0 auto; }
 
 /* ---- DOG TAG ---- */
 .ep--dog-tag { padding: 20px 16px 12px; }
@@ -766,7 +766,7 @@ h3 { font-size: 1.2rem; }
   .ep__faces { gap: 10px; }
   .ep__face-svg { width: 38px; }
   .ep__ring-svg { max-width: 200px; }
-  .ep__bracelet-svg { max-width: 240px; }
+  .ep--bracelet .ep__set-svg--bracelet { max-width: 240px; }
 }
 
 /* ---- numbered buy steps: 01 Metal · 02 Sides · 03 Your engraving ---- */
@@ -832,6 +832,27 @@ form[data-product-form] { counter-reset: buystep; }
 .ep__set-svg--necklace .ep__engrave-text { font-size: 7px; letter-spacing: 0.08em; }
 .ep__set-svg--ring     { width: 110px; height: auto; display: block; margin: 0 auto; }
 .ep__set-svg--keychain { width: 52px;  height: auto; display: block; margin: 0 auto; }
+
+/* ---- DUO SET: 4-sided necklace + companion pieces ---- */
+.ep--duo { padding: 16px 12px 12px; }
+.ep__duo-piece { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px dashed var(--c-line); }
+.ep__duo-piece:last-of-type { border-bottom: 0; margin-bottom: 0; padding-bottom: 4px; }
+.ep__duo-title {
+  display: block; font-family: var(--f-coord); font-size: 0.66rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--c-gold);
+  margin-bottom: 8px;
+}
+.ep--duo .ep__chain { margin-bottom: -5px; }
+.ep--duo .ep__set-svg--bracelet { width: min(280px, 100%); height: auto; display: block; margin: 0 auto; }
+.ep__duo-extra { margin: 14px 0 4px; }
+.ep__duo-extra-label {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; margin: 0 0 8px;
+}
+.ep__duo-extra-label span {
+  text-transform: none; letter-spacing: 0; font-weight: 400;
+  font-size: 0.74rem; color: var(--c-ink-soft);
+}
 
 /* Customize-each-piece toggle */
 .ep__set-customize {

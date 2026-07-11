@@ -1,0 +1,83 @@
+{%- comment -%}
+  Renders one engravable piece as a realistic SVG.
+  Params:
+    piece        — 'bracelet' | 'necklace' | 'ring' | 'keychain'
+    placeholder  — sample engraving shown until the shopper types
+    id_prefix    — unique per render to keep SVG ids from colliding
+    mode         — 'set' (default) emits data-set-preview="{piece}" on the
+                   text node; 'single' emits data-engrave-preview for the
+                   standalone single-input renderer.
+  All metal surfaces use .ep__metal / .ep__ring-band so they recolor live
+  with the chosen metal variant.
+{%- endcomment -%}
+{%- liquid
+  assign _mode = mode | default: 'set'
+-%}
+{%- case piece -%}
+
+  {%- when 'bracelet' -%}
+    <svg viewBox="0 0 340 130" class="ep__set-svg ep__set-svg--bracelet" aria-hidden="true">
+      <defs>
+        <path id="{{ id_prefix }}-cuff-text" d="M 42,68 Q 170,86 298,68" fill="none"/>
+      </defs>
+      {%- comment -%} Arms of the cuff, shaded for depth {%- endcomment -%}
+      <path d="M 8,6 C 8,36 22,48 38,54 L 38,38 C 26,34 20,26 20,6 Z" class="ep__metal"/>
+      <path d="M 8,6 C 8,36 22,48 38,54 L 38,38 C 26,34 20,26 20,6 Z" class="ep__cuff-shade"/>
+      <path d="M 8,6 C 8,36 22,48 38,54" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+      <path d="M 332,6 C 332,36 318,48 302,54 L 302,38 C 314,34 320,26 320,6 Z" class="ep__metal"/>
+      <path d="M 332,6 C 332,36 318,48 302,54 L 302,38 C 314,34 320,26 320,6 Z" class="ep__cuff-shade"/>
+      <path d="M 332,6 C 332,36 318,48 302,54" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+      {%- comment -%} Front band + brushed sheen + rim light and shadow {%- endcomment -%}
+      <path d="M 28,46 Q 170,76 312,46 L 312,70 Q 170,100 28,70 Z" class="ep__metal"/>
+      <path d="M 28,46 Q 170,76 312,46 L 312,52 Q 170,82 28,52 Z" class="ep__cuff-sheen"/>
+      <path d="M 28,46 Q 170,76 312,46" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.6"/>
+      <path d="M 28,70 Q 170,100 312,70" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5"/>
+      <text class="ep__engrave-text ep__engrave-text--curve" text-anchor="middle">
+        <textPath href="#{{ id_prefix }}-cuff-text" startOffset="50%"
+                  {% if _mode == 'single' %}data-engrave-preview{% else %}data-set-preview="bracelet"{% endif %}
+                  data-fit="230" data-fit-chars="24" lengthAdjust="spacingAndGlyphs"
+                  data-placeholder="{{ placeholder | escape }}">{{ placeholder }}</textPath>
+      </text>
+    </svg>
+
+  {%- when 'necklace' -%}
+    <svg viewBox="0 0 60 200" class="ep__set-svg ep__set-svg--necklace" aria-hidden="true">
+      <line x1="30" y1="0" x2="30" y2="20" class="ep__chain-line" stroke-width="1"/>
+      <circle cx="30" cy="22" r="4" fill="none" class="ep__chain-line" stroke-width="1"/>
+      <rect x="16" y="30" width="28" height="160" rx="2" class="ep__metal"/>
+      <rect x="18" y="32" width="9" height="156" rx="2" class="ep__sheen"/>
+      <text x="30" y="110" dominant-baseline="central"
+            {% if _mode == 'single' %}data-engrave-preview{% else %}data-set-preview="necklace"{% endif %}
+            data-fit="140" data-fit-chars="12" lengthAdjust="spacingAndGlyphs"
+            class="ep__engrave-text ep__engrave-text--vertical"
+            data-placeholder="{{ placeholder | escape }}">{{ placeholder }}</text>
+    </svg>
+
+  {%- when 'ring' -%}
+    <svg viewBox="0 0 220 140" class="ep__set-svg ep__set-svg--ring" aria-hidden="true">
+      <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="#23232a" stroke-width="18" class="ep__ring-band"/>
+      <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="16"/>
+      <defs><path id="{{ id_prefix }}-ring-text" d="M 15,70 A 95,55 0 0 1 205,70" fill="none"/></defs>
+      <text class="ep__engrave-text ep__engrave-text--curve">
+        <textPath href="#{{ id_prefix }}-ring-text" startOffset="50%" text-anchor="middle"
+                  {% if _mode == 'single' %}data-engrave-preview{% else %}data-set-preview="ring"{% endif %}
+                  data-fit="200" data-fit-chars="20" lengthAdjust="spacingAndGlyphs"
+                  data-placeholder="{{ placeholder | escape }}">{{ placeholder }}</textPath>
+      </text>
+    </svg>
+
+  {%- when 'keychain' -%}
+    <svg viewBox="0 0 120 200" class="ep__set-svg ep__set-svg--keychain" aria-hidden="true">
+      <circle cx="60" cy="22" r="16" fill="none" class="ep__chain-line" stroke-width="3.5"/>
+      <line x1="60" y1="38" x2="60" y2="50" class="ep__chain-line" stroke-width="2"/>
+      <rect x="24" y="54" width="72" height="116" rx="8" class="ep__metal"/>
+      <rect x="27" y="57" width="22" height="110" rx="6" class="ep__sheen"/>
+      <circle cx="60" cy="68" r="5" class="ep__hole"/>
+      <text x="60" y="122"
+            {% if _mode == 'single' %}data-engrave-preview{% else %}data-set-preview="keychain"{% endif %}
+            data-fit="86" data-fit-chars="9" lengthAdjust="spacingAndGlyphs"
+            class="ep__engrave-text ep__engrave-text--vertical"
+            data-placeholder="{{ placeholder | escape }}">{{ placeholder }}</text>
+    </svg>
+
+{%- endcase -%}

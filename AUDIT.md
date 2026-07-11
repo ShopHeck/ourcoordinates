@@ -140,6 +140,20 @@ real personalization options:
   dog-tag templates capped input below their own placeholder text. All
   corrected (15–20 chars, per-shape).
 
+**Round 3 — sets.** The Coordinates Set template now supports per-product
+previews. A new "Set necklace style: 4-sided pendant" mode (used by the new
+`product.necklace-bracelet-set` template) renders the necklace as the real
+4-sided bar — chain, bail, per-side faces — and every companion piece (cuff
+bracelet, keychain, ring) as its own realistic scene. One shared coordinates
+input is laid out per piece exactly as engraved: latitude on the necklace
+front, longitude on the back, the full pair on the bracelet; up to two more
+necklace sides are optional inputs, and each companion piece can be engraved
+differently via a tucked-away override. Per-target order properties
+("Engraving — Necklace Front", "Engraving — Bracelet", …) submit only when
+they carry text. Legacy sets (same text on every piece) are untouched —
+assign the new template to the Necklace + Bracelet Set in admin to activate
+the duo experience.
+
 ## 7. Not changed, deliberately
 
 - Checkout itself (Shopify-hosted).
