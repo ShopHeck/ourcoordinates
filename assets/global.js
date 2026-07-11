@@ -1043,3 +1043,163 @@
   list.unshift(current);
   write(list.slice(0, 8));
 })();
+
+
+/* ============================================================
+   DUO SET — necklace (4-sided pendant) + companion pieces.
+   One shared coordinates input is laid out per piece exactly as
+   engraved: with 2+ necklace sides available, latitude goes on
+   the front and longitude on the back, while flat pieces (cuff,
+   keychain…) carry the full pair on one line. Hidden per-target
+   properties stay disabled while empty so blank engraving lines
+   never reach the order.
+   ============================================================ */
+(function () {
+  'use strict';
+  var root = document.querySelector('[data-product]');
+  if (!root) return;
+  if ((root.dataset.previewType || '') !== 'coordinates-set') return;
+  var rig = root.querySelector('[data-set-duo]');
+  if (!rig) return; /* legacy sets are handled by the block above */
+
+  var shared = rig.querySelector('[data-duo-shared]');
+  var counter = rig.querySelector('[data-engrave-count]');
+  var splitNote = rig.querySelector('[data-duo-splitnote]');
+  if (!shared) return;
+
+  function facePreview(i) { return rig.querySelector('[data-duo-face="' + i + '"]'); }
+  function faceWrap(i) { return rig.querySelector('[data-face="' + i + '"]'); }
+  function sideInput(i) { return rig.querySelector('[data-duo-side="' + i + '"]'); }
+  function sideField(i) { return rig.querySelector('[data-duo-side-field="' + i + '"]'); }
+  function sideProp(i) { return rig.querySelector('[data-duo-prop="' + i + '"]'); }
+
+  function clampFit(el, textLength) {
+    var fit = el.dataset.fit;
+    var chars = parseInt(el.dataset.fitChars || '0', 10);
+    if (!fit || !chars) return;
+    if (textLength > chars) el.setAttribute('textLength', fit);
+    else el.removeAttribute('textLength');
+  }
+
+  function setText(el, val) {
+    if (!el) return;
+    var ph = el.dataset.placeholder || '';
+    el.textContent = val || ph;
+    el.style.opacity = val ? '1' : '0.4';
+    clampFit(el, (val || ph).length);
+  }
+
+  /* hidden order properties submit only when they carry text */
+  function setProp(el, val) {
+    if (!el) return;
+    el.value = val;
+    el.disabled = !val;
+  }
+
+  /* how many necklace sides the current variant allows (4 when the
+     set has no sides option) */
+  function maxSides() {
+    var optIndex = rig.dataset.sidesOption;
+    if (optIndex === '-1' || optIndex == null) return 4;
+    var group = root.querySelector('[data-option-index="' + optIndex + '"]');
+    var checked = group && group.querySelector('input:checked');
+    if (!checked) return parseInt(rig.dataset.maxSides || '4', 10);
+    var m = checked.value.match(/[1-4]/);
+    return m ? parseInt(m[0], 10) : parseInt(rig.dataset.maxSides || '4', 10);
+  }
+
+  function render() {
+    var v = shared.value.trim();
+    var allowed = maxSides();
+    rig.dataset.maxSides = allowed;
+
+    /* split "lat, lng" across front/back unless the shopper typed
+       their own back line or the variant only includes one side */
+    var comma = v.indexOf(',');
+    var backTyped = sideInput(2) && sideInput(2).value.trim();
+    var split = comma > -1 && allowed >= 2 && !backTyped;
+    var front = split ? v.slice(0, comma).trim() : v;
+    var texts = {
+      1: front,
+      2: split ? v.slice(comma + 1).trim() : (backTyped || ''),
+      3: sideInput(3) ? sideInput(3).value.trim() : '',
+      4: sideInput(4) ? sideInput(4).value.trim() : ''
+    };
+
+    for (var i = 1; i <= 4; i++) {
+      var inBudget = i <= allowed;
+      setText(facePreview(i), inBudget ? texts[i] : '');
+      var wrap = faceWrap(i);
+      if (wrap) {
+        /* front and back read as "yours" by default; 3/4 light up when used */
+        var active = inBudget && (i <= 2 || !!texts[i]);
+        wrap.dataset.faceActive = active ? 'true' : 'false';
+      }
+      setProp(sideProp(i), inBudget ? texts[i] : '');
+      if (i >= 2) {
+        var field = sideField(i);
+        var input = sideInput(i);
+        /* the back field hides while the split fills it automatically */
+        var hideField = !inBudget || (i === 2 && split);
+        if (field) field.style.display = hideField ? 'none' : '';
+        if (input) input.disabled = !inBudget;
+      }
+    }
+
+    if (splitNote) splitNote.hidden = !split;
+
+    /* companion pieces mirror the full pair unless overridden */
+    rig.querySelectorAll('[data-duo-piece-prop]').forEach(function (prop) {
+      var piece = prop.dataset.duoPieceProp;
+      var override = rig.querySelector('[data-duo-override="' + piece + '"]');
+      var val = (override && override.value.trim()) || v;
+      setProp(prop, val);
+      rig.querySelectorAll('[data-set-preview="' + piece + '"]').forEach(function (el) {
+        setText(el, val);
+      });
+      if (override && !override.value) override.placeholder = v || override.dataset.origPlaceholder || '';
+    });
+
+    if (counter) counter.textContent = shared.value.length + ' / ' + shared.maxLength;
+  }
+
+  rig.querySelectorAll('[data-duo-override]').forEach(function (el) {
+    el.dataset.origPlaceholder = el.placeholder;
+  });
+
+  shared.addEventListener('input', function () {
+    render();
+    /* manual edits invalidate locator-pinned coordinates */
+    if (!shared.dataset.fromLocator) {
+      ['[data-prop-latlng]', '[data-prop-place]', '[data-prop-maplink]'].forEach(function (sel) {
+        var el = rig.querySelector(sel);
+        if (el) el.value = '';
+      });
+    }
+  });
+
+  rig.addEventListener('input', function (e) {
+    if (e.target.matches('[data-duo-side], [data-duo-override]')) render();
+  });
+
+  /* variant switches can change the allowed side count */
+  root.addEventListener('change', function (e) {
+    if (e.target.closest('[data-option-index]')) render();
+  });
+
+  render();
+
+  /* require the shared coordinates before add to cart */
+  var form = root.querySelector('form[data-product-form]');
+  if (form && shared.required) {
+    form.addEventListener('submit', function (e) {
+      if (!shared.value.trim()) {
+        e.preventDefault();
+        shared.focus();
+        shared.setCustomValidity('Add your coordinates so we can engrave the set.');
+        shared.reportValidity();
+        shared.addEventListener('input', function () { shared.setCustomValidity(''); }, { once: true });
+      }
+    });
+  }
+})();
