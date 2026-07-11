@@ -47,8 +47,24 @@
       return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
     }
 
+    /* recolor every engraving preview to the chosen metal */
+    function syncMetal() {
+      var metal = '';
+      currentOptions().forEach(function (val) {
+        if (!val) return;
+        var v = val.toLowerCase();
+        if (/rose/.test(v)) metal = 'rose-gold';
+        else if (!metal && /gold|brass/.test(v)) metal = 'gold';
+        else if (!metal && /silver|steel|stainless|platinum/.test(v)) metal = 'silver';
+        else if (!metal && /black|gunmetal|graphite|onyx/.test(v)) metal = 'black';
+      });
+      if (metal) root.dataset.metal = metal;
+      else delete root.dataset.metal;
+    }
+
     function updateVariant() {
       var v = matchVariant();
+      syncMetal();
       if (!v) return;
       if (idInput) idInput.value = v.id;
       if (priceEl) {
@@ -274,61 +290,6 @@
   });
 })();
 
-/* ---------- vertical 4-side bar product template ---------- */
-(function () {
-  'use strict';
-  var rig = document.querySelector('[data-vertical-engraving]');
-  var root = document.querySelector('[data-product-vertical]');
-  if (!rig || !root) return;
-
-  /* per-side live previews */
-  for (var i = 1; i <= 4; i++) {
-    (function (side) {
-      var input = rig.querySelector('[data-engrave-input-side="' + side + '"]');
-      var preview = rig.querySelector('[data-vertical-preview="' + side + '"]');
-      if (!input || !preview) return;
-      var placeholder = side === 1 ? (preview.dataset.placeholder || '') : '· · ·';
-      var render = function () {
-        var val = input.value.trim();
-        preview.textContent = val || placeholder;
-        preview.style.opacity = val ? '1' : '0.4';
-      };
-      input.addEventListener('input', render);
-      render();
-    })(i);
-  }
-
-  /* variant option like "2 sides" controls how many sides are active */
-  function syncSides() {
-    var sides = 4;
-    root.querySelectorAll('[data-option-index] input:checked').forEach(function (radio) {
-      var m = radio.value.match(/(\d)\s*side/i);
-      if (m) sides = parseInt(m[1], 10);
-    });
-    rig.dataset.activeSides = sides;
-  }
-  root.addEventListener('change', function (e) {
-    if (e.target.closest('[data-option-index]')) syncSides();
-  });
-  syncSides();
-
-  /* side 1 must be filled before add to cart */
-  var form = root.querySelector('form[data-product-form]');
-  var side1 = rig.querySelector('[data-engrave-input-side="1"]');
-  if (form && side1) {
-    form.addEventListener('submit', function (e) {
-      if (!side1.value.trim()) {
-        e.preventDefault();
-        side1.focus();
-        side1.setCustomValidity('Add your engraving for side 1 — coordinates, a name, or a date.');
-        side1.reportValidity();
-        side1.addEventListener('input', function () { side1.setCustomValidity(''); }, { once: true });
-      }
-    });
-  }
-})();
-
-
 /* ============================================================
    ENGRAVING PREVIEW SYSTEM
    Handles live text updates for all preview types:
@@ -339,6 +300,16 @@
   var root = document.querySelector('[data-product]');
   if (!root) return;
   var previewType = root.dataset.previewType || 'horizontal-bar';
+
+  /* long engravings compress to the bar instead of spilling off it,
+     so the preview always shows what physically fits */
+  function clampFit(el, textLength) {
+    var fit = el.dataset.fit;
+    var chars = parseInt(el.dataset.fitChars || '0', 10);
+    if (!fit || !chars) return;
+    if (textLength > chars) el.setAttribute('textLength', fit);
+    else el.removeAttribute('textLength');
+  }
 
   /* ---- STANDARD SINGLE-INPUT PREVIEWS ---- */
   /* Covers: horizontal-bar, vertical-bar, ring, bracelet */
@@ -356,6 +327,7 @@
         /* SVG <text> uses textContent, <textPath> also uses textContent */
         el.textContent = val || placeholder;
         el.style.opacity = val ? '1' : '0.4';
+        clampFit(el, (val || placeholder).length);
       });
       if (counter) counter.textContent = input.value.length + ' / ' + input.maxLength;
       /* manual edits invalidate locator data */
@@ -399,6 +371,7 @@
         var val = inp.value.trim();
         preview.textContent = val || placeholder || '—';
         preview.style.opacity = val ? '1' : '0.4';
+        clampFit(preview, (val || placeholder).length);
         if (!inp.dataset.fromLocator) {
           ['[data-prop-latlng]', '[data-prop-place]', '[data-prop-maplink]'].forEach(function (sel) {
             var el = document.querySelector(sel);
@@ -411,6 +384,7 @@
       /* initial render */
       preview.textContent = inp.value.trim() || placeholder || '—';
       preview.style.opacity = inp.value.trim() ? '1' : '0.4';
+      clampFit(preview, (inp.value.trim() || placeholder).length);
     });
 
     /* locator auto-fills: split lat/lng into line 1 + line 2 */
@@ -452,67 +426,113 @@
     var rig = root.querySelector('[data-four-sided-engraving]');
     if (!rig) return;
 
-    /* side count picker */
+    /* Side count follows the product variant when one of the variant
+       options is a side count ("2 Sides") — the same control that sets
+       the price. The rig's own picker only exists for products without
+       such an option (data-sides-source="manual"). */
+    var variantDriven = rig.dataset.sidesSource === 'variant';
     var sideRadios = rig.querySelectorAll('[data-side-count-picker] input[type="radio"]');
-    function getActiveSides() {
+    var counter = rig.querySelector('[data-engrave-count]');
+    var tip = rig.querySelector('[data-four-tip]');
+
+    function sidesFromVariant() {
+      var sides = 0;
+      root.querySelectorAll('[data-option-index] input:checked').forEach(function (radio) {
+        var m = radio.value.match(/([1-4])\s*side/i);
+        if (m) sides = parseInt(m[1], 10);
+      });
+      return sides;
+    }
+
+    function sidesFromPicker() {
       var count = 2;
       sideRadios.forEach(function (r) { if (r.checked) count = parseInt(r.value, 10); });
       return count;
     }
 
+    function getActiveSides() {
+      if (variantDriven) {
+        return sidesFromVariant() || parseInt(rig.dataset.activeSides || '2', 10);
+      }
+      return sidesFromPicker();
+    }
+
     function syncSideVisibility() {
       var active = getActiveSides();
+      rig.dataset.activeSides = active;
       for (var s = 1; s <= 4; s++) {
         var field = rig.querySelector('[data-side-field="' + s + '"]');
         var face = rig.querySelector('[data-face="' + s + '"]');
+        var input = rig.querySelector('[data-engrave-input-side="' + s + '"]');
         if (field) field.style.display = s <= active ? '' : 'none';
         if (face) face.dataset.faceActive = s <= active ? 'true' : 'false';
+        /* disabled inputs never submit: a hidden side can't ride along
+           into the cart on a variant the shopper didn't pay for */
+        if (input) input.disabled = s > active;
       }
+      var hint = rig.querySelector('[data-four-hint]');
+      if (hint) hint.textContent = 'Live preview — one pendant, engraved on ' + active + (active === 1 ? ' side' : ' sides');
+      if (tip && active >= 2) tip.hidden = true;
     }
 
+    if (variantDriven) {
+      root.addEventListener('change', function (e) {
+        if (e.target.closest('[data-option-index]')) syncSideVisibility();
+      });
+    }
     sideRadios.forEach(function (r) {
       r.addEventListener('change', syncSideVisibility);
     });
     syncSideVisibility();
 
-    /* per-side live preview */
+    /* per-side live preview + shared counter follows whichever side is edited */
     for (var i = 1; i <= 4; i++) {
       (function (side) {
         var inp = rig.querySelector('[data-engrave-input-side="' + side + '"]');
         var preview = rig.querySelector('[data-four-preview="' + side + '"]');
         if (!inp || !preview) return;
-        var ph = side === 1 ? (preview.dataset.placeholder || '') : 'Side ' + side;
+        var ph = preview.dataset.placeholder || (side === 1 ? '' : '· · ·');
 
         function renderSide() {
           var val = inp.value.trim();
           preview.textContent = val || ph;
           preview.style.opacity = val ? '1' : '0.4';
+          clampFit(preview, (val || ph).length);
         }
-        inp.addEventListener('input', renderSide);
+        inp.addEventListener('input', function () {
+          renderSide();
+          if (counter) counter.textContent = inp.value.length + ' / ' + inp.maxLength;
+        });
+        inp.addEventListener('focus', function () {
+          if (counter) counter.textContent = inp.value.length + ' / ' + inp.maxLength;
+        });
         renderSide();
       })(i);
     }
 
-    /* locator auto-fills: split lat/lng into front (side 1) + back (side 2) */
+    /* locator auto-fill: split lat/lng across front + back when the
+       shopper's variant includes 2+ sides; otherwise keep the full pair
+       on the front and suggest the two-sided option instead of silently
+       switching them to a different price */
     var side1Input = rig.querySelector('[data-engrave-input-side="1"]');
     if (side1Input) {
       side1Input.addEventListener('input', function () {
-        if (side1Input.dataset.fromLocator) {
-          var parts = side1Input.value.split(',').map(function (s) { return s.trim(); });
-          if (parts.length >= 2) {
-            side1Input.value = parts[0]; /* latitude on front */
-            var side2Input = rig.querySelector('[data-engrave-input-side="2"]');
-            if (side2Input) {
-              side2Input.value = parts.slice(1).join(', '); /* longitude on back */
-              side2Input.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-            /* ensure 2 sides minimum */
-            var twoSideRadio = rig.querySelector('[data-side-count-picker] input[value="2"]');
-            if (twoSideRadio && getActiveSides() < 2) {
-              twoSideRadio.checked = true;
-              syncSideVisibility();
-            }
+        if (!side1Input.dataset.fromLocator) return;
+        var parts = side1Input.value.split(',').map(function (s) { return s.trim(); });
+        if (parts.length < 2) return;
+        if (getActiveSides() >= 2) {
+          side1Input.value = parts[0]; /* latitude on front */
+          /* re-dispatch so side 1's preview redraws with just the latitude;
+             the second pass finds no comma and returns immediately */
+          side1Input.dispatchEvent(new Event('input', { bubbles: true }));
+          var side2Input = rig.querySelector('[data-engrave-input-side="2"]');
+          if (side2Input) {
+            side2Input.value = parts.slice(1).join(', '); /* longitude on back */
+            side2Input.dispatchEvent(new Event('input', { bubbles: true }));
           }
+          if (tip) tip.hidden = true;
+        } else if (tip) {
+          tip.hidden = false;
         }
       });
     }
@@ -561,11 +581,20 @@
     return (el && el.dataset && el.dataset.placeholder) || '27.7676\u00B0 N, 82.6403\u00B0 W';
   }
 
+  function clampFit(el, textLength) {
+    var fit = el.dataset.fit;
+    var chars = parseInt(el.dataset.fitChars || '0', 10);
+    if (!fit || !chars) return;
+    if (textLength > chars) el.setAttribute('textLength', fit);
+    else el.removeAttribute('textLength');
+  }
+
   function updatePreview(piece, val) {
     allPreviews.forEach(function (el) {
       if (el.dataset.setPreview === piece) {
         el.textContent = val || getPlaceholder(el);
         el.style.opacity = val ? '1' : '0.4';
+        clampFit(el, (val || getPlaceholder(el)).length);
       }
     });
   }
@@ -574,6 +603,7 @@
     allPreviews.forEach(function (el) {
       el.textContent = val || getPlaceholder(el);
       el.style.opacity = val ? '1' : '0.4';
+      clampFit(el, (val || getPlaceholder(el)).length);
     });
   }
 

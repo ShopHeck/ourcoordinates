@@ -242,28 +242,8 @@ h3 { font-size: 1.2rem; }
 .swatches input:checked + label { border-color: var(--c-ink); background: var(--c-ink); color: var(--c-paper); }
 .swatches input:focus-visible + label { outline: 2px solid var(--c-gold); outline-offset: 2px; }
 
-/* engraving preview — the signature */
+/* engraving field */
 .engrave-field { margin-bottom: 20px; }
-.engrave-preview {
-  background: linear-gradient(120deg, #d8d3c9, #efece5 45%, #cfc9bd);
-  border: 1px solid var(--c-line); border-radius: 3px;
-  padding: 26px 16px; text-align: center; margin-bottom: 10px;
-}
-.engrave-preview__bar {
-  display: inline-block; min-width: 230px;
-  padding: 14px 18px;
-  background: linear-gradient(180deg, #23232a, #0c0c10);
-  border-radius: 3px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 16px rgba(0,0,0,0.25);
-}
-.engrave-preview__text {
-  font-family: var(--f-coord); font-size: 0.95rem; letter-spacing: 0.22em;
-  color: #cdb88a;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.8);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  display: block; max-width: 280px;
-}
-.engrave-preview__hint { font-family: var(--f-coord); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-ink-soft); margin-top: 10px; }
 .engrave-field input[type="text"] {
   width: 100%; padding: 13px 14px;
   border: 1px solid var(--c-line); border-radius: 2px; background: #fff;
@@ -542,52 +522,6 @@ h3 { font-size: 1.2rem; }
   .locator__coords { text-align: center; }
 }
 
-/* ---- vertical 4-side bar preview ---- */
-.vbar-stage {
-  display: flex; justify-content: center; align-items: flex-end; gap: 14px;
-  background: linear-gradient(120deg, #d8d3c9, #efece5 45%, #cfc9bd);
-  border: 1px solid var(--c-line); border-radius: 3px;
-  padding: 26px 12px 16px;
-}
-.vbar { display: grid; justify-items: center; gap: 8px; transition: opacity 0.25s ease, filter 0.25s ease; }
-.vbar__face {
-  width: 46px; height: 230px;
-  background: linear-gradient(90deg, #23232a, #0c0c10 55%, #1a1a20);
-  border-radius: 3px;
-  box-shadow: inset 1px 0 0 rgba(255,255,255,0.12), inset -2px 0 4px rgba(0,0,0,0.5), 0 8px 18px rgba(0,0,0,0.25);
-  display: grid; place-items: center; overflow: hidden;
-}
-.vbar__text {
-  writing-mode: vertical-rl; text-orientation: mixed;
-  font-family: var(--f-coord); font-size: 0.82rem; letter-spacing: 0.28em;
-  color: #cdb88a; text-shadow: 1px 0 0 rgba(0,0,0,0.8);
-  max-height: 210px; overflow: hidden; white-space: nowrap;
-}
-.vbar__label {
-  font-family: var(--f-coord); font-size: 0.6rem; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--c-ink-soft);
-}
-/* inactive sides dim out based on the variant's side count */
-[data-vertical-engraving][data-active-sides="1"] .vbar:nth-child(n+2),
-[data-vertical-engraving][data-active-sides="2"] .vbar:nth-child(n+3),
-[data-vertical-engraving][data-active-sides="3"] .vbar:nth-child(n+4) { opacity: 0.22; filter: grayscale(1); }
-[data-vertical-engraving][data-active-sides="1"] [data-side-input="2"],
-[data-vertical-engraving][data-active-sides="1"] [data-side-input="3"],
-[data-vertical-engraving][data-active-sides="1"] [data-side-input="4"],
-[data-vertical-engraving][data-active-sides="2"] [data-side-input="3"],
-[data-vertical-engraving][data-active-sides="2"] [data-side-input="4"],
-[data-vertical-engraving][data-active-sides="3"] [data-side-input="4"] { display: none; }
-.vside-input { margin-bottom: 8px; }
-.vside-input input {
-  width: 100%; padding: 12px 14px;
-  border: 1px solid var(--c-line); border-radius: 2px; background: #fff;
-}
-.vside-input input:focus { border-color: var(--c-gold); outline: none; }
-@media (max-width: 420px) {
-  .vbar__face { width: 38px; height: 190px; }
-  .vbar__text { max-height: 172px; font-size: 0.74rem; }
-}
-
 /* ---- hero CTA group + secondary button ---- */
 .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
 .btn--hero-ghost {
@@ -728,24 +662,40 @@ h3 { font-size: 1.2rem; }
   letter-spacing: 0.18em;
 }
 
-/* -- shared metal fill for SVG rects -- */
-.ep__metal {
-  fill: url(#ep-metal-grad);
-}
-/* fallback when no gradient defined */
-.ep__metal { fill: #1a1a22; }
+/* -- shared metal fill for SVG shapes --
+   The gradients live in an inline <defs> block on the product page and
+   switch with the shopper's metal variant via data-metal on the section
+   root (set in global.js). Solid-color fallback first for safety. */
+.ep__metal { fill: #1c1c24; }
 .ep svg .ep__metal {
-  fill: #1a1a22;
+  fill: url(#ep-metal-black);
   filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
 }
+[data-metal="gold"] .ep svg .ep__metal { fill: url(#ep-metal-gold); }
+[data-metal="rose-gold"] .ep svg .ep__metal { fill: url(#ep-metal-rose-gold); }
+[data-metal="silver"] .ep svg .ep__metal { fill: url(#ep-metal-silver); }
+
+/* engraving reads dark on light metals, light on dark metal */
+[data-metal="gold"] .ep .ep__engrave-text,
+[data-metal="rose-gold"] .ep .ep__engrave-text { fill: rgba(62, 45, 20, 0.8); }
+[data-metal="silver"] .ep .ep__engrave-text { fill: rgba(48, 50, 60, 0.8); }
+/* the cuff artwork keeps its own dark band — keep its text light */
+[data-metal] .ep--bracelet .ep__engrave-text,
+[data-metal] .ep__set-svg--bracelet .ep__engrave-text { fill: rgba(255, 255, 255, 0.82); }
+
+/* ring band + chain recolor with the metal too */
+[data-metal="gold"] .ep .ep__ring-band { stroke: #ab8c5e; }
+[data-metal="rose-gold"] .ep .ep__ring-band { stroke: #c08b73; }
+[data-metal="silver"] .ep .ep__ring-band { stroke: #b6b6bf; }
+
+/* brushed-metal detailing */
+.ep__sheen { fill: rgba(255, 255, 255, 0.13); }
+.ep__bevel { stroke: rgba(255, 255, 255, 0.17); stroke-width: 1; }
+.ep__hole { fill: rgba(0, 0, 0, 0.38); stroke: rgba(255, 255, 255, 0.3); stroke-width: 1; }
 
 /* ---- HORIZONTAL BAR ---- */
 .ep--horizontal-bar { padding: 28px 16px 12px; }
 .ep__hbar-svg { max-width: 320px; width: 100%; height: auto; display: block; margin: 0 auto; }
-.ep__hbar-svg .ep__metal {
-  fill: #1a1a22;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
-}
 
 /* ---- VERTICAL BAR ---- */
 .ep--vertical-bar { padding: 20px 16px 12px; }
@@ -766,20 +716,26 @@ h3 { font-size: 1.2rem; }
 .ep__dog-tag-svg { max-width: 160px; width: 100%; height: auto; display: block; margin: 0 auto; }
 
 /* ---- FOUR-SIDED BAR ---- */
-.ep--four-sided { padding: 20px 12px 12px; }
+.ep--four-sided { padding: 12px 12px 12px; }
+.ep__chain { margin-bottom: -5px; }
+.ep__chain svg { width: min(300px, 92%); height: auto; display: block; margin: 0 auto; }
+.ep__chain-line { stroke: #8b8b95; stroke-width: 1.3; }
+[data-metal="gold"] .ep__chain-line { stroke: #b7975f; }
+[data-metal="rose-gold"] .ep__chain-line { stroke: #c48f76; }
+[data-metal="silver"] .ep__chain-line { stroke: #b0b0ba; }
 .ep__faces {
-  display: flex; justify-content: center; align-items: flex-end; gap: 16px;
+  display: flex; justify-content: center; align-items: flex-end; gap: 18px;
   margin-bottom: 4px;
 }
 .ep__face { text-align: center; transition: opacity 0.25s ease, filter 0.25s ease; }
 .ep__face[data-face-active="false"] { opacity: 0.2; filter: grayscale(1); }
-.ep__face-svg { width: 40px; height: auto; display: block; margin: 0 auto; }
+.ep__face-svg { width: 46px; height: auto; display: block; margin: 0 auto; }
 .ep__face-label {
   font-family: var(--f-coord); font-size: 0.6rem; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--c-ink-soft); margin-top: 4px; display: block;
 }
 
-/* side count picker — reuses swatch styling */
+/* side count picker — fallback only, for products without a sides variant */
 .ep__side-picker { margin-bottom: 12px; }
 .ep__side-picker legend { margin-bottom: 6px; }
 
@@ -788,6 +744,15 @@ h3 { font-size: 1.2rem; }
 .ep__side-input label {
   font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--c-ink-soft); display: block; margin-bottom: 4px;
+}
+.ep__side-optional {
+  text-transform: none; letter-spacing: 0; font-weight: 400;
+  font-size: 0.72rem; color: var(--c-ink-soft);
+}
+.ep__side-tip {
+  font-size: 0.78rem; color: var(--c-ink-soft);
+  background: rgba(182, 151, 106, 0.08); border-left: 2px solid var(--c-gold);
+  padding: 8px 10px; margin: 0 0 10px; border-radius: 2px;
 }
 
 /* dog-tag multi-line labels */
@@ -799,9 +764,21 @@ h3 { font-size: 1.2rem; }
 /* responsive */
 @media (max-width: 420px) {
   .ep__faces { gap: 10px; }
-  .ep__face-svg { width: 34px; }
+  .ep__face-svg { width: 38px; }
   .ep__ring-svg { max-width: 200px; }
   .ep__bracelet-svg { max-width: 240px; }
+}
+
+/* ---- numbered buy steps: 01 Metal · 02 Sides · 03 Your engraving ---- */
+form[data-product-form] { counter-reset: buystep; }
+.buy-step::before {
+  counter-increment: buystep;
+  content: counter(buystep, decimal-leading-zero);
+  font-family: var(--f-coord);
+  font-size: 0.7rem;
+  color: var(--c-gold);
+  margin-right: 9px;
+  letter-spacing: 0.05em;
 }
 
 

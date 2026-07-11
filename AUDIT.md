@@ -114,7 +114,33 @@ Watch in analytics after launch: add-to-cart → checkout rate (drawer),
 gift-packaging attach rate (target 8–15%), upsell row CTR, AOV, and the
 gift-finder entry rate from the new homepage Story CTA.
 
-## 6. Not changed, deliberately
+## 6. Round 2 — personalization templates (July 2026)
+
+Follow-up pass focused on making the engraving preview match each product's
+real personalization options:
+
+- **Variant-driven sides.** On four-sided products (e.g. the Custom
+  Coordinates Necklace), the number of engraving inputs and preview faces now
+  follows the shopper's variant selection (any option valued like "2 Sides").
+  The old separate "How many sides?" picker — which duplicated the variant and
+  never changed the price — renders only for products without a sides variant.
+  Inputs for inactive sides are disabled, so an engraving for a side the
+  shopper didn't pay for can never ride into the cart.
+- **Realistic preview.** The four-sided preview now reads as one pendant —
+  chain and bail, brushed-metal gradients, bevel and drill-hole details — and
+  every preview site-wide recolors live to the chosen metal variant (gold,
+  rose gold, silver, black). Long engravings compress into the bar exactly the
+  way a laser layout would, instead of overflowing the artwork.
+- **Guided flow.** Buy-box choices are numbered (01 Metal · 02 Sides · 03 Your
+  engraving), sides 2–4 are labeled optional with example placeholders, and
+  using the coordinate finder on a 1-side variant surfaces a gentle
+  "split it across two sides" tip instead of silently switching variants.
+- **Template repairs**: `product.four-sided.json` pointed at the wrong preview
+  (`vertical-bar`, single input) with a 10-character cap; vertical-bar and
+  dog-tag templates capped input below their own placeholder text. All
+  corrected (15–20 chars, per-shape).
+
+## 7. Not changed, deliberately
 
 - Checkout itself (Shopify-hosted).
 - The coordinates-builder quiz page (`page.coordinates-builder.liquid`) — it's a self-contained experience; the homepage now feeds it traffic.
