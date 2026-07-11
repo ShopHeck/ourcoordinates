@@ -435,13 +435,15 @@
     var counter = rig.querySelector('[data-engrave-count]');
     var tip = rig.querySelector('[data-four-tip]');
 
+    /* Liquid already identified WHICH option is the side count
+       (data-sides-option), so accept any value format it can carry:
+       "2 Sides", "2", "4-sided" — first digit 1–4 wins. */
     function sidesFromVariant() {
-      var sides = 0;
-      root.querySelectorAll('[data-option-index] input:checked').forEach(function (radio) {
-        var m = radio.value.match(/([1-4])\s*side/i);
-        if (m) sides = parseInt(m[1], 10);
-      });
-      return sides;
+      var group = root.querySelector('[data-option-index="' + rig.dataset.sidesOption + '"]');
+      var checked = group && group.querySelector('input:checked');
+      if (!checked) return 0;
+      var m = checked.value.match(/[1-4]/);
+      return m ? parseInt(m[0], 10) : 0;
     }
 
     function sidesFromPicker() {
