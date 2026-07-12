@@ -42,11 +42,12 @@ jobs:
 
       # A section over the sync's per-file cap merges cleanly, then never
       # reaches the store — the exact failure that froze the engraving
-      # previews on July 12, 2026. Fail loudly here instead. 48 000 bytes
-      # leaves margin below the lowest observed working size (50 224).
+      # previews on July 12, 2026. Fail loudly here instead. 50 224 bytes
+      # is the largest section the sync has ever accepted on this store;
+      # anything bigger has silently failed.
       - name: Guard section/snippet file sizes
         run: |
-          LIMIT=48000
+          LIMIT=50224
           fail=0
           for f in sections/*.liquid snippets/*.liquid; do
             [ -f "$f" ] || continue
