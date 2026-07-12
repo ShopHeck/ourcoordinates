@@ -1,58 +1,81 @@
 # Deploying this theme to Shopify
 
-## The pipeline (read this once)
+## The pipeline
 
 ```
-edit → PR → merge to main → GitHub Action pushes to the LIVE theme
+edit → PR (Theme CI validates) → merge to main → Shopify GitHub sync → live theme
 ```
 
-**Merging to `main` does not, by itself, change the store.** This repository
-is not connected to the Shopify admin's GitHub theme integration — there is
-no `shopify[bot]` in the commit history and no connected-theme entry in the
-store's theme library that tracks this repo. Until July 2026 the final
-"push to Shopify" step was done by hand (Claude sessions with the Shopify
-connector, or Shopify CLI from a laptop), which is why a merge could quietly
-end up in git only.
+The store's **published theme is `ourcoordinates/main`**, connected to this
+repository's `main` branch through Shopify's GitHub integration. Every merge
+to `main` syncs to the live theme automatically, file by file, within
+seconds (observed lag ≈ 4–6 s on every merge since July 5, 2026). No secrets,
+CI, or manual pushes are involved in normal deploys.
 
-`.github/workflows/deploy-theme.yml` now automates that step: every merge to
-`main` that touches theme files validates the theme (`shopify theme check`)
-and pushes it to the **published** theme. It can also be run manually from
-the **Actions** tab — including against a specific unpublished theme ID for
-previewing.
+Two consequences worth knowing:
 
-## Incident that prompted this — July 12, 2026
+- **Git is the source of truth.** Nobody edits this theme in the Shopify
+  code editor or theme editor (there are no `shopify[bot]` reverse-sync
+  commits in the history). Section/template edits made on the Shopify side
+  would be committed back to `main` by the integration — keep it that way,
+  or make the change in git instead.
+- **`config/settings_data.json` is effectively frozen** at its initial
+  version until someone saves theme settings in the editor (which would
+  commit back here). The merchant-setup steps in `AUDIT.md` §4 still assume
+  settings are made in the theme editor — that's fine; they'll sync back.
 
-PRs #5 and #6 (star-map astronomy preview, cuff engraving redesign) merged
-cleanly to `main` but never appeared on the live site. Audit findings:
+## The sync's silent failure mode (July 12, 2026 incident)
 
-- Both merges were complete and correct on GitHub `main` (`ffcf8ac`).
-- The theme at that commit is fully valid — Theme Check passes with 0 errors,
-  all template JSON parses, every referenced section exists. Nothing about
-  the commits could have been rejected by a sync.
-- The repo has never had a deploy pipeline, and the store shows no trace of
-  the GitHub integration (no reverse commits from theme-editor edits ever).
-- Conclusion: the "transfer" was always a manual push. Rounds 1–3 were pushed
-  by the sessions that authored them; round 4's push never happened, so the
-  merge stopped at git.
+**Symptom:** PRs #5–#6 (star-map preview, cuff redesign) merged cleanly but
+the product pages didn't change. Everything looked deployed — most files
+were — yet the previews stayed old.
 
-Fix: the deploy workflow above, plus a one-off sync of `main` to the live
-theme.
+**Root cause:** the GitHub sync **silently skips section files larger than
+~50 KB**. `sections/main-product.liquid` grew from 50,224 bytes (PR #2,
+the last version that ever synced) to 54,375 (PR #3) and then 62,708 bytes
+(PR #5). From PR #3 onward the sync updated every other file within seconds
+of each merge but left `main-product.liquid` frozen at the PR #2 version —
+no error in GitHub, no failed check, nothing in the repo to see. Checksum
+comparison of the live theme against `main` via the Admin API is what
+exposed it.
 
-## One-time setup (≈5 minutes)
+**Cascade:** JSON templates are validated against the *live* section schema
+at sync time. Because the live `main-product` schema was stale, all five
+set templates (`product.complete-set`, `product.necklace-bracelet-set`,
+`product.necklace-keychain-set`, `product.ring-bracelet-set`,
+`product.ring-necklace-set`) had their `set_necklace_style` setting
+silently stripped when they synced (Shopify rewrote them with an
+"auto-generated" banner). That degraded the set pages to the legacy
+same-text-on-every-piece preview.
 
-1. **Create a Theme Access password**
-   - Shopify admin → **Apps** → search **Theme Access** (by Shopify) → install.
-   - Create a password for the developer/owner email — you receive a token
-     starting with `shptka_`.
-2. **Add the two repository secrets**
-   (GitHub → repo → Settings → Secrets and variables → Actions):
-   - `SHOPIFY_CLI_THEME_TOKEN` → the `shptka_…` token
-   - `SHOPIFY_STORE` → the store's `*.myshopify.com` domain (not the custom
-     domain)
-3. Re-run the failed **Deploy theme to Shopify** run (or push any theme file
-   to `main`) and confirm it goes green.
+**Fix (July 12, 2026):**
 
-## Manual fallbacks
+1. `sections/main-product.liquid` was split from 62.7 KB to ~21 KB — the
+   eight engraving-preview bodies and the JSON-LD block moved to
+   `snippets/pdp-preview-*.liquid` / `snippets/pdp-json-ld.liquid`
+   (verified as a byte-identical move: inlining the snippets back
+   reconstructs the original file exactly).
+2. The five set templates were re-serialized so the sync re-uploads them
+   once the new schema is live, restoring `set_necklace_style`.
+3. Theme CI (`.github/workflows/theme-ci.yml`) now **fails any PR that
+   pushes a section or snippet past 48,000 bytes**, so this class of
+   failure can't merge silently again.
+
+If a file ever seems not to deploy again: compare `checksumMd5` from the
+Admin API (`theme(id:).files(...)`) against `git show main:<file> | md5sum`
+— mismatched or stale `updatedAt` files are the ones the sync skipped.
+
+## Manual deploy fallback
+
+Normally unnecessary. If the GitHub integration is ever disconnected or you
+need to push to a preview theme:
+
+- **GitHub Actions:** Actions tab → **Theme CI** → *Run workflow*
+  (optionally enter a theme ID; empty = live theme). One-time setup —
+  repo secrets:
+  1. `SHOPIFY_CLI_THEME_TOKEN` — Shopify admin → Apps → **Theme Access** →
+     create a password (`shptka_…`).
+  2. `SHOPIFY_STORE` — the store's `*.myshopify.com` domain.
 
 - **From a laptop:**
 
@@ -62,25 +85,11 @@ theme.
     --live --allow-live --nodelete --ignore config/settings_data.json
   ```
 
-  (Log in with the store owner account when prompted, or set
-  `SHOPIFY_CLI_THEME_TOKEN`.)
+Both paths exclude `config/settings_data.json` (merchant editor settings
+survive) and never delete store-only files (`--nodelete`).
 
-- **Via Claude:** any session with the Shopify connector authorized can push
-  theme files through the Admin API (`themeFilesUpsert`). If Claude reports
-  the connector token expired, re-authorize it in claude.ai → Settings →
-  Connectors → Shopify.
-
-## Safety properties of the deploy
-
-- **Merchant settings are never overwritten**: `config/settings_data.json`
-  is excluded from every push, so choices made in the theme editor (gifting
-  products, occasion dates, app blocks) survive deploys.
-- **Store-only files are never deleted**: `--nodelete` keeps assets and
-  templates that exist only on the store (app-generated files, editor-created
-  templates).
-- **Invalid themes don't deploy**: the push is gated on
-  `shopify theme check --fail-level error`.
-- **Caveat**: JSON templates and sections in this repo are the source of
-  truth — section changes made in the theme editor to files that exist here
-  will be overwritten on the next deploy. Make layout changes in git, or
-  copy them back into the repo.
+- **Via Claude:** sessions with the Shopify connector can read the live
+  theme (verify checksums, diagnose) but Admin-API writes to the
+  *published* theme are blocked by policy — fixes flow through git and the
+  sync, which is the correct path anyway. If Claude reports the connector
+  token expired, re-authorize it at claude.ai → Settings → Connectors.
