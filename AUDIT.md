@@ -209,6 +209,14 @@ dependencies; the math and catalog add ~4 KB to the existing JS file.
   sellers) — the customer who owns every piece for one place is the easiest
   repeat purchase in the store: a second place.
 
+**Cuff preview redesign (follow-up).** The bracelet/cuff SVG used on the
+Coordinates Cuff Bracelet page (and inside every set preview) was rebuilt:
+the old abstract band now draws as a true open cuff — three-quarter view,
+ball terminals at the gap — and the engraving sits in a recessed channel
+along the front of the band, so the personalization always reads as light
+text on a dark surface regardless of the chosen metal (the old preview went
+dark-on-dark/dark-on-gold once a metal variant was selected).
+
 ### Merchant checklist for this round (5 minutes)
 1. Assign the five templates (table above).
 2. Create collection **`coordinates-sets`** containing the four set products

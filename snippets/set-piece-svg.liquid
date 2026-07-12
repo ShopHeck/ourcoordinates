@@ -16,26 +16,37 @@
 {%- case piece -%}
 
   {%- when 'bracelet' -%}
-    <svg viewBox="0 0 340 130" class="ep__set-svg ep__set-svg--bracelet" aria-hidden="true">
+    {%- comment -%}
+      Open cuff seen in three-quarter view: the band sweeps around the
+      bottom, the gap and ball terminals face up — the classic cuff
+      silhouette. The engraving sits in a recessed channel along the
+      front of the band, so the text always reads light-on-dark no
+      matter which metal the band recolors to.
+    {%- endcomment -%}
+    <svg viewBox="0 0 340 200" class="ep__set-svg ep__set-svg--bracelet" aria-hidden="true">
       <defs>
-        <path id="{{ id_prefix }}-cuff-text" d="M 42,68 Q 170,86 298,68" fill="none"/>
+        <path id="{{ id_prefix }}-cuff-text" d="M 73.4,137.3 A 118,68.5 0 0 0 266.6,137.3" fill="none"/>
       </defs>
-      {%- comment -%} Arms of the cuff, shaded for depth {%- endcomment -%}
-      <path d="M 8,6 C 8,36 22,48 38,54 L 38,38 C 26,34 20,26 20,6 Z" class="ep__metal"/>
-      <path d="M 8,6 C 8,36 22,48 38,54 L 38,38 C 26,34 20,26 20,6 Z" class="ep__cuff-shade"/>
-      <path d="M 8,6 C 8,36 22,48 38,54" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
-      <path d="M 332,6 C 332,36 318,48 302,54 L 302,38 C 314,34 320,26 320,6 Z" class="ep__metal"/>
-      <path d="M 332,6 C 332,36 318,48 302,54 L 302,38 C 314,34 320,26 320,6 Z" class="ep__cuff-shade"/>
-      <path d="M 332,6 C 332,36 318,48 302,54" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
-      {%- comment -%} Front band + brushed sheen + rim light and shadow {%- endcomment -%}
-      <path d="M 28,46 Q 170,76 312,46 L 312,70 Q 170,100 28,70 Z" class="ep__metal"/>
-      <path d="M 28,46 Q 170,76 312,46 L 312,52 Q 170,82 28,52 Z" class="ep__cuff-sheen"/>
-      <path d="M 28,46 Q 170,76 312,46" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.6"/>
-      <path d="M 28,70 Q 170,100 312,70" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5"/>
-      <text class="ep__engrave-text ep__engrave-text--curve" text-anchor="middle">
+      {%- comment -%} The band: outer sweep, back along the inner edge {%- endcomment -%}
+      <path d="M 94.3,34.1 A 132,78 0 1 0 245.7,34.1 L 229.7,55.4 A 104,52 0 1 1 110.3,55.4 Z" class="ep__metal"/>
+      {%- comment -%} Brushed sheen down the left arm, rim light, inner shadow {%- endcomment -%}
+      <path d="M 92.9,47.4 A 120,66 0 0 0 54.1,115.1" class="ep__cuff-sheen" stroke-width="9"/>
+      <path d="M 94.3,34.1 A 132,78 0 1 0 245.7,34.1" class="ep__cuff-rim" stroke-width="1"/>
+      <path d="M 229.7,55.4 A 104,52 0 1 1 110.3,55.4" class="ep__cuff-inner-shadow" stroke-width="1.5"/>
+      {%- comment -%} Ball terminals at the opening {%- endcomment -%}
+      <circle cx="102.3" cy="44.7" r="13.2" class="ep__metal"/>
+      <circle cx="102.3" cy="44.7" r="13.2" fill="none" class="ep__cuff-rim" stroke-width="0.8"/>
+      <circle cx="99" cy="41.4" r="2.2" fill="rgba(255,255,255,0.35)"/>
+      <circle cx="237.7" cy="44.7" r="13.2" class="ep__metal"/>
+      <circle cx="237.7" cy="44.7" r="13.2" fill="none" class="ep__cuff-rim" stroke-width="0.8"/>
+      <circle cx="234.4" cy="41.4" r="2.2" fill="rgba(255,255,255,0.35)"/>
+      {%- comment -%} Recessed engraving channel along the front {%- endcomment -%}
+      <path d="M 73.4,135.3 A 118,65 0 0 0 266.6,135.3" class="ep__cuff-channel" stroke-width="17"/>
+      <path d="M 73.4,135.3 A 118,65 0 0 0 266.6,135.3" class="ep__cuff-channel ep__cuff-channel--core" stroke-width="13"/>
+      <text class="ep__engrave-text ep__engrave-text--curve ep__cuff-engrave" text-anchor="middle">
         <textPath href="#{{ id_prefix }}-cuff-text" startOffset="50%"
                   {% if _mode == 'single' %}data-engrave-preview{% else %}data-set-preview="bracelet"{% endif %}
-                  data-fit="230" data-fit-chars="24" lengthAdjust="spacingAndGlyphs"
+                  data-fit="170" data-fit-chars="18" lengthAdjust="spacingAndGlyphs"
                   data-placeholder="{{ placeholder | escape }}">{{ placeholder }}</textPath>
       </text>
     </svg>
