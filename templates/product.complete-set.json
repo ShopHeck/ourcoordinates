@@ -18,10 +18,7 @@
           }
         }
       },
-      "block_order": [
-        "details",
-        "how"
-      ],
+      "block_order": ["details", "how"],
       "settings": {
         "preview_type": "coordinates-set",
         "set_pieces": "necklace,bracelet,keychain,ring",
@@ -46,8 +43,5 @@
       }
     }
   },
-  "order": [
-    "main",
-    "cross"
-  ]
+  "order": ["main", "cross"]
 }
