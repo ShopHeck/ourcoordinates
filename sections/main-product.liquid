@@ -1,3 +1,4 @@
+{% comment %} sync repair 2026-07-12: re-upload after failed partial sync {% endcomment %}
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign ships_by = 'now' | date: '%s' | plus: 0
@@ -392,4 +393,3 @@
   ]
 }
 {% endschema %}
-{% comment %} sync nudge — force re-upload after partial sync on 2026-07-12 {% endcomment %}
