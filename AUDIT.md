@@ -234,3 +234,13 @@ dark-on-dark/dark-on-gold once a metal variant was selected).
 - Checkout itself (Shopify-hosted).
 - The coordinates-builder quiz page (`page.coordinates-builder.liquid`) — it's a self-contained experience; the homepage now feeds it traffic.
 - No new fonts, no new JS dependencies, no external scripts — the drawer and all new features reuse the existing single CSS/JS files, keeping the 90+ PageSpeed strategy intact.
+
+## 9. Deployment (added July 12, 2026)
+
+Merging to `main` updates this repository only — this repo has never been
+connected to Shopify's GitHub theme integration, so the final "push to the
+live theme" step was manual, and Round 4 (PRs #5–#6) stalled in git when
+that step was skipped. A GitHub Action
+(`.github/workflows/deploy-theme.yml`) now pushes every theme change on
+`main` to the published theme; it needs two one-time repository secrets.
+Full pipeline, setup, and incident notes: `docs/deployment.md`.
