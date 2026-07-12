@@ -1,0 +1,44 @@
+{%- comment -%}
+  Extracted from sections/main-product.liquid so the section stays under
+  Shopify's per-file size limit for sections — files over ~50 KB are
+  silently skipped by the GitHub theme sync (see docs/deployment.md).
+  Accepts:
+    engraving_placeholder / engraving_max / engraving_required —
+      the section's engraving settings, passed through verbatim.
+{%- endcomment -%}
+            <div class="engrave-field">
+              <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <div class="ep ep--ring" aria-hidden="true">
+                <svg viewBox="0 0 220 140" class="ep__ring-svg">
+                  {%- comment -%} Ring band — outer ellipse {%- endcomment -%}
+                  <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="#23232a" stroke-width="18" class="ep__ring-band"/>
+                  {%- comment -%} Inner highlight {%- endcomment -%}
+                  <ellipse cx="110" cy="70" rx="95" ry="55" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="16"/>
+                  {%- comment -%} Text along the outer curve — single line {%- endcomment -%}
+                  <defs>
+                    <path id="ring-text-path" d="M 15,70 A 95,55 0 0 1 205,70" fill="none"/>
+                  </defs>
+                  <text class="ep__engrave-text ep__engrave-text--curve">
+                    <textPath href="#ring-text-path" startOffset="50%" text-anchor="middle"
+                              data-engrave-preview
+                              data-placeholder="{{ engraving_placeholder | escape }}">{{ engraving_placeholder }}</textPath>
+                  </text>
+                </svg>
+                <p class="ep__hint">Live preview — single line, exactly as we engrave it</p>
+              </div>
+              <input type="text" id="engrave-input" data-engrave-input
+                     name="properties[Engraving]"
+                     maxlength="{{ engraving_max }}"
+                     placeholder="{{ engraving_placeholder | escape }}"
+                     {% if engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ engraving_max }}</span>
+              </div>
+            </div>

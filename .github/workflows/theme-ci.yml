@@ -59,6 +59,26 @@ jobs:
           done
           exit $fail
 
+      # A section's {% schema %}…{% endschema %} must be the last thing in the
+      # file. Anything after {% endschema %} (even a Liquid comment) can
+      # invalidate the section server-side on the Shopify GitHub sync — which
+      # then hides every product template that renders it. theme-check
+      # tolerates it, so it merges clean and breaks silently. This is the
+      # second half of the July 12, 2026 incident (see docs/deployment.md).
+      - name: Guard nothing follows endschema in sections
+        run: |
+          fail=0
+          for f in sections/*.liquid; do
+            [ -f "$f" ] || continue
+            grep -q 'endschema' "$f" || continue
+            after=$(awk 'found{print} /endschema/{found=1}' "$f" | tr -d '[:space:]')
+            if [ -n "$after" ]; then
+              echo "::error file=$f::content follows {% endschema %} in $f — the schema must end the file, or the Shopify sync can reject the section (see docs/deployment.md)."
+              fail=1
+            fi
+          done
+          exit $fail
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
