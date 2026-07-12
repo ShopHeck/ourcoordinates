@@ -30,42 +30,63 @@ Two consequences worth knowing:
 the product pages didn't change. Everything looked deployed — most files
 were — yet the previews stayed old.
 
-**Root cause:** the GitHub sync **silently skips section files larger than
-~50 KB**. `sections/main-product.liquid` grew from 50,224 bytes (PR #2,
-the last version that ever synced) to 54,375 (PR #3) and then 62,708 bytes
-(PR #5). From PR #3 onward the sync updated every other file within seconds
-of each merge but left `main-product.liquid` frozen at the PR #2 version —
-no error in GitHub, no failed check, nothing in the repo to see. Checksum
-comparison of the live theme against `main` via the Admin API is what
-exposed it.
+**Root cause (corrected — the real one).** The sync rejected
+`sections/main-product.liquid` because its **`{% schema %}` was invalid**:
+the `set_necklace_style` select had an option label of 54 characters, and
+**Shopify caps schema option labels at 50**. The actual sync log is
+unambiguous:
 
-**Cascade:** JSON templates are validated against the *live* section schema
-at sync time. Because the live `main-product` schema was stale, all five
-set templates (`product.complete-set`, `product.necklace-bracelet-set`,
+```
+Error: sections/main-product.liquid, Validation failed: Invalid schema:
+setting with id="set_necklace_style" option label is too long (max 50 characters)
+```
+
+Shopify refuses that one file on **every** sync (`8 succeeded … 2 failed`,
+yet "Theme updated!") while every valid file updates — no failed GitHub
+check, nothing in the repo to see. `shopify theme check` does **not**
+validate option-label length, so it passed locally and the bad schema
+merged clean.
+
+> **The "~50 KB size cap" was a misdiagnosis.** Earlier notes in this file
+> blamed a silent per-file size limit. That was wrong. The PR #2 section
+> synced only because it *predated* `set_necklace_style` (valid schema) —
+> not because it was smaller. Splitting the file to shrink it never touched
+> the real defect, which is why the previews still didn't ship after the
+> split. The split is fine to keep (smaller sections are easier to work on),
+> but the fix that actually made the section sync was shortening the label.
+
+**Cascade:** because the live `main-product` section never updated, JSON
+templates validating against the *live* (old) schema at sync time had their
+`set_necklace_style` setting stripped — degrading the five set pages
+(`product.complete-set`, `product.necklace-bracelet-set`,
 `product.necklace-keychain-set`, `product.ring-bracelet-set`,
-`product.ring-necklace-set`) had their `set_necklace_style` setting
-silently stripped when they synced (Shopify rewrote them with an
-"auto-generated" banner). That degraded the set pages to the legacy
-same-text-on-every-piece preview.
+`product.ring-necklace-set`) to the legacy same-text-on-every-piece
+preview. Once the section's schema is valid and live, they validate and
+regain the setting.
 
-**Fix (July 12, 2026):**
+**Fix:**
 
-1. `sections/main-product.liquid` was split from 62.7 KB to ~21 KB — the
-   eight engraving-preview bodies and the JSON-LD block moved to
-   `snippets/pdp-preview-*.liquid` / `snippets/pdp-json-ld.liquid`
-   (verified as a byte-identical move: inlining the snippets back
-   reconstructs the original file exactly).
-2. The five set templates were re-serialized so the sync re-uploads them
-   once the new schema is live, restoring `set_necklace_style`.
-3. Theme CI (`.github/workflows/theme-ci.yml`) now **fails any PR that
-   pushes a section or snippet past 50,224 bytes** (the largest section the
-   sync has ever accepted here), so this class of failure can't merge
-   silently again.
-4. A second CI guard **fails any PR that leaves content after
-   `{% endschema %}`** in a section. That was the *other* half of the
-   incident: a re-sync "nudge" appended a Liquid comment after `endschema`,
-   which invalidated the section server-side (theme-check tolerates it) and
-   hid every product template that renders it.
+1. **The actual fix:** the `set_necklace_style` `four-sided` option label was
+   shortened from 54 to 44 characters (`"4-sided pendant (per-side inputs +
+   previews)"`). The option **value** (`four-sided`) is unchanged, so the five
+   set templates that key off it are unaffected — only the display label the
+   theme editor shows got shorter. With a valid schema, Shopify accepts the
+   section and it syncs.
+2. **The guard that would have caught it:** Theme CI now parses each section's
+   `{% schema %}` and **fails any option label longer than 50 characters** —
+   the validation `shopify theme check` skips. This is the check that turns a
+   silent sync rejection into a red PR.
+3. A CI guard **fails any PR that leaves content after `{% endschema %}`** in a
+   section — content there can invalidate the section server-side (theme-check
+   tolerates it). A real hazard, independent of this incident.
+4. A CI **size guard** (section/snippet ≤ 50,224 bytes) is kept as
+   defense-in-depth. Note this was *not* the root cause — but the split it
+   encouraged is a fine maintainability win and stays.
+5. `sections/main-product.liquid` remains split from 62.7 KB to ~21 KB (eight
+   `snippets/pdp-preview-*.liquid` + `snippets/pdp-json-ld.liquid`), verified
+   byte-identical: re-inlining the snippets reconstructs the original exactly.
+6. The five set templates carry `set_necklace_style` in git and revalidate
+   against the now-valid live schema.
 
 > **History note (re-applied cleanly).** The split above was first shipped,
 > then rolled back the same day — not because the split was wrong (it wasn't;
