@@ -1203,3 +1203,227 @@
     });
   }
 })();
+
+
+/* ============================================================
+   STAR MAP — the real night sky for a date, time and place.
+   Positions are computed, not decorative: local sidereal time
+   from the date (time zone approximated from longitude), then
+   alt/az for ~100 catalog stars, projected zenith-center onto
+   the pendant disc. Constellation segments draw only when both
+   endpoint stars are above the horizon.
+   ============================================================ */
+(function () {
+  'use strict';
+  var root = document.querySelector('[data-product]');
+  if (!root) return;
+  if ((root.dataset.previewType || '') !== 'star-map') return;
+  var rig = root.querySelector('[data-star-map-engraving]');
+  if (!rig) return;
+
+  var dateIn = rig.querySelector('[data-sm-input-date]');
+  var timeIn = rig.querySelector('[data-sm-input-time]');
+  var locIn = rig.querySelector('[data-sm-input-location]');
+  var capIn = rig.querySelector('[data-sm-input-caption]');
+  var sky = rig.querySelector('[data-sm-sky]');
+  var capText = rig.querySelector('[data-sm-caption]');
+  var dateText = rig.querySelector('[data-sm-date]');
+  var counter = rig.querySelector('[data-engrave-count]');
+  if (!sky) return;
+
+  /* [ra hours, dec deg, magnitude] — J2000, the ~100 brightest stars */
+  var STARS = [
+    [6.752,-16.72,-1.46],[6.399,-52.70,-0.74],[14.660,-60.83,-0.27],[14.261,19.18,-0.05],
+    [18.616,38.78,0.03],[5.278,46.00,0.08],[5.242,-8.20,0.13],[7.655,5.22,0.34],
+    [1.629,-57.24,0.46],[5.919,7.41,0.50],[14.064,-60.37,0.61],[19.846,8.87,0.77],
+    [12.443,-63.10,0.76],[4.599,16.51,0.85],[16.490,-26.43,1.09],[13.420,-11.16,0.97],
+    [7.755,28.03,1.14],[22.961,-29.62,1.16],[20.690,45.28,1.25],[12.795,-59.69,1.25],
+    [10.139,11.97,1.40],[6.977,-28.97,1.50],[7.577,31.89,1.58],[17.560,-37.10,1.62],
+    [12.519,-57.11,1.64],[5.418,6.35,1.64],[5.438,28.61,1.68],[9.220,-69.72,1.68],
+    [5.604,-1.20,1.69],[22.137,-46.96,1.74],[12.900,55.96,1.77],[5.679,-1.94,1.77],
+    [11.062,61.75,1.79],[3.405,49.86,1.79],[7.140,-26.39,1.83],[18.403,-34.38,1.85],
+    [13.792,49.31,1.86],[8.375,-59.51,1.86],[17.622,-43.00,1.87],[5.992,44.95,1.90],
+    [16.811,-69.03,1.92],[6.629,16.40,1.92],[20.427,-56.74,1.94],[8.745,-54.71,1.96],
+    [2.530,89.26,1.98],[6.378,-17.96,1.98],[9.460,-8.66,1.98],[2.120,23.46,2.00],
+    [0.726,-17.99,2.02],[13.399,54.93,2.04],[18.921,-26.30,2.06],[14.111,-36.37,2.06],
+    [0.140,29.09,2.06],[14.845,74.16,2.08],[17.582,12.56,2.08],[5.796,-9.67,2.09],
+    [3.136,40.96,2.12],[11.818,14.57,2.14],[8.158,-47.34,1.78],[9.133,-43.43,2.21],
+    [5.533,-0.30,2.23],[20.371,40.26,2.23],[17.943,51.49,2.23],[0.675,56.54,2.24],
+    [8.060,-40.00,2.25],[2.065,42.33,2.26],[0.153,59.15,2.27],[16.006,-22.62,2.29],
+    [16.836,-34.29,2.29],[11.031,56.38,2.37],[14.750,27.07,2.37],[21.736,9.88,2.39],
+    [0.438,-42.31,2.40],[11.897,53.69,2.44],[17.173,-15.72,2.43],[23.063,28.08,2.42],
+    [21.310,62.59,2.46],[0.945,60.72,2.47],[23.079,15.21,2.48],[3.038,4.09,2.54],
+    [19.043,-29.88,2.60],[15.283,-9.38,2.61],[15.738,6.43,2.62],[1.430,60.24,2.68],
+    [18.350,-29.83,2.72],[19.771,10.61,2.72],[12.252,-58.75,2.79],[13.036,10.96,2.83],
+    [0.220,15.18,2.83],[21.784,-16.13,2.85],[19.749,45.13,2.87],[21.526,-5.57,2.90],
+    [19.512,27.96,3.05],[12.257,57.03,3.31],[1.162,35.62,2.05],[20.770,33.97,2.46],
+    [15.578,26.71,2.23],[1.907,63.67,3.38],[12.263,-17.54,2.59],[17.507,52.30,2.79]
+  ];
+  /* index chains: Big & Little Dipper, Cassiopeia, Orion, Cygnus, Crux +
+     pointers, Scorpius, Canis Major, Pegasus square, Andromeda, and
+     two-star hints (Gemini, Aquila, Auriga, Taurus, Perseus, Boötes) */
+  var LINES = [
+    [36,49,30,93,73,69,32,93],[44,53],[66,63,77,83,97],
+    [60,28,31],[9,25],[9,31,55],[25,60,6],
+    [18,61,92],[90,61,95],[12,24],[19,86],[2,10],
+    [67,14,68,38,23],[45,0,21,34],[52,75,78,88,52],[52,94,65],
+    [35,84,50,80],[85,11],[22,16],[5,39],[13,26],[33,56],[3,70]
+  ];
+
+  var HOME = { lat: 27.7676, lng: -82.6403 }; /* placeholder sky until a place is picked */
+  var R = 99, CX = 130, CY = 170;
+  var NS = 'http://www.w3.org/2000/svg';
+  var MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  function clampFit(el, textLength) {
+    var fit = el.dataset.fit;
+    var chars = parseInt(el.dataset.fitChars || '0', 10);
+    if (!fit || !chars) return;
+    if (textLength > chars) el.setAttribute('textLength', fit);
+    else el.removeAttribute('textLength');
+  }
+
+  /* accepts "27.7676° N, 82.6403° W", "27.7676 N 82.6403 W", "27.7, -82.6" */
+  function parseLatLng(str) {
+    if (!str) return null;
+    var m = str.match(/(-?\d+(?:\.\d+)?)\s*°?\s*([NSns])?\s*[,;\s]\s*(-?\d+(?:\.\d+)?)\s*°?\s*([EWew])?/);
+    if (!m) return null;
+    var lat = parseFloat(m[1]), lng = parseFloat(m[3]);
+    if (m[2] && /s/i.test(m[2])) lat = -Math.abs(lat);
+    if (m[4] && /w/i.test(m[4])) lng = -Math.abs(lng);
+    if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+    return { lat: lat, lng: lng };
+  }
+
+  function skyState() {
+    var typed = parseLatLng(locIn && locIn.value);
+    var loc = typed || HOME;
+    var now = new Date();
+    var parts = (dateIn && dateIn.value) ? dateIn.value.split('-') : null;
+    var y = parts ? +parts[0] : now.getFullYear();
+    var mo = parts ? +parts[1] : now.getMonth() + 1;
+    var d = parts ? +parts[2] : now.getDate();
+    var tp = ((timeIn && timeIn.value) || '21:00').split(':');
+    /* the time means local time where they stood: approximate the zone
+       from longitude (15°/hour) — well under a degree of sky at this scale */
+    var tz = Math.round(loc.lng / 15);
+    return {
+      lat: loc.lat, lng: loc.lng,
+      ms: Date.UTC(y, mo - 1, d, (+tp[0] || 0) - tz, +tp[1] || 0),
+      y: y, mo: mo, d: d,
+      real: !!(parts || typed)
+    };
+  }
+
+  function project(ms, lat, lng) {
+    var jd = ms / 86400000 + 2440587.5;
+    var D = jd - 2451545.0;
+    var gmst = (280.46061837 + 360.98564736629 * D) % 360;
+    var lst = gmst + lng; /* east-positive */
+    var rad = Math.PI / 180;
+    var sinLat = Math.sin(lat * rad), cosLat = Math.cos(lat * rad);
+    var pts = [];
+    for (var i = 0; i < STARS.length; i++) {
+      var dec = STARS[i][1] * rad;
+      var H = (lst - STARS[i][0] * 15) * rad;
+      var sinAlt = Math.sin(dec) * sinLat + Math.cos(dec) * cosLat * Math.cos(H);
+      var alt = Math.asin(sinAlt);
+      if (alt <= 0.015) { pts.push(null); continue; } /* below the horizon */
+      var az = Math.atan2(
+        -Math.cos(dec) * Math.sin(H),
+        Math.sin(dec) * cosLat - Math.cos(dec) * sinLat * Math.cos(H)
+      );
+      /* zenith at the disc center, horizon at the rim; looking up,
+         north sits at the top and east to the LEFT (chart convention) */
+      var r = R * (1 - alt / (Math.PI / 2));
+      pts.push({ x: CX - r * Math.sin(az), y: CY - r * Math.cos(az), mag: STARS[i][2] });
+    }
+    return pts;
+  }
+
+  function draw() {
+    var st = skyState();
+    var pts = project(st.ms, st.lat, st.lng);
+    while (sky.firstChild) sky.removeChild(sky.firstChild);
+
+    for (var l = 0; l < LINES.length; l++) {
+      var chain = LINES[l];
+      for (var s = 0; s < chain.length - 1; s++) {
+        var a = pts[chain[s]], b = pts[chain[s + 1]];
+        if (!a || !b) continue;
+        var ln = document.createElementNS(NS, 'line');
+        ln.setAttribute('x1', a.x.toFixed(1)); ln.setAttribute('y1', a.y.toFixed(1));
+        ln.setAttribute('x2', b.x.toFixed(1)); ln.setAttribute('y2', b.y.toFixed(1));
+        ln.setAttribute('class', 'ep__sm-line');
+        sky.appendChild(ln);
+      }
+    }
+    for (var i = 0; i < pts.length; i++) {
+      var p = pts[i];
+      if (!p) continue;
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', p.x.toFixed(1)); c.setAttribute('cy', p.y.toFixed(1));
+      c.setAttribute('r', Math.max(0.7, 2.9 - p.mag * 0.52).toFixed(2));
+      c.setAttribute('class', 'ep__sm-star' + (p.mag < 1 ? ' ep__sm-star--bright' : ''));
+      sky.appendChild(c);
+    }
+    sky.style.opacity = st.real ? '1' : '0.55';
+
+    if (capText) {
+      var cap = capIn ? capIn.value.trim() : '';
+      var ph = capText.dataset.placeholder || '';
+      capText.textContent = (cap || ph).toUpperCase();
+      capText.style.opacity = cap ? '1' : '0.5';
+      clampFit(capText, (cap || ph).length);
+    }
+    if (dateText) {
+      var dstr = MONTHS[st.mo - 1] + ' ' + st.d + ', ' + st.y;
+      dateText.textContent = dstr;
+      dateText.style.opacity = (dateIn && dateIn.value) ? '1' : '0.5';
+      clampFit(dateText, dstr.length);
+    }
+    if (counter && capIn) counter.textContent = capIn.value.length + ' / ' + capIn.maxLength;
+  }
+
+  ['input', 'change'].forEach(function (ev) {
+    rig.addEventListener(ev, function (e) {
+      if (e.target === dateIn || e.target === timeIn || e.target === locIn || e.target === capIn) draw();
+    });
+  });
+
+  /* typing over a pinned place invalidates the locator's backend data */
+  if (locIn) {
+    locIn.addEventListener('input', function () {
+      if (!locIn.dataset.fromLocator) {
+        ['[data-prop-latlng]', '[data-prop-place]', '[data-prop-maplink]'].forEach(function (sel) {
+          var el = rig.querySelector(sel);
+          if (el) el.value = '';
+        });
+      }
+    });
+  }
+
+  draw();
+
+  /* the sky needs a date and a place before it can be engraved */
+  var form = root.querySelector('form[data-product-form]');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      var missing = null, msg = '';
+      if (dateIn && dateIn.required && !dateIn.value) {
+        missing = dateIn; msg = 'Pick the date of your moment — we chart the sky from it.';
+      } else if (locIn && locIn.required && !locIn.value.trim()) {
+        missing = locIn; msg = 'Add the place — tap “Find my coordinates” to drop a pin.';
+      } else if (capIn && capIn.required && !capIn.value.trim()) {
+        missing = capIn; msg = 'Add your caption so we can engrave it.';
+      }
+      if (missing) {
+        e.preventDefault();
+        missing.focus();
+        missing.setCustomValidity(msg);
+        missing.reportValidity();
+        missing.addEventListener('input', function () { missing.setCustomValidity(''); }, { once: true });
+      }
+    });
+  }
+})();

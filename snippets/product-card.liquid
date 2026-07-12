@@ -13,6 +13,30 @@
       <span class="product-card__badge">Back soon</span>
     {%- elsif card_product.compare_at_price > card_product.price -%}
       <span class="product-card__badge product-card__badge--sale">Save {{ card_product.compare_at_price | minus: card_product.price | times: 100 | divided_by: card_product.compare_at_price }}%</span>
+    {%- else -%}
+      {%- comment -%}
+        Sets are the AOV driver — flag them in every grid. A product is a
+        set when its title says so (" … Set", "Set of 2") or it carries a
+        set/bundle tag. Availability and sale badges still win the slot.
+      {%- endcomment -%}
+      {%- liquid
+        assign title_probe = card_product.title | downcase | prepend: ' ' | append: ' '
+        assign is_set = false
+        if title_probe contains ' set ' or title_probe contains ' sets '
+          assign is_set = true
+        else
+          for tag in card_product.tags
+            assign tag_down = tag | downcase | strip
+            if tag_down == 'set' or tag_down == 'bundle' or tag_down == 'matching-set'
+              assign is_set = true
+              break
+            endif
+          endfor
+        endif
+      -%}
+      {%- if is_set -%}
+        <span class="product-card__badge product-card__badge--set">Matching set</span>
+      {%- endif -%}
     {%- endif -%}
   </div>
   <p class="product-card__title">{{ card_product.title }}</p>

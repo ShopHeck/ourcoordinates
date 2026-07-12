@@ -159,7 +159,69 @@ they carry text. Legacy sets (same text on every piece) are untouched —
 assign the new template to the Necklace + Bracelet Set in admin to activate
 the duo experience.
 
-## 7. Not changed, deliberately
+## 7. Round 4 — per-product set templates & the real star-map sky (July 2026)
+
+Five products now have templates whose engraving preview matches exactly
+what gets engraved:
+
+| Product (handle) | Assign this template | Preview |
+|---|---|---|
+| `coordinates-necklace-keychain-set` | `product.necklace-keychain-set` | 4-sided necklace faces + keychain fob, coordinates split front/back, full pair down the keychain |
+| `coordinates-ring-necklace-set` | `product.ring-necklace-set` | 4-sided necklace faces + ring band with the pair curved around it |
+| `coordinates-ring-bracelet-set` | `product.ring-bracelet-set` | Ring band + cuff, the same line engraved on each (per-piece override available) |
+| `complete-coordinates-set` | `product.complete-set` | All four pieces at once — necklace faces, cuff, keychain, ring — companions shown two-up |
+| `star-map-necklace` | `product.star-map` (updated in place) | See below |
+
+**Assignment is one dropdown per product**: Admin → Products → (product) →
+Theme template. Everything else — shared coordinates input, per-piece order
+properties ("Engraving — Keychain", …), optional extra necklace sides,
+per-piece overrides, metal recoloring — comes from the templates.
+
+### The star map preview is real astronomy
+The Star Map Necklace sells "the exact night sky from any date and place,"
+but its old template previewed a flat coordinates bar. It now renders a disc
+pendant whose sky is **computed, not decorative**: the shopper picks the
+date, time, and place (same "Find my coordinates" pin-drop), and the theme
+JS calculates local sidereal time and the alt/az of the ~100 brightest stars,
+projects them onto the disc (zenith center, horizon at the rim, chart
+orientation), and draws recognizable constellation lines — Orion in a
+January sky, Scorpius in July, the Southern Cross from Sydney. The caption
+and date engrave live under the map exactly as ordered. Orders carry
+`Star Map — Date / Time / Location` plus the hidden exact-decimal
+coordinates and map-verification link for the production team. No new
+dependencies; the math and catalog add ~4 KB to the existing JS file.
+
+### Conversion & AOV changes in this round
+- **"Matching set" badge** on product cards (title says "Set"/"Set of 2" or
+  tag `set`/`bundle`/`matching-set`) — sets are the AOV driver, so they now
+  stand out in every grid. Sale and back-soon badges still take priority.
+- **Homepage sets row** ("Better together") after the trust strip, pointed
+  at a `coordinates-sets` collection, with a new optional subheading line on
+  all Featured-collection sections.
+- **Featured collection sections hide themselves** when their collection is
+  missing or empty (they stay visible in the theme editor) — so the sets row
+  can ship before the collection exists.
+- **`collection.sets` landing template** (trust strip + "one place, two
+  people" story CTA) for the sets collection.
+- **Collection empty state**: an empty collection now shows a short line and
+  a "Shop all pieces" button instead of a blank grid.
+- The **complete set's cross-sell** says "Start a second story" (best
+  sellers) — the customer who owns every piece for one place is the easiest
+  repeat purchase in the store: a second place.
+
+### Merchant checklist for this round (5 minutes)
+1. Assign the five templates (table above).
+2. Create collection **`coordinates-sets`** containing the four set products
+   (+ the matching-necklaces set), assign it the **`sets`** template, and the
+   homepage row lights up automatically.
+3. Sets are the natural place for an automatic **"Sets save 15%"** discount
+   (Shopify native, no code) — the badge and homepage row do the promotion.
+4. The star map's date/time/place arrive as order properties — confirm the
+   production flow reads `Star Map — Date`, `Star Map — Time`,
+   `Star Map — Location` (plus `_Exact Decimal Coordinates` /
+   `_Verify on Map` as before).
+
+## 8. Not changed, deliberately
 
 - Checkout itself (Shopify-hosted).
 - The coordinates-builder quiz page (`page.coordinates-builder.liquid`) — it's a self-contained experience; the homepage now feeds it traffic.
