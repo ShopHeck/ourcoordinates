@@ -235,12 +235,18 @@ dark-on-dark/dark-on-gold once a metal variant was selected).
 - The coordinates-builder quiz page (`page.coordinates-builder.liquid`) — it's a self-contained experience; the homepage now feeds it traffic.
 - No new fonts, no new JS dependencies, no external scripts — the drawer and all new features reuse the existing single CSS/JS files, keeping the 90+ PageSpeed strategy intact.
 
-## 9. Deployment (added July 12, 2026)
+## 9. Deployment (updated July 12, 2026)
 
-Merging to `main` updates this repository only — this repo has never been
-connected to Shopify's GitHub theme integration, so the final "push to the
-live theme" step was manual, and Round 4 (PRs #5–#6) stalled in git when
-that step was skipped. A GitHub Action
-(`.github/workflows/deploy-theme.yml`) now pushes every theme change on
-`main` to the published theme; it needs two one-time repository secrets.
-Full pipeline, setup, and incident notes: `docs/deployment.md`.
+The published theme (`ourcoordinates/main`) is connected to this repo's
+`main` branch via Shopify's GitHub integration — merges sync to the live
+theme within seconds. **Correction to the note shipped earlier today:** the
+integration was connected and working all along; what broke Round 4 was the
+sync's silent per-file size cap. `sections/main-product.liquid` outgrew
+~50 KB at PR #3 and every sync since skipped just that file (no error
+anywhere), freezing the preview logic at the PR #2 version and causing the
+set templates to be stripped of `set_necklace_style` against the stale
+schema. Fixed by splitting the section into `snippets/pdp-*` (~21 KB
+section, byte-identical rendering), re-serializing the five set templates,
+and adding a CI size guard (`.github/workflows/theme-ci.yml`) so an
+oversized section can never merge silently again. Full incident write-up
+and manual-deploy fallback: `docs/deployment.md`.
