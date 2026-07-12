@@ -1,1 +1,49 @@
-{"sections":{"main":{"type":"main-product","blocks":{"details":{"type":"accordion","settings":{"title":"Product details","content":"<p>Material, pendant size, chain length, and care instructions go here.</p>"}},"how":{"type":"accordion","settings":{"title":"How engraving works","content":"<p>1. Pick your metal and how many sides to engrave — the price updates as you choose. 2. Type each side (or tap “Find my coordinates”) and watch the preview draw it exactly as we laser it. 3. We send a photo proof before it ships.</p>"}}},"block_order":["details","how"],"settings":{"preview_type":"four-sided","show_engraving":true,"engraving_required":true,"engraving_placeholder":"27.7676° N","engraving_max":15,"atc_label":"Add to cart — free engraving"}},"cross":{"type":"featured-collection","settings":{"eyebrow":"Complete the set","heading":"Pairs well with","collection":"necklaces","limit":4,"hide_sold_out":true}}},"order":["main","cross"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>Material, pendant size, chain length, and care instructions go here.</p>"
+          }
+        },
+        "how": {
+          "type": "accordion",
+          "settings": {
+            "title": "How engraving works",
+            "content": "<p>1. Pick your metal and how many sides to engrave — the price updates as you choose. 2. Type each side (or tap “Find my coordinates”) and watch the preview draw it exactly as we laser it. 3. We send a photo proof before it ships.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "details",
+        "how"
+      ],
+      "settings": {
+        "preview_type": "four-sided",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "27.7676° N",
+        "engraving_max": 15,
+        "atc_label": "Add to cart — free engraving"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cross"
+  ]
+}
