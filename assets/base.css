@@ -687,9 +687,18 @@ h3 { font-size: 1.2rem; }
 [data-metal="rose-gold"] .ep .ep__engrave-text { fill: rgba(62, 45, 20, 0.8); }
 [data-metal="silver"] .ep .ep__engrave-text { fill: rgba(48, 50, 60, 0.8); }
 
-/* cuff depth layers (piece SVG snippet) */
-.ep__cuff-shade { fill: rgba(0, 0, 0, 0.16); }
-.ep__cuff-sheen { fill: rgba(255, 255, 255, 0.12); }
+/* cuff detailing (piece SVG snippet) */
+.ep__cuff-sheen { stroke: rgba(255, 255, 255, 0.13); fill: none; stroke-linecap: round; }
+.ep__cuff-rim { stroke: rgba(255, 255, 255, 0.22); fill: none; }
+.ep__cuff-inner-shadow { stroke: rgba(0, 0, 0, 0.3); fill: none; }
+.ep__cuff-channel { stroke: rgba(10, 12, 16, 0.42); fill: none; stroke-linecap: round; }
+.ep__cuff-channel--core { stroke: rgba(10, 12, 16, 0.25); }
+/* the engraving sits in the recessed channel, so it reads light-on-dark
+   on every metal — overrides the per-metal dark-text rules above */
+.ep__cuff-engrave { fill: #f2e9d6; }
+[data-metal="gold"] .ep .ep__cuff-engrave,
+[data-metal="rose-gold"] .ep .ep__cuff-engrave,
+[data-metal="silver"] .ep .ep__cuff-engrave { fill: #f7f1e2; }
 
 /* ring band + chain recolor with the metal too */
 [data-metal="gold"] .ep .ep__ring-band { stroke: #ab8c5e; }
