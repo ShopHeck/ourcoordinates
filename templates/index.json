@@ -92,6 +92,17 @@
       "block_order": ["t1", "t2", "t3", "t4"],
       "settings": {}
     },
+    "sets": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Better together",
+        "heading": "Matching sets — one place, worn by both",
+        "subheading": "Enter your coordinates once and the engraving flows across every piece in the set — necklace, bracelet, keychain, or ring.",
+        "collection": "coordinates-sets",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    },
     "manifesto": {
       "type": "manifesto",
       "settings": {
@@ -217,6 +228,7 @@
     "marquee",
     "featured",
     "trust",
+    "sets",
     "manifesto",
     "moments",
     "story",

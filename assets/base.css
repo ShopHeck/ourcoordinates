@@ -173,6 +173,7 @@ h3 { font-size: 1.2rem; }
   text-transform: uppercase; padding: 4px 8px;
 }
 .product-card__badge--sale { background: var(--c-gold); color: var(--c-ink); }
+.product-card__badge--set { background: var(--c-paper); color: var(--c-ink); border: 1px solid var(--c-gold); }
 .product-card__title { margin: 12px 0 4px; font-size: 0.95rem; font-weight: 500; line-height: 1.35; }
 .product-card__price { font-family: var(--f-coord); font-size: 0.88rem; margin: 0; }
 .product-card__price s { color: var(--c-ink-soft); margin-left: 8px; }
@@ -183,6 +184,11 @@ h3 { font-size: 1.2rem; }
 
 .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
 .section-head a { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.section-head__sub { margin: 8px 0 0; font-size: 0.9rem; color: var(--c-ink-soft); max-width: 56ch; }
+
+/* empty collection — keep the shopper moving instead of dead-ending */
+.collection-empty { text-align: center; padding: 40px 0 16px; display: grid; gap: 14px; justify-items: center; }
+.collection-empty p { margin: 0; color: var(--c-ink-soft); max-width: 44ch; }
 
 /* ---- product page ---- */
 .pdp { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
@@ -838,6 +844,19 @@ form[data-product-form] { counter-reset: buystep; }
 .ep--duo { padding: 16px 12px 12px; }
 .ep__duo-piece { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px dashed var(--c-line); }
 .ep__duo-piece:last-of-type { border-bottom: 0; margin-bottom: 0; padding-bottom: 4px; }
+/* 3+ pieces (e.g. the complete set): necklace keeps the full row,
+   companions sit two-up so the preview doesn't become a tower */
+@media (min-width: 480px) {
+  .ep--duo:has(.ep__duo-piece:nth-of-type(3)) {
+    display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; align-items: end;
+  }
+  .ep--duo:has(.ep__duo-piece:nth-of-type(3)) > .ep__duo-piece:first-of-type,
+  .ep--duo:has(.ep__duo-piece:nth-of-type(3)) > .ep__hint { grid-column: 1 / -1; }
+  .ep--duo:has(.ep__duo-piece:nth-of-type(3)) > .ep__duo-piece { border-bottom: 0; }
+  .ep--duo:has(.ep__duo-piece:nth-of-type(3)) > .ep__duo-piece:first-of-type {
+    border-bottom: 1px dashed var(--c-line);
+  }
+}
 .ep__duo-title {
   display: block; font-family: var(--f-coord); font-size: 0.66rem;
   letter-spacing: 0.18em; text-transform: uppercase; color: var(--c-gold);
@@ -854,6 +873,39 @@ form[data-product-form] { counter-reset: buystep; }
   text-transform: none; letter-spacing: 0; font-weight: 400;
   font-size: 0.74rem; color: var(--c-ink-soft);
 }
+
+/* ---- STAR MAP: night-sky disc pendant ---- */
+.ep--star-map { padding: 14px 12px 12px; }
+.ep__sm-svg { max-width: 252px; width: 100%; height: auto; display: block; margin: 0 auto; }
+.ep__sm-ring { stroke: rgba(234, 226, 200, 0.22); stroke-width: 0.8; }
+[data-sm-sky] { transition: opacity 0.3s ease; }
+.ep__sm-star { fill: #efe9d8; }
+.ep__sm-star--bright { filter: drop-shadow(0 0 1.4px rgba(239, 233, 216, 0.9)); }
+.ep__sm-line { stroke: rgba(234, 226, 200, 0.3); stroke-width: 0.55; }
+.ep__sm-cardinal {
+  fill: rgba(234, 226, 200, 0.42); font-family: var(--f-coord);
+  font-size: 7px; letter-spacing: 0.1em; text-anchor: middle;
+}
+.ep__sm-rule { stroke: rgba(234, 226, 200, 0.35); stroke-width: 0.6; }
+.ep__sm-text {
+  fill: #ead9b0; font-family: var(--f-coord); font-size: 11px;
+  letter-spacing: 0.2em; text-anchor: middle; transition: opacity 0.15s ease;
+}
+.ep__sm-text--small { font-size: 7.5px; letter-spacing: 0.24em; fill: rgba(234, 217, 176, 0.85); }
+.ep__sm-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+@media (max-width: 480px) { .ep__sm-fields { grid-template-columns: 1fr; } }
+.ep__sm-field { margin-bottom: 8px; }
+.ep__sm-field label {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--c-ink-soft); display: block; margin-bottom: 4px;
+}
+.ep__sm-field input[type="date"],
+.ep__sm-field input[type="time"] {
+  width: 100%; padding: 11px 12px; border: 1px solid var(--c-line);
+  border-radius: 2px; background: #fff; font-family: var(--f-coord); font-size: 0.9rem;
+}
+.ep__sm-field input[type="date"]:focus,
+.ep__sm-field input[type="time"]:focus { border-color: var(--c-gold); outline: none; }
 
 /* Customize-each-piece toggle */
 .ep__set-customize {

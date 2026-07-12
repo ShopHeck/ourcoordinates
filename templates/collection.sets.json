@@ -1,0 +1,74 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "Better together"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "t1": {
+          "type": "badge",
+          "settings": {
+            "text": "One engraving flows across the set"
+          }
+        },
+        "t2": {
+          "type": "badge",
+          "settings": {
+            "text": "Photo proof of every piece"
+          }
+        },
+        "t3": {
+          "type": "badge",
+          "settings": {
+            "text": "30-day happiness guarantee"
+          }
+        },
+        "t4": {
+          "type": "badge",
+          "settings": {
+            "text": "Free engraving on every piece"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "story": {
+      "type": "story-cta",
+      "settings": {
+        "eyebrow": "One place, two people",
+        "heading": "The same coordinates, worn two ways.",
+        "text": "She wears the necklace, he carries the keychain — and the numbers match. Tell us the place that belongs to both of you and we'll engrave it across every piece in the set.",
+        "button_label": "Find your place",
+        "button_link": "/pages/gift-finder",
+        "button_label_2": "See how it works",
+        "button_link_2": "shopify://pages/how-it-works"
+      }
+    },
+    "quote": {
+      "type": "testimonial",
+      "settings": {
+        "eyebrow": "Verified customer review",
+        "quote": "My husband and I love them. They have the coordinates of our first trip together.",
+        "attribution": "Lucy — United States",
+        "button_label": "Shop matching sets",
+        "button_link": "shopify://collections/coordinates-sets"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trust",
+    "story",
+    "quote"
+  ]
+}

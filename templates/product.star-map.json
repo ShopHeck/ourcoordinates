@@ -13,8 +13,8 @@
         "how": {
           "type": "accordion",
           "settings": {
-            "title": "How engraving works",
-            "content": "<p>1. Enter your location or coordinates above. 2. We laser-engrave it and send you a photo proof. 3. Approve it, and it ships.</p>"
+            "title": "How your star map is made",
+            "content": "<p>1. Tell us the date, time, and place of your moment — tap “Find my coordinates” to drop a pin on the exact spot. 2. We chart the real night sky above it: every star position is calculated for your moment, nothing is decorative. 3. We laser-engrave the map with your caption and date, send you a photo proof, and ship once you approve.</p>"
           }
         }
       },
@@ -23,18 +23,20 @@
         "how"
       ],
       "settings": {
-        "preview_type": "horizontal-bar",
+        "preview_type": "star-map",
         "show_engraving": true,
-        "engraving_required": true,
-        "engraving_placeholder": "27.7676\u00b0 N, 82.6403\u00b0 W",
-        "engraving_max": 30,
-        "atc_label": "Add to cart \u2014 free engraving"
+        "engraving_required": false,
+        "engraving_placeholder": "The night we met",
+        "engraving_max": 20,
+        "atc_label": "Add to cart — free star map engraving",
+        "review_style": "app",
+        "show_recently_viewed": true
       }
     },
     "cross": {
       "type": "featured-collection",
       "settings": {
-        "eyebrow": "Complete the set",
+        "eyebrow": "Under the same sky",
         "heading": "Pairs well with",
         "collection": "necklaces",
         "limit": 4,

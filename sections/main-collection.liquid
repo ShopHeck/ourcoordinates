@@ -32,11 +32,19 @@
     </div>
 
     {%- paginate collection.products by 24 -%}
-      <div class="product-grid">
-        {%- for product in collection.products -%}
-          {%- render 'product-card', card_product: product -%}
-        {%- endfor -%}
-      </div>
+      {%- if collection.products_count == 0 -%}
+        <div class="collection-empty">
+          <p class="coord-eyebrow">0 results here</p>
+          <p>Nothing in this collection yet — but every piece we make can carry your place.</p>
+          <a class="btn" href="{{ routes.all_products_collection_url }}">Shop all pieces</a>
+        </div>
+      {%- else -%}
+        <div class="product-grid">
+          {%- for product in collection.products -%}
+            {%- render 'product-card', card_product: product -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
 
       {%- if paginate.pages > 1 -%}
         <nav class="pagination" aria-label="Pagination">
