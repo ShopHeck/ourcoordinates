@@ -1,0 +1,121 @@
+{%- comment -%}
+  Extracted from sections/main-product.liquid so the section stays under
+  Shopify's per-file size limit for sections — files over ~50 KB are
+  silently skipped by the GitHub theme sync (see docs/deployment.md).
+  Accepts:
+    engraving_placeholder / engraving_max / engraving_required —
+      the section's engraving settings, passed through verbatim.
+{%- endcomment -%}
+            <div class="engrave-field" data-star-map-engraving>
+              <p class="option-group buy-step" style="margin-bottom:4px">Your moment</p>
+              <p class="ep__set-sub">Pick the date and place — we chart the exact night sky above it</p>
+
+              <div class="ep ep--star-map" aria-hidden="true">
+                <svg viewBox="0 0 260 300" class="ep__sm-svg">
+                  <defs>
+                    <radialGradient id="sm-face" cx="0.5" cy="0.42" r="0.78">
+                      <stop offset="0" stop-color="#242a3a"/>
+                      <stop offset="0.62" stop-color="#161b29"/>
+                      <stop offset="1" stop-color="#0c0f18"/>
+                    </radialGradient>
+                    <linearGradient id="sm-fade" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="#0c0f18" stop-opacity="0"/>
+                      <stop offset="0.55" stop-color="#0c0f18" stop-opacity="0.55"/>
+                      <stop offset="1" stop-color="#0c0f18" stop-opacity="0.8"/>
+                    </linearGradient>
+                    <clipPath id="sm-clip"><circle cx="130" cy="170" r="99"/></clipPath>
+                  </defs>
+                  {%- comment -%} Chain + bail {%- endcomment -%}
+                  <path d="M 10,0 L 130,46 L 250,0" fill="none" class="ep__chain-line"/>
+                  <circle cx="130" cy="52.5" r="6" fill="none" class="ep__chain-line"/>
+                  {%- comment -%} Pendant: metal rim around an oxidized night-sky face {%- endcomment -%}
+                  <circle cx="130" cy="170" r="112" class="ep__metal"/>
+                  <circle cx="130" cy="170" r="111.2" fill="none" class="ep__bevel"/>
+                  <circle cx="130" cy="170" r="103" fill="url(#sm-face)"/>
+                  <circle cx="130" cy="170" r="99" fill="none" class="ep__sm-ring"/>
+                  <g clip-path="url(#sm-clip)">
+                    {%- comment -%}
+                      Static fallback sky (no-JS). global.js replaces this
+                      with the real star positions for the chosen moment.
+                    {%- endcomment -%}
+                    <g data-sm-sky>
+                      <path d="M101,96 L120,117 L139,141 L163,155" class="ep__sm-line" fill="none"/>
+                      <path d="M187,131 L172,120 L168,103" class="ep__sm-line" fill="none"/>
+                      <circle cx="101" cy="96" r="2.6" class="ep__sm-star"/><circle cx="146" cy="88" r="1.4" class="ep__sm-star"/>
+                      <circle cx="168" cy="103" r="2" class="ep__sm-star"/><circle cx="79" cy="121" r="1.2" class="ep__sm-star"/>
+                      <circle cx="120" cy="117" r="1.7" class="ep__sm-star"/><circle cx="187" cy="131" r="2.8" class="ep__sm-star"/>
+                      <circle cx="60" cy="148" r="1.5" class="ep__sm-star"/><circle cx="95" cy="152" r="2.2" class="ep__sm-star"/>
+                      <circle cx="139" cy="141" r="1.1" class="ep__sm-star"/><circle cx="163" cy="155" r="1.6" class="ep__sm-star"/>
+                      <circle cx="203" cy="166" r="1.3" class="ep__sm-star"/><circle cx="49" cy="180" r="2" class="ep__sm-star"/>
+                      <circle cx="117" cy="171" r="2.9" class="ep__sm-star"/><circle cx="76" cy="196" r="1.2" class="ep__sm-star"/>
+                      <circle cx="150" cy="183" r="1.9" class="ep__sm-star"/><circle cx="180" cy="192" r="1.1" class="ep__sm-star"/>
+                      <circle cx="105" cy="205" r="1.5" class="ep__sm-star"/><circle cx="135" cy="214" r="1.2" class="ep__sm-star"/>
+                      <circle cx="196" cy="209" r="1.7" class="ep__sm-star"/><circle cx="66" cy="214" r="0.9" class="ep__sm-star"/>
+                      <circle cx="152" cy="222" r="1" class="ep__sm-star"/><circle cx="88" cy="231" r="1.3" class="ep__sm-star"/>
+                      <circle cx="170" cy="235" r="1.5" class="ep__sm-star"/><circle cx="124" cy="243" r="0.9" class="ep__sm-star"/>
+                      <circle cx="145" cy="96" r="0.9" class="ep__sm-star"/><circle cx="110" cy="132" r="0.9" class="ep__sm-star"/>
+                      <circle cx="172" cy="120" r="1" class="ep__sm-star"/><circle cx="55" cy="163" r="0.9" class="ep__sm-star"/>
+                      <circle cx="190" cy="150" r="1" class="ep__sm-star"/><circle cx="128" cy="155" r="1.3" class="ep__sm-star"/>
+                    </g>
+                    {%- comment -%} Legibility fade behind the engraved caption {%- endcomment -%}
+                    <rect x="27" y="200" width="206" height="75" fill="url(#sm-fade)"/>
+                  </g>
+                  <text x="130" y="84" class="ep__sm-cardinal">N</text>
+                  <line x1="88" y1="212" x2="172" y2="212" class="ep__sm-rule"/>
+                  <text x="130" y="234" data-sm-caption class="ep__sm-text"
+                        data-fit="132" data-fit-chars="13" lengthAdjust="spacingAndGlyphs"
+                        data-placeholder="{{ engraving_placeholder | upcase | escape }}">{{ engraving_placeholder | upcase }}</text>
+                  <text x="130" y="251" data-sm-date class="ep__sm-text ep__sm-text--small"
+                        data-fit="118" data-fit-chars="16" lengthAdjust="spacingAndGlyphs">{{ 'now' | date: '%b %-d, %Y' | upcase }}</text>
+                </svg>
+                <p class="ep__hint" data-sm-hint>Live preview — real star positions for your date, time &amp; place</p>
+              </div>
+
+              <div class="ep__sm-fields">
+                <div class="ep__sm-field">
+                  <label for="sm-date">Date of your moment</label>
+                  <input type="date" id="sm-date" data-sm-input-date
+                         name="properties[Star Map — Date]"
+                         required autocomplete="off">
+                </div>
+                <div class="ep__sm-field">
+                  <label for="sm-time">Time <span class="ep__side-optional">the sky turns through the night</span></label>
+                  <input type="time" id="sm-time" data-sm-input-time
+                         name="properties[Star Map — Time]"
+                         value="21:00" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="ep__sm-field">
+                <label for="sm-location">Place — where you stood</label>
+                <input type="text" id="sm-location" data-sm-input-location data-engrave-input
+                       name="properties[Star Map — Location]"
+                       maxlength="60"
+                       placeholder="27.7676° N, 82.6403° W"
+                       required autocomplete="off">
+              </div>
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+              </div>
+
+              <div class="ep__sm-field" style="margin-top:12px">
+                <label for="sm-caption">Engraved caption
+                  {%- unless engraving_required %} <span class="ep__side-optional">optional</span>{% endunless -%}
+                </label>
+                <input type="text" id="sm-caption" data-sm-input-caption
+                       name="properties[Engraving — Caption]"
+                       maxlength="{{ engraving_max }}"
+                       placeholder="e.g. The night we met"
+                       {% if engraving_required %}required{% endif %}
+                       autocomplete="off">
+                <div class="field-row">
+                  <span>Engraved under the map, with your date</span>
+                  <span data-engrave-count>0 / {{ engraving_max }}</span>
+                </div>
+              </div>
+            </div>

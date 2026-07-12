@@ -58,8 +58,26 @@ same-text-on-every-piece preview.
 2. The five set templates were re-serialized so the sync re-uploads them
    once the new schema is live, restoring `set_necklace_style`.
 3. Theme CI (`.github/workflows/theme-ci.yml`) now **fails any PR that
-   pushes a section or snippet past 48,000 bytes**, so this class of
-   failure can't merge silently again.
+   pushes a section or snippet past 50,224 bytes** (the largest section the
+   sync has ever accepted here), so this class of failure can't merge
+   silently again.
+4. A second CI guard **fails any PR that leaves content after
+   `{% endschema %}`** in a section. That was the *other* half of the
+   incident: a re-sync "nudge" appended a Liquid comment after `endschema`,
+   which invalidated the section server-side (theme-check tolerates it) and
+   hid every product template that renders it.
+
+> **History note (re-applied cleanly).** The split above was first shipped,
+> then rolled back the same day — not because the split was wrong (it wasn't;
+> the byte-identical reconstruction still holds), but because a series of
+> panicked re-sync "nudges" introduced the `endschema` bug above and the
+> live theme's state could no longer be *verified* from the session (the
+> read-only Shopify connector was unavailable). The safe move was to restore
+> the last-known-good theme. The split was then re-applied from the clean
+> pre-nudge commit, re-verified byte-for-byte against the pre-split section,
+> and shipped with the second guard added. The lesson: after a merge, give
+> the sync ~30 s and verify by checksum — don't byte-touch files in a loop
+> to "force" a re-sync.
 
 If a file ever seems not to deploy again: compare `checksumMd5` from the
 Admin API (`theme(id:).files(...)`) against `git show main:<file> | md5sum`

@@ -247,6 +247,7 @@ anywhere), freezing the preview logic at the PR #2 version and causing the
 set templates to be stripped of `set_necklace_style` against the stale
 schema. Fixed by splitting the section into `snippets/pdp-*` (~21 KB
 section, byte-identical rendering), re-serializing the five set templates,
-and adding a CI size guard (`.github/workflows/theme-ci.yml`) so an
-oversized section can never merge silently again. Full incident write-up
-and manual-deploy fallback: `docs/deployment.md`.
+and adding CI guards (`.github/workflows/theme-ci.yml`) — one on file size,
+one forbidding any content after `{% endschema %}` — so neither half of this
+failure can merge silently again. Full incident write-up and manual-deploy
+fallback: `docs/deployment.md`.
