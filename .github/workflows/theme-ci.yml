@@ -79,6 +79,45 @@ jobs:
           done
           exit $fail
 
+      # Shopify caps schema select/radio OPTION labels at 50 characters and
+      # rejects the ENTIRE section on sync if one is longer — with no failed
+      # check and no error in GitHub. `shopify theme check` does NOT validate
+      # this, so it merges clean and the section silently never updates. This
+      # is what actually froze main-product.liquid (the "50 KB size cap" was a
+      # misdiagnosis — see docs/deployment.md). Guard it here.
+      - name: Guard schema option-label length (Shopify max 50)
+        run: |
+          python3 - <<'PY'
+          import re, json, glob, sys
+          MAX = 50
+          fail = False
+          for f in sorted(glob.glob("sections/*.liquid") + glob.glob("snippets/*.liquid")):
+              src = open(f, encoding="utf-8").read()
+              m = re.search(r"\{%-?\s*schema\s*-?%\}(.*?)\{%-?\s*endschema\s*-?%\}", src, re.S)
+              if not m:
+                  continue
+              try:
+                  schema = json.loads(m.group(1))
+              except Exception:
+                  continue  # invalid JSON is theme-check's job to flag
+              groups = [("settings", schema.get("settings", []))]
+              for b in schema.get("blocks", []):
+                  if isinstance(b, dict):
+                      groups.append((f"block '{b.get('type')}'", b.get("settings", [])))
+              for where, settings in groups:
+                  if not isinstance(settings, list):
+                      continue
+                  for s in settings:
+                      if not isinstance(s, dict):
+                          continue
+                      for opt in (s.get("options") or []):
+                          lbl = (opt or {}).get("label", "") if isinstance(opt, dict) else ""
+                          if len(lbl) > MAX:
+                              print(f"::error file={f}::setting id='{s.get('id')}' ({where}) has an option label of {len(lbl)} chars (max {MAX}): {lbl!r}. Shopify rejects the whole section on sync; shorten the label (the option value is unaffected).")
+                              fail = True
+          sys.exit(1 if fail else 0)
+          PY
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22

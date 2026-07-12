@@ -239,15 +239,17 @@ dark-on-dark/dark-on-gold once a metal variant was selected).
 
 The published theme (`ourcoordinates/main`) is connected to this repo's
 `main` branch via Shopify's GitHub integration — merges sync to the live
-theme within seconds. **Correction to the note shipped earlier today:** the
-integration was connected and working all along; what broke Round 4 was the
-sync's silent per-file size cap. `sections/main-product.liquid` outgrew
-~50 KB at PR #3 and every sync since skipped just that file (no error
-anywhere), freezing the preview logic at the PR #2 version and causing the
-set templates to be stripped of `set_necklace_style` against the stale
-schema. Fixed by splitting the section into `snippets/pdp-*` (~21 KB
-section, byte-identical rendering), re-serializing the five set templates,
-and adding CI guards (`.github/workflows/theme-ci.yml`) — one on file size,
-one forbidding any content after `{% endschema %}` — so neither half of this
-failure can merge silently again. Full incident write-up and manual-deploy
-fallback: `docs/deployment.md`.
+theme within seconds. **What actually broke Round 4** (correcting an earlier
+size-cap theory that turned out wrong): `sections/main-product.liquid` had an
+**invalid schema** — the `set_necklace_style` select carried a 54-character
+option label, and Shopify caps option labels at 50 — so the sync **rejected
+that one file on every merge** (`Validation failed: … option label is too
+long`) while every other file updated. `shopify theme check` doesn't validate
+label length, so it merged clean and the section silently never changed,
+which in turn stripped `set_necklace_style` from the set templates against the
+stale live schema. Fixed by shortening the label (value unchanged) and adding
+a CI guard that fails any schema option label over 50 characters — the check
+theme-check lacks. The section also stays split into `snippets/pdp-*` (~21 KB,
+byte-identical rendering) with size and post-`{% endschema %}` guards as
+defense-in-depth. Full incident write-up and manual-deploy fallback:
+`docs/deployment.md`.
