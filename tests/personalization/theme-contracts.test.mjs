@@ -52,3 +52,25 @@ test('main product renders the release and effective contract markers', () => {
   assert.match(section, /data-personalization-release=/);
   assert.match(section, /data-personalization-contract=/);
 });
+
+function assertTemplateContract(handle, snippetPath) {
+  const item = byHandle.get(handle);
+  const template = json(`templates/product.${item.templateSuffix}.json`);
+  const snippet = read(snippetPath);
+  const section = read('sections/main-product.liquid');
+  assert.equal(template.sections.main.settings.preview_type, item.contract);
+  assert.equal(template.sections.main.settings.show_engraving, item.contract !== 'none');
+  for (const property of item.properties) {
+    assert.ok(snippet.includes(`name="properties[${property}]"`), `${handle} missing ${property}`);
+  }
+  assert.ok(section.includes(`preview_type == '${item.contract}'`));
+}
+
+test('heart necklace has one front engraving and no side controls', () => {
+  assertTemplateContract(
+    'personalized-heart-pendant-necklace',
+    'snippets/pdp-preview-heart-necklace.liquid'
+  );
+  const snippet = read('snippets/pdp-preview-heart-necklace.liquid');
+  assert.doesNotMatch(snippet, /Back|Left side|Right side|side-count/);
+});

@@ -146,8 +146,12 @@
             </defs>
           </svg>
 
+          {%- comment -%} ---- HEART NECKLACE ---- {%- endcomment -%}
+          {%- if preview_type == 'heart-necklace' -%}
+            {% render 'pdp-preview-heart-necklace', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+
           {%- comment -%} ---- FOUR-SIDED BAR ---- {%- endcomment -%}
-          {%- if preview_type == 'four-sided' -%}
+          {%- elsif preview_type == 'four-sided' -%}
             {% render 'pdp-preview-four-sided', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required, current_variant: current_variant %}
 
           {%- comment -%} ---- DOG TAG (multi-line) ---- {%- endcomment -%}
@@ -347,6 +351,7 @@
       "label": "Engraving preview shape",
       "options": [
         { "value": "horizontal-bar", "label": "Horizontal bar (flat bar pendant)" },
+        { "value": "heart-necklace", "label": "Heart pendant (front engraving)" },
         { "value": "vertical-bar", "label": "Vertical bar (tall pendant, text top→bottom)" },
         { "value": "ring", "label": "Ring band (text along curve)" },
         { "value": "bracelet", "label": "Bracelet / cuff (text along curve)" },
