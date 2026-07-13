@@ -106,3 +106,11 @@ test('birthstone ring collects month and engraving without dynamic asset depende
   assertTemplateContract('custom-birthstone-rings', 'snippets/pdp-preview-birthstone-ring.liquid');
   assert.equal(byHandle.get('custom-birthstone-rings').javascript, false);
 });
+
+test('horizontal nameplate has one required Name property', () => {
+  assertTemplateContract('personalized-nameplate-necklace', 'snippets/pdp-preview-nameplate.liquid');
+});
+
+test('vertical nameplate has one required Name property', () => {
+  assertTemplateContract('vertical-name-necklace', 'snippets/pdp-preview-vertical-name.liquid');
+});
