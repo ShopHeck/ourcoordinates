@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>Enter the coordinates for Necklace A and Necklace B. Use the same engraving on both or personalize them separately.</p>"
+          }
+        }
+      },
+      "block_order": ["details"],
+      "settings": {
+        "preview_type": "matching-necklaces",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "27.7676° N, 82.6403° W",
+        "engraving_max": 30,
+        "atc_label": "Add to cart — free engraving"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": ["main", "cross"]
+}

@@ -74,3 +74,13 @@ test('heart necklace has one front engraving and no side controls', () => {
   const snippet = read('snippets/pdp-preview-heart-necklace.liquid');
   assert.doesNotMatch(snippet, /Back|Left side|Right side|side-count/);
 });
+
+test('matching necklaces submit explicit A and B properties', () => {
+  assertTemplateContract(
+    'matching-coordinates-necklaces',
+    'snippets/pdp-preview-matching-necklaces.liquid'
+  );
+  const section = read('sections/main-product.liquid');
+  assert.match(section, /personalization-dynamic\.js/);
+  assert.match(section, /matching-necklaces/);
+});
