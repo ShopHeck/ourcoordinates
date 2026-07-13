@@ -84,3 +84,7 @@ test('matching necklaces submit explicit A and B properties', () => {
   assert.match(section, /personalization-dynamic\.js/);
   assert.match(section, /matching-necklaces/);
 });
+
+test('couple rings expose two engravings and two fulfillment styles', () => {
+  assertTemplateContract('personalized-couple-rings', 'snippets/pdp-preview-couple-rings.liquid');
+});

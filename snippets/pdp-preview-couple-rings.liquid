@@ -1,0 +1,47 @@
+{% style %}
+  .ep--couple-rings { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ep--couple-rings svg { width:100%; max-width:220px; margin:0 auto; }
+  .couple-ring-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .couple-ring-fields label { display:block; margin:8px 0 4px; }
+  .couple-ring-fields select { width:100%; }
+  @media (max-width:520px) {
+    .ep--couple-rings, .couple-ring-fields { grid-template-columns:1fr; }
+  }
+{% endstyle %}
+<div class="engrave-field" data-couple-rings>
+  <p class="option-group buy-step">Personalize both rings</p>
+  <p class="ep__set-sub">The size and style selected above are for Ring 1.</p>
+  <div class="ep ep--couple-rings" aria-hidden="true">
+    {% for index in (1..2) %}
+      <svg viewBox="0 0 220 130" class="ep__ring-svg">
+        <ellipse cx="110" cy="65" rx="78" ry="38" fill="none" stroke-width="18" class="ep__ring-band"/>
+        <text x="110" y="70" class="ep__engrave-text"
+              data-ring-preview="{{ index }}">RING {{ index }}</text>
+      </svg>
+    {% endfor %}
+  </div>
+  <div class="couple-ring-fields">
+    <div>
+      <label for="ring-engraving-1">Ring 1 engraving</label>
+      <input id="ring-engraving-1" type="text" data-ring-engraving="1"
+             name="properties[Engraving - Ring 1]" maxlength="{{ engraving_max }}" required>
+      <input type="hidden" data-ring1-style
+             name="properties[Ring 1 Size / Style]" value="{{ current_variant.title | escape }}">
+    </div>
+    <div>
+      <label for="ring-engraving-2">Ring 2 engraving</label>
+      <input id="ring-engraving-2" type="text" data-ring-engraving="2"
+             name="properties[Engraving - Ring 2]" maxlength="{{ engraving_max }}" required>
+      <label for="ring-2-style">Ring 2 size / style</label>
+      <select id="ring-2-style" data-ring2-style
+              name="properties[Ring 2 Size / Style]" required>
+        <option value="">Choose Ring 2</option>
+        {% for variant in product.variants %}
+          {% if variant.available %}
+            <option value="{{ variant.title | escape }}">{{ variant.title }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>

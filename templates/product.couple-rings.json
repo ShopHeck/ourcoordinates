@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>Choose Ring 1 above, then enter both engravings and the verified size/style for Ring 2.</p>"
+          }
+        }
+      },
+      "block_order": ["details"],
+      "settings": {
+        "preview_type": "couple-rings",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "FOREVER",
+        "engraving_max": 20,
+        "atc_label": "Add to cart — free engraving"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "collection": "rings",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": ["main", "cross"]
+}
