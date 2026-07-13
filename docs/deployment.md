@@ -141,8 +141,11 @@ Before assignments:
 node scripts/personalization/probe-storefront.mjs \
   --url https://ourcoordinates.com/products/matching-coordinates-necklaces \
   --release oc-order-safe-2026-07-13-1 \
-  --count 20
+  --count 20 \
+  --delay-ms 3000
 ```
+
+The delay is intentional: cache-busted requests are paced to avoid Shopify storefront throttling while still requiring 20 consecutive responses from one release.
 
 Assignment dry run:
 

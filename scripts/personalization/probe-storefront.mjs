@@ -34,26 +34,59 @@ async function fetchInspection(url) {
   return inspectProductHtml(await response.text());
 }
 
+const waitFor = (milliseconds) => new Promise((resolveWait) => setTimeout(resolveWait, milliseconds));
+
+export async function collectReleaseProbes({
+  url,
+  expectedRelease,
+  count,
+  delayMs = 3000,
+  fetchInspectionFn = fetchInspection,
+  wait = waitFor,
+  onProgress = () => {}
+}) {
+  const releases = [];
+  for (let index = 0; index < count; index += 1) {
+    if (index > 0 && delayMs > 0) await wait(delayMs);
+    const inspection = await fetchInspectionFn(url);
+    releases.push(inspection.release);
+    if (inspection.release !== expectedRelease) {
+      throw new Error(`Probe ${index + 1} returned ${inspection.release}`);
+    }
+    onProgress(index + 1, count);
+  }
+  if (new Set(releases).size !== 1) throw new Error(`Mixed releases: ${releases.join(', ')}`);
+  return releases;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const url = args[args.indexOf('--url') + 1];
   const expectedRelease = args[args.indexOf('--release') + 1];
   const countValue = args.includes('--count') ? args[args.indexOf('--count') + 1] : '20';
+  const delayValue = args.includes('--delay-ms') ? args[args.indexOf('--delay-ms') + 1] : '3000';
   const count = Number.parseInt(countValue, 10);
+  const delayMs = Number.parseInt(delayValue, 10);
   const contractsMode = args.includes('--contracts');
-  if (!url || !expectedRelease || !Number.isInteger(count) || count < 1) {
-    throw new Error('Use --url URL --release RELEASE [--count N] [--contracts]');
+  if (
+    !url ||
+    !expectedRelease ||
+    !Number.isInteger(count) ||
+    count < 1 ||
+    !Number.isInteger(delayMs) ||
+    delayMs < 0 ||
+    delayMs > 60000
+  ) {
+    throw new Error('Use --url URL --release RELEASE [--count N] [--delay-ms N] [--contracts]');
   }
 
-  const releases = [];
-  for (let index = 0; index < count; index += 1) {
-    const inspection = await fetchInspection(url);
-    releases.push(inspection.release);
-    if (inspection.release !== expectedRelease) {
-      throw new Error(`Probe ${index + 1} returned ${inspection.release}`);
-    }
-  }
-  if (new Set(releases).size !== 1) throw new Error(`Mixed releases: ${releases.join(', ')}`);
+  await collectReleaseProbes({
+    url,
+    expectedRelease,
+    count,
+    delayMs,
+    onProgress: (current, total) => console.log(`Release probe ${current}/${total} passed.`)
+  });
 
   if (contractsMode) {
     const root = resolve(fileURLToPath(new URL('../../', import.meta.url)));
