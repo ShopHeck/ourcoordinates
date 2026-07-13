@@ -13,7 +13,7 @@ const manifest = json('scripts/personalization/product-contracts.json');
 const byHandle = new Map(manifest.products.map((item) => [item.handle, item]));
 
 test('manifest has one unique, versioned contract per approved handle', () => {
-  assert.equal(manifest.release, 'oc-order-safe-2026-07-13-1');
+  assert.equal(manifest.release, 'oc-order-safe-2026-07-13-2');
   assert.equal(manifest.products.length, 10);
   assert.equal(byHandle.size, manifest.products.length);
   for (const item of manifest.products) {
@@ -48,7 +48,7 @@ test('four-sided source remains byte-for-byte unchanged', () => {
 
 test('main product renders the release and effective contract markers', () => {
   const section = read('sections/main-product.liquid');
-  assert.match(section, /oc-order-safe-2026-07-13-1/);
+  assert.match(section, /oc-order-safe-2026-07-13-2/);
   assert.match(section, /data-personalization-release=/);
   assert.match(section, /data-personalization-contract=/);
 });
