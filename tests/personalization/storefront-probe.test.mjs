@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   assertLiveContract,
   collectReleaseProbes,
+  fetchInspection,
   inspectProductHtml
 } from '../../scripts/personalization/probe-storefront.mjs';
 
@@ -52,4 +53,18 @@ test('sequential release probes pause between cache-busted requests', async () =
   assert.equal(fetches, 3);
   assert.deepEqual(delays, [5, 5]);
   assert.deepEqual(releases, ['release-1', 'release-1', 'release-1']);
+});
+
+test('storefront fetch uses a customer browser request profile', async () => {
+  let requestOptions;
+  const inspection = await fetchInspection('https://example.com/products/test', async (_url, options) => {
+    requestOptions = options;
+    return {
+      ok: true,
+      status: 200,
+      text: async () => '<section data-personalization-release="release-1" data-personalization-contract="test"></section>'
+    };
+  });
+  assert.equal(inspection.release, 'release-1');
+  assert.match(requestOptions.headers['user-agent'], /Mozilla\/5\.0.*Chrome/);
 });
