@@ -99,13 +99,77 @@
     sync();
   }
 
+  function parseCharmCount(value) {
+    var match = String(value || '').match(/\b([2-8])\s*names?\b/i);
+    return match ? parseInt(match[1], 10) : null;
+  }
+
+  function activeNameIndexes(count) {
+    if (!Number.isInteger(count) || count < 2 || count > 8) return [];
+    return Array.from({ length: count }, function (_, index) { return index + 1; });
+  }
+
+  function initCharms(document) {
+    var root = document.querySelector('[data-product][data-preview-type="charm-name-necklace"]');
+    var rig = root && root.querySelector('[data-charm-names]');
+    if (!rig) return;
+    var alert = rig.querySelector('[data-contract-error]');
+
+    function countFromSelection() {
+      var group = root.querySelector(`[data-option-index="${rig.dataset.namesOption}"]`);
+      var checked = group && group.querySelector('input:checked');
+      return parseCharmCount(checked && checked.value);
+    }
+
+    function sync() {
+      var count = countFromSelection();
+      var active = activeNameIndexes(count);
+      rig.querySelectorAll('[data-charm-field]').forEach(function (field) {
+        var index = parseInt(field.dataset.charmField, 10);
+        var enabled = active.indexOf(index) !== -1;
+        var input = field.querySelector('input');
+        field.hidden = !enabled;
+        input.disabled = !enabled;
+        input.required = enabled;
+        var preview = rig.querySelector(`[data-charm-preview="${index}"]`);
+        if (preview) preview.closest('[data-charm-preview-wrap]').hidden = !enabled;
+      });
+      if (alert) alert.hidden = Boolean(count);
+      document.querySelectorAll('[data-atc]').forEach(function (button) {
+        if (!count) {
+          button.dataset.contractBlocked = 'true';
+          button.disabled = true;
+        } else if (button.dataset.contractBlocked) {
+          delete button.dataset.contractBlocked;
+          var variant = selectedVariant(root);
+          button.disabled = !variant || !variant.available;
+        }
+      });
+    }
+
+    root.addEventListener('change', sync);
+    rig.querySelectorAll('[data-charm-field] input').forEach(function (input) {
+      input.addEventListener('input', function () {
+        renderText(
+          rig.querySelector(`[data-charm-preview="${input.dataset.charmInput}"]`),
+          input.value.trim(),
+          `NAME ${input.dataset.charmInput}`
+        );
+      });
+    });
+    sync();
+  }
+
   function init(document) {
     initMatching(document);
     initCoupleRings(document);
+    initCharms(document);
   }
 
   return {
+    activeNameIndexes: activeNameIndexes,
     init: init,
+    parseCharmCount: parseCharmCount,
     resolveMatchingProperties: resolveMatchingProperties,
     resolveRingProperties: resolveRingProperties
   };

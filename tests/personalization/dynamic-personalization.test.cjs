@@ -21,3 +21,15 @@ test('couple rings preserve both engravings and both size/style values', () => {
     ring2: '7 / Woman'
   });
 });
+
+test('charm count accepts only supported paid variant values', () => {
+  assert.equal(api.parseCharmCount('2 names'), 2);
+  assert.equal(api.parseCharmCount('8 names'), 8);
+  assert.equal(api.parseCharmCount('9 names'), null);
+  assert.equal(api.parseCharmCount('names'), null);
+});
+
+test('active charm fields match the paid count', () => {
+  assert.deepEqual(api.activeNameIndexes(4), [1, 2, 3, 4]);
+  assert.deepEqual(api.activeNameIndexes(null), []);
+});

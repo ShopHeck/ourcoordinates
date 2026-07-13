@@ -60,8 +60,14 @@ function assertTemplateContract(handle, snippetPath) {
   const section = read('sections/main-product.liquid');
   assert.equal(template.sections.main.settings.preview_type, item.contract);
   assert.equal(template.sections.main.settings.show_engraving, item.contract !== 'none');
-  for (const property of item.properties) {
-    assert.ok(snippet.includes(`name="properties[${property}]"`), `${handle} missing ${property}`);
+  if (item.contract === 'charm-name-necklace') {
+    assert.deepEqual(item.properties, Array.from({ length: 8 }, (_, index) => `Name ${index + 1}`));
+    assert.match(snippet, /for index in \(1\.\.8\)/);
+    assert.ok(snippet.includes('name="properties[Name {{ index }}]"'));
+  } else {
+    for (const property of item.properties) {
+      assert.ok(snippet.includes(`name="properties[${property}]"`), `${handle} missing ${property}`);
+    }
   }
   assert.ok(section.includes(`preview_type == '${item.contract}'`));
 }
@@ -87,4 +93,11 @@ test('matching necklaces submit explicit A and B properties', () => {
 
 test('couple rings expose two engravings and two fulfillment styles', () => {
   assertTemplateContract('personalized-couple-rings', 'snippets/pdp-preview-couple-rings.liquid');
+});
+
+test('charm necklace exposes every potential paid Name property', () => {
+  assertTemplateContract(
+    'chain-link-necklace-custom-charms',
+    'snippets/pdp-preview-charm-name-necklace.liquid'
+  );
 });

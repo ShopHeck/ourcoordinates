@@ -158,6 +158,10 @@
           {%- elsif preview_type == 'couple-rings' -%}
             {% render 'pdp-preview-couple-rings', engraving_max: section.settings.engraving_max, current_variant: current_variant %}
 
+          {%- comment -%} ---- CHARM NAME NECKLACE ---- {%- endcomment -%}
+          {%- elsif preview_type == 'charm-name-necklace' -%}
+            {% render 'pdp-preview-charm-name-necklace', engraving_max: section.settings.engraving_max, current_variant: current_variant %}
+
           {%- comment -%} ---- FOUR-SIDED BAR ---- {%- endcomment -%}
           {%- elsif preview_type == 'four-sided' -%}
             {% render 'pdp-preview-four-sided', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required, current_variant: current_variant %}
@@ -349,7 +353,7 @@
 {%- comment -%} ── Product JSON-LD Schema (rich snippets) ── {%- endcomment -%}
   {% render 'pdp-json-ld' %}
 
-{%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' -%}
+{%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' or preview_type == 'charm-name-necklace' -%}
   <script src="{{ 'personalization-dynamic.js' | asset_url }}" defer></script>
 {%- endif -%}
 
@@ -366,6 +370,7 @@
         { "value": "heart-necklace", "label": "Heart pendant (front engraving)" },
         { "value": "matching-necklaces", "label": "Matching necklaces (two engravings)" },
         { "value": "couple-rings", "label": "Couple rings (two-ring preview)" },
+        { "value": "charm-name-necklace", "label": "Charm necklace (variant name count)" },
         { "value": "vertical-bar", "label": "Vertical bar (tall pendant, text top→bottom)" },
         { "value": "ring", "label": "Ring band (text along curve)" },
         { "value": "bracelet", "label": "Bracelet / cuff (text along curve)" },
