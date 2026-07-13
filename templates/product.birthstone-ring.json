@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>Select the birth month and enter the name or date for engraving. The existing product price and variant remain unchanged.</p>"
+          }
+        }
+      },
+      "block_order": ["details"],
+      "settings": {
+        "preview_type": "birthstone-ring",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "ALEX",
+        "engraving_max": 20,
+        "atc_label": "Add to cart — free engraving"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "collection": "rings",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": ["main", "cross"]
+}

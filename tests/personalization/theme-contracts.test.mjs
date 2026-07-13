@@ -101,3 +101,8 @@ test('charm necklace exposes every potential paid Name property', () => {
     'snippets/pdp-preview-charm-name-necklace.liquid'
   );
 });
+
+test('birthstone ring collects month and engraving without dynamic asset dependency', () => {
+  assertTemplateContract('custom-birthstone-rings', 'snippets/pdp-preview-birthstone-ring.liquid');
+  assert.equal(byHandle.get('custom-birthstone-rings').javascript, false);
+});
