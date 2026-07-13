@@ -1,5 +1,5 @@
 {
-  "release": "oc-order-safe-2026-07-13-1",
+  "release": "oc-order-safe-2026-07-13-2",
   "products": [
     {
       "handle": "premium-gift-packaging",
@@ -58,7 +58,7 @@
       "handle": "custom-birthstone-rings",
       "templateSuffix": "birthstone-ring",
       "contract": "birthstone-ring",
-      "properties": ["Birth Month", "Engraving"],
+      "properties": ["Name 1", "Name 2"],
       "javascript": false,
       "mutable": true
     },

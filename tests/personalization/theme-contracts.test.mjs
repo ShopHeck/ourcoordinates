@@ -13,7 +13,7 @@ const manifest = json('scripts/personalization/product-contracts.json');
 const byHandle = new Map(manifest.products.map((item) => [item.handle, item]));
 
 test('manifest has one unique, versioned contract per approved handle', () => {
-  assert.equal(manifest.release, 'oc-order-safe-2026-07-13-1');
+  assert.equal(manifest.release, 'oc-order-safe-2026-07-13-2');
   assert.equal(manifest.products.length, 10);
   assert.equal(byHandle.size, manifest.products.length);
   for (const item of manifest.products) {
@@ -48,7 +48,7 @@ test('four-sided source remains byte-for-byte unchanged', () => {
 
 test('main product renders the release and effective contract markers', () => {
   const section = read('sections/main-product.liquid');
-  assert.match(section, /oc-order-safe-2026-07-13-1/);
+  assert.match(section, /oc-order-safe-2026-07-13-2/);
   assert.match(section, /data-personalization-release=/);
   assert.match(section, /data-personalization-contract=/);
 });
@@ -102,9 +102,24 @@ test('charm necklace exposes every potential paid Name property', () => {
   );
 });
 
-test('birthstone ring collects month and engraving without dynamic asset dependency', () => {
+test('birthstone ring collects exactly two required names without a preview', () => {
   assertTemplateContract('custom-birthstone-rings', 'snippets/pdp-preview-birthstone-ring.liquid');
-  assert.equal(byHandle.get('custom-birthstone-rings').javascript, false);
+  const item = byHandle.get('custom-birthstone-rings');
+  const snippet = read('snippets/pdp-preview-birthstone-ring.liquid');
+  const inputs = [...snippet.matchAll(/<input\b[^>]*name="properties\[([^\]]+)\]"[^>]*>/g)];
+
+  assert.deepEqual(item.properties, ['Name 1', 'Name 2']);
+  assert.deepEqual(inputs.map((match) => match[1]), ['Name 1', 'Name 2']);
+  for (const [tag] of inputs) {
+    assert.match(tag, /type="text"/);
+    assert.match(tag, /\brequired\b/);
+  }
+  assert.ok(snippet.indexOf('Name 1:</label>') < snippet.indexOf('Name 2:</label>'));
+  assert.doesNotMatch(
+    snippet,
+    /<svg|Birth Month|properties\[Engraving\]|type="radio"|data-engrave-preview|data-engrave-input|data-engrave-count/
+  );
+  assert.equal(item.javascript, false);
 });
 
 test('horizontal nameplate has one required Name property', () => {

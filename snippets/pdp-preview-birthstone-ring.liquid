@@ -1,49 +1,13 @@
-{%- assign months = 'January,February,March,April,May,June,July,August,September,October,November,December' | split: ',' -%}
-{% style %}
-  .birthstone-contract .birthstone-gem { fill:#d8d8dc; stroke:#fff; stroke-width:2; }
-  .birthstone-contract:has([value="January"]:checked) .birthstone-gem { fill:#7b1f32; }
-  .birthstone-contract:has([value="February"]:checked) .birthstone-gem { fill:#7652a8; }
-  .birthstone-contract:has([value="March"]:checked) .birthstone-gem { fill:#74c7c7; }
-  .birthstone-contract:has([value="April"]:checked) .birthstone-gem { fill:#eef4ff; }
-  .birthstone-contract:has([value="May"]:checked) .birthstone-gem { fill:#258b57; }
-  .birthstone-contract:has([value="June"]:checked) .birthstone-gem { fill:#e7d7dc; }
-  .birthstone-contract:has([value="July"]:checked) .birthstone-gem { fill:#c51f3a; }
-  .birthstone-contract:has([value="August"]:checked) .birthstone-gem { fill:#8dbb50; }
-  .birthstone-contract:has([value="September"]:checked) .birthstone-gem { fill:#315ea8; }
-  .birthstone-contract:has([value="October"]:checked) .birthstone-gem { fill:#e28bb7; }
-  .birthstone-contract:has([value="November"]:checked) .birthstone-gem { fill:#d99a32; }
-  .birthstone-contract:has([value="December"]:checked) .birthstone-gem { fill:#45a6a6; }
-  .birthstone-months { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
-  .birthstone-months label { font-size:.78rem; }
-  @media (max-width:420px) { .birthstone-months { grid-template-columns:repeat(2, 1fr); } }
-{% endstyle %}
 <div class="engrave-field birthstone-contract" data-birthstone-ring>
-  <p class="option-group buy-step">Choose the birth month</p>
-  <div class="ep ep--ring" aria-hidden="true">
-    <svg viewBox="0 0 260 180" class="ep__ring-svg">
-      <ellipse cx="130" cy="103" rx="84" ry="44" fill="none" stroke-width="20" class="ep__ring-band"/>
-      <path d="M103 58 L116 40 H144 L157 58 L145 78 H115 Z" class="birthstone-gem"/>
-      <text x="130" y="112" data-engrave-preview class="ep__engrave-text"
-            data-placeholder="{{ engraving_placeholder | escape }}">{{ engraving_placeholder }}</text>
-    </svg>
-    <p class="ep__hint">Birthstone and engraving preview</p>
-  </div>
-  <fieldset class="birthstone-months">
-    <legend class="visually-hidden">Birth month</legend>
-    {% for month in months %}
-      <div>
-        <input id="birth-month-{{ month | handleize }}" type="radio"
-               name="properties[Birth Month]" value="{{ month }}"
-               {% if forloop.first %}required{% endif %}>
-        <label for="birth-month-{{ month | handleize }}">{{ month }}</label>
-      </div>
-    {% endfor %}
-  </fieldset>
-  <label for="birthstone-engraving">Name or date to engrave</label>
-  <input id="birthstone-engraving" type="text" data-engrave-input
-         name="properties[Engraving]"
+  <label for="birthstone-name-1">Name 1:</label>
+  <input id="birthstone-name-1" type="text"
+         name="properties[Name 1]"
          maxlength="{{ engraving_max }}"
-         placeholder="{{ engraving_placeholder | escape }}"
          required autocomplete="off">
-  <div class="field-row"><span data-engrave-count>0 / {{ engraving_max }}</span></div>
+
+  <label for="birthstone-name-2">Name 2:</label>
+  <input id="birthstone-name-2" type="text"
+         name="properties[Name 2]"
+         maxlength="{{ engraving_max }}"
+         required autocomplete="off">
 </div>
