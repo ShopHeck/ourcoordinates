@@ -102,9 +102,24 @@ test('charm necklace exposes every potential paid Name property', () => {
   );
 });
 
-test('birthstone ring collects month and engraving without dynamic asset dependency', () => {
+test('birthstone ring collects exactly two required names without a preview', () => {
   assertTemplateContract('custom-birthstone-rings', 'snippets/pdp-preview-birthstone-ring.liquid');
-  assert.equal(byHandle.get('custom-birthstone-rings').javascript, false);
+  const item = byHandle.get('custom-birthstone-rings');
+  const snippet = read('snippets/pdp-preview-birthstone-ring.liquid');
+  const inputs = [...snippet.matchAll(/<input\b[^>]*name="properties\[([^\]]+)\]"[^>]*>/g)];
+
+  assert.deepEqual(item.properties, ['Name 1', 'Name 2']);
+  assert.deepEqual(inputs.map((match) => match[1]), ['Name 1', 'Name 2']);
+  for (const [tag] of inputs) {
+    assert.match(tag, /type="text"/);
+    assert.match(tag, /\brequired\b/);
+  }
+  assert.ok(snippet.indexOf('Name 1:</label>') < snippet.indexOf('Name 2:</label>'));
+  assert.doesNotMatch(
+    snippet,
+    /<svg|Birth Month|properties\[Engraving\]|type="radio"|data-engrave-preview|data-engrave-input|data-engrave-count/
+  );
+  assert.equal(item.javascript, false);
 });
 
 test('horizontal nameplate has one required Name property', () => {

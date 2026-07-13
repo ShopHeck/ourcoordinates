@@ -58,7 +58,7 @@
       "handle": "custom-birthstone-rings",
       "templateSuffix": "birthstone-ring",
       "contract": "birthstone-ring",
-      "properties": ["Birth Month", "Engraving"],
+      "properties": ["Name 1", "Name 2"],
       "javascript": false,
       "mutable": true
     },
