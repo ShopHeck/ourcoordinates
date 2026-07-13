@@ -114,3 +114,48 @@ test('horizontal nameplate has one required Name property', () => {
 test('vertical nameplate has one required Name property', () => {
   assertTemplateContract('vertical-name-necklace', 'snippets/pdp-preview-vertical-name.liquid');
 });
+
+test('every mutable personalized contract has a matching template, snippet, and exact properties', () => {
+  const snippetByContract = {
+    'heart-necklace': 'snippets/pdp-preview-heart-necklace.liquid',
+    'matching-necklaces': 'snippets/pdp-preview-matching-necklaces.liquid',
+    'couple-rings': 'snippets/pdp-preview-couple-rings.liquid',
+    'charm-name-necklace': 'snippets/pdp-preview-charm-name-necklace.liquid',
+    'birthstone-ring': 'snippets/pdp-preview-birthstone-ring.liquid',
+    'nameplate': 'snippets/pdp-preview-nameplate.liquid',
+    'vertical-name': 'snippets/pdp-preview-vertical-name.liquid'
+  };
+  for (const item of manifest.products.filter((entry) => entry.mutable && entry.contract !== 'none')) {
+    assertTemplateContract(item.handle, snippetByContract[item.contract]);
+  }
+});
+
+test('dynamic JavaScript stays dependency-free, scoped, and within budget', () => {
+  const asset = read('assets/personalization-dynamic.js');
+  assert.ok(Buffer.byteLength(asset) <= 16384);
+  assert.doesNotMatch(asset, /\binnerHTML\b/);
+  assert.doesNotMatch(asset, /\b(jQuery|React|Vue|Angular)\b/);
+  const section = read('sections/main-product.liquid');
+  const include = section.match(
+    /\{%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' or preview_type == 'charm-name-necklace' -%\}[\s\S]*?personalization-dynamic\.js[\s\S]*?\{%- endif -%\}/
+  );
+  assert.ok(include, 'dynamic asset include is not the approved allowlist');
+  for (const contract of ['heart-necklace', 'birthstone-ring', 'nameplate', 'vertical-name']) {
+    assert.doesNotMatch(include[0], new RegExp(contract));
+    const entry = manifest.products.find((item) => item.contract === contract);
+    assert.equal(entry.javascript, false);
+  }
+});
+
+test('new product-scoped CSS remains below the per-page budget', () => {
+  const snippets = [
+    'snippets/pdp-preview-heart-necklace.liquid',
+    'snippets/pdp-preview-matching-necklaces.liquid',
+    'snippets/pdp-preview-couple-rings.liquid',
+    'snippets/pdp-preview-charm-name-necklace.liquid',
+    'snippets/pdp-preview-birthstone-ring.liquid',
+    'snippets/pdp-preview-nameplate.liquid',
+    'snippets/pdp-preview-vertical-name.liquid'
+  ];
+  for (const path of snippets) assert.ok(Buffer.byteLength(read(path)) <= 8192, `${path} exceeds 8 KB`);
+});
