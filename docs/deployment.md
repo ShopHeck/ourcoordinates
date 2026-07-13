@@ -132,3 +132,42 @@ survive) and never delete store-only files (`--nodelete`).
   *published* theme are blocked by policy — fixes flow through git and the
   sync, which is the correct path anyway. If Claude reports the connector
   token expired, re-authorize it at claude.ai → Settings → Connectors.
+
+## Order-safe personalization release
+
+Before assignments:
+
+```sh
+node scripts/personalization/probe-storefront.mjs \
+  --url https://ourcoordinates.com/products/matching-coordinates-necklaces \
+  --release oc-order-safe-2026-07-13-1 \
+  --count 20
+```
+
+Assignment dry run:
+
+```sh
+SHOPIFY_STORE=store.myshopify.com \
+SHOPIFY_ADMIN_ACCESS_TOKEN=token \
+node scripts/personalization/assign-templates.mjs
+```
+
+Apply only after reviewing the snapshot:
+
+```sh
+SHOPIFY_STORE=store.myshopify.com \
+SHOPIFY_ADMIN_ACCESS_TOKEN=token \
+node scripts/personalization/assign-templates.mjs --apply
+```
+
+Rollback:
+
+```sh
+SHOPIFY_STORE=store.myshopify.com \
+SHOPIFY_ADMIN_ACCESS_TOKEN=token \
+node scripts/personalization/assign-templates.mjs \
+  --rollback .personalization-snapshots/<snapshot>.json \
+  --apply
+```
+
+Replace `store.myshopify.com`, `token`, and `<snapshot>` with runtime values; none are committed.
