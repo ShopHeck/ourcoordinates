@@ -24,11 +24,17 @@ export function assertLiveContract(item, inspection) {
   }
 }
 
-async function fetchInspection(url) {
+export async function fetchInspection(url, fetchFn = fetch) {
   const probe = new URL(url);
   probe.searchParams.set('_oc_release_probe', `${Date.now()}-${Math.random()}`);
-  const response = await fetch(probe, {
-    headers: { 'cache-control': 'no-cache', pragma: 'no-cache' }
+  const response = await fetchFn(probe, {
+    headers: {
+      accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+      'accept-language': 'en-US,en;q=0.9',
+      'cache-control': 'no-cache',
+      pragma: 'no-cache',
+      'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
+    }
   });
   if (!response.ok) throw new Error(`${response.status} ${probe}`);
   return inspectProductHtml(await response.text());
