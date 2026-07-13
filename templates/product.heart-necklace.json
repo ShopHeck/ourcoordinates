@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>Choose the current color and chain length, then enter the message for the front of the heart.</p>"
+          }
+        }
+      },
+      "block_order": ["details"],
+      "settings": {
+        "preview_type": "heart-necklace",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "YOUR MESSAGE",
+        "engraving_max": 25,
+        "atc_label": "Add to cart — free engraving"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": ["main", "cross"]
+}

@@ -1,0 +1,22 @@
+{% style %}
+  .ep--nameplate svg { display:block; width:min(330px, 100%); margin:0 auto; }
+  .ep--nameplate .ep__engrave-text { font-size:16px; font-family:var(--f-display); letter-spacing:.06em; }
+{% endstyle %}
+<div class="engrave-field" data-nameplate>
+  <label class="option-group buy-step" for="nameplate-name">Your name</label>
+  <div class="ep ep--nameplate" aria-hidden="true">
+    <svg viewBox="0 0 280 180">
+      <path d="M0 15 L32 64 M280 15 L248 64" fill="none" class="ep__chain-line"/>
+      <path class="ep__metal" d="M35 54 H245 C255 54 263 62 263 72 V108 C263 118 255 126 245 126 H35 C25 126 17 118 17 108 V72 C17 62 25 54 35 54 Z"/>
+      <text x="140" y="96" data-engrave-preview class="ep__engrave-text"
+            data-fit="205" data-fit-chars="14"
+            data-placeholder="{{ engraving_placeholder | escape }}">{{ engraving_placeholder }}</text>
+    </svg>
+    <p class="ep__hint">Horizontal name preview</p>
+  </div>
+  <input id="nameplate-name" type="text" data-engrave-input
+         name="properties[Name]" maxlength="{{ engraving_max }}"
+         placeholder="{{ engraving_placeholder | escape }}"
+         required autocomplete="name">
+  <div class="field-row"><span data-engrave-count>0 / {{ engraving_max }}</span></div>
+</div>

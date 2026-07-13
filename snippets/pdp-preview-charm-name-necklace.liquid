@@ -1,0 +1,85 @@
+{%- liquid
+  assign names_option = -1
+  for option in product.options_with_values
+    assign probe = option.name | append: ' ' | append: option.values | downcase
+    if probe contains 'name'
+      assign names_option = forloop.index0
+      break
+    endif
+  endfor
+
+  assign initial_count = 0
+  if names_option >= 0
+    assign selected_names = current_variant.options[names_option] | downcase
+    if selected_names contains '8'
+      assign initial_count = 8
+    elsif selected_names contains '7'
+      assign initial_count = 7
+    elsif selected_names contains '6'
+      assign initial_count = 6
+    elsif selected_names contains '5'
+      assign initial_count = 5
+    elsif selected_names contains '4'
+      assign initial_count = 4
+    elsif selected_names contains '3'
+      assign initial_count = 3
+    elsif selected_names contains '2'
+      assign initial_count = 2
+    endif
+  endif
+-%}
+{% style %}
+  .ep--charms { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  .ep__charm { width:64px; }
+  .ep__charm svg { display:block; width:48px; margin:0 auto; }
+  .ep__charm .ep__engrave-text { font-size:7px; letter-spacing:.04em; }
+  .charm-name-fields { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .charm-name-fields label { display:block; margin-bottom:4px; }
+  .charm-contract-error { color:#8b1e1e; font-weight:600; }
+  @media (max-width:520px) { .charm-name-fields { grid-template-columns:1fr; } }
+{% endstyle %}
+<div class="engrave-field" data-charm-names data-names-option="{{ names_option }}">
+  <p class="option-group buy-step">Names for your charms</p>
+  <p class="charm-contract-error" role="alert" data-contract-error
+     {% if initial_count >= 2 and initial_count <= 8 %}hidden{% endif %}>
+    This product's Names variant could not be mapped safely. Please contact support.
+  </p>
+  <div class="ep ep--charms" aria-hidden="true">
+    {% for index in (1..8) %}
+      <div class="ep__charm" data-charm-preview-wrap
+           {% if index > initial_count %}hidden{% endif %}>
+        <svg viewBox="0 0 64 92">
+          <circle cx="32" cy="10" r="5" class="ep__hole"/>
+          <rect x="9" y="13" width="46" height="68" rx="8" class="ep__metal"/>
+          <text x="32" y="51" class="ep__engrave-text"
+                data-charm-preview="{{ index }}">NAME {{ index }}</text>
+        </svg>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="charm-name-fields">
+    {% for index in (1..8) %}
+      <div data-charm-field="{{ index }}" {% if index > initial_count %}hidden{% endif %}>
+        <label for="charm-name-{{ index }}">Name {{ index }}</label>
+        <input id="charm-name-{{ index }}" type="text"
+               data-charm-input="{{ index }}"
+               name="properties[Name {{ index }}]"
+               maxlength="{{ engraving_max }}"
+               {% if index <= initial_count %}required{% else %}disabled{% endif %}
+               autocomplete="off">
+      </div>
+    {% endfor %}
+  </div>
+  <noscript>
+    <p>Choose the paid number of names by reloading one of these variants:</p>
+    {%- assign seen_names = '|' -%}
+    {%- for variant in product.variants -%}
+      {%- assign names_value = variant.options[names_option] -%}
+      {%- capture token -%}|{{ names_value }}|{%- endcapture -%}
+      {%- unless seen_names contains token -%}
+        <a href="{{ product.url }}?variant={{ variant.id }}">{{ names_value }}</a>
+        {%- assign seen_names = seen_names | append: names_value | append: '|' -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  </noscript>
+</div>

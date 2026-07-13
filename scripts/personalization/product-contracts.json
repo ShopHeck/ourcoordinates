@@ -1,0 +1,90 @@
+{
+  "release": "oc-order-safe-2026-07-13-1",
+  "products": [
+    {
+      "handle": "premium-gift-packaging",
+      "templateSuffix": "non-custom",
+      "contract": "none",
+      "properties": [],
+      "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "routeins",
+      "templateSuffix": "non-custom",
+      "contract": "none",
+      "properties": [],
+      "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "personalized-heart-pendant-necklace",
+      "templateSuffix": "heart-necklace",
+      "contract": "heart-necklace",
+      "properties": ["Engraving - Front"],
+      "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "matching-coordinates-necklaces",
+      "templateSuffix": "matching-necklaces",
+      "contract": "matching-necklaces",
+      "properties": ["Engraving - Necklace A", "Engraving - Necklace B"],
+      "javascript": true,
+      "mutable": true
+    },
+    {
+      "handle": "personalized-couple-rings",
+      "templateSuffix": "couple-rings",
+      "contract": "couple-rings",
+      "properties": [
+        "Engraving - Ring 1",
+        "Engraving - Ring 2",
+        "Ring 1 Size / Style",
+        "Ring 2 Size / Style"
+      ],
+      "javascript": true,
+      "mutable": true
+    },
+    {
+      "handle": "chain-link-necklace-custom-charms",
+      "templateSuffix": "charm-name-necklace",
+      "contract": "charm-name-necklace",
+      "properties": ["Name 1", "Name 2", "Name 3", "Name 4", "Name 5", "Name 6", "Name 7", "Name 8"],
+      "javascript": true,
+      "mutable": true
+    },
+    {
+      "handle": "custom-birthstone-rings",
+      "templateSuffix": "birthstone-ring",
+      "contract": "birthstone-ring",
+      "properties": ["Birth Month", "Engraving"],
+      "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "personalized-nameplate-necklace",
+      "templateSuffix": "nameplate",
+      "contract": "nameplate",
+      "properties": ["Name"],
+      "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "vertical-name-necklace",
+      "templateSuffix": "vertical-name",
+      "contract": "vertical-name",
+      "properties": ["Name"],
+      "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "custom-bar-necklace",
+      "templateSuffix": "four-sided",
+      "contract": "four-sided",
+      "properties": ["Engraving — Front", "Engraving — Back", "Engraving — Left", "Engraving — Right"],
+      "javascript": false,
+      "mutable": false
+    }
+  ]
+}

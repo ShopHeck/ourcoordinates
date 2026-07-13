@@ -1,0 +1,42 @@
+{% style %}
+  .ep--matching { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ep--matching svg { display:block; width:70px; height:auto; margin:0 auto; }
+  .ep--matching-fields { display:grid; gap:10px; }
+  @media (max-width:420px) { .ep--matching { gap:8px; } }
+{% endstyle %}
+<div class="engrave-field" data-matching-necklaces>
+  <p class="option-group buy-step">Your necklace engravings</p>
+  <div class="ep ep--matching" aria-hidden="true">
+    {% for key in (1..2) %}
+      {% assign letter = 'a' %}
+      {% if key == 2 %}{% assign letter = 'b' %}{% endif %}
+      <div>
+        <svg viewBox="0 0 70 200">
+          <path d="M4 0 L35 28 L66 0" fill="none" class="ep__chain-line"/>
+          <rect x="16" y="26" width="38" height="160" rx="4" class="ep__metal"/>
+          <text x="35" y="105" class="ep__engrave-text ep__engrave-text--vertical"
+                data-match-preview="{{ letter }}"
+                data-placeholder="NECKLACE {{ key }}">NECKLACE {{ key }}</text>
+        </svg>
+        <span class="ep__face-label">Necklace {{ key }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  <label data-match-enhancement hidden>
+    <input type="checkbox" data-match-separate> Use a different engraving on Necklace B
+  </label>
+  <div class="ep--matching-fields">
+    <div>
+      <label for="matching-a">Necklace A</label>
+      <input id="matching-a" type="text" data-match-input="a"
+             name="properties[Engraving - Necklace A]"
+             maxlength="{{ engraving_max }}" required autocomplete="off">
+    </div>
+    <div data-match-field-b>
+      <label for="matching-b">Necklace B</label>
+      <input id="matching-b" type="text" data-match-input="b"
+             name="properties[Engraving - Necklace B]"
+             maxlength="{{ engraving_max }}" required autocomplete="off">
+    </div>
+  </div>
+</div>

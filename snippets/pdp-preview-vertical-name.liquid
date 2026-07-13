@@ -1,0 +1,23 @@
+{% style %}
+  .ep--vertical-name svg { display:block; width:min(150px, 72%); margin:0 auto; }
+  .ep--vertical-name .ep__engrave-text { font-family:var(--f-display); font-size:14px; }
+{% endstyle %}
+<div class="engrave-field" data-vertical-name>
+  <label class="option-group buy-step" for="vertical-name">Your name</label>
+  <div class="ep ep--vertical-name" aria-hidden="true">
+    <svg viewBox="0 0 200 300">
+      <path d="M20 0 L100 32 L180 0" fill="none" class="ep__chain-line"/>
+      <rect x="65" y="24" width="70" height="252" rx="10" class="ep__metal"/>
+      <text x="100" y="150" data-engrave-preview
+            class="ep__engrave-text ep__engrave-text--vertical"
+            data-fit="205" data-fit-chars="14"
+            data-placeholder="{{ engraving_placeholder | escape }}">{{ engraving_placeholder }}</text>
+    </svg>
+    <p class="ep__hint">Vertical name preview</p>
+  </div>
+  <input id="vertical-name" type="text" data-engrave-input
+         name="properties[Name]" maxlength="{{ engraving_max }}"
+         placeholder="{{ engraving_placeholder | escape }}"
+         required autocomplete="name">
+  <div class="field-row"><span data-engrave-count>0 / {{ engraving_max }}</span></div>
+</div>

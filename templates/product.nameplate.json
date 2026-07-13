@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "preview_type": "nameplate",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "ALEXANDRA",
+        "engraving_max": 20,
+        "atc_label": "Add to cart — free personalization"
+      }
+    }
+  },
+  "order": ["main"]
+}

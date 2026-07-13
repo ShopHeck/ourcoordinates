@@ -122,6 +122,14 @@ jobs:
         with:
           node-version: 22
 
+      - name: Personalization contract tests
+        run: node --test tests/personalization/*.test.*
+
+      - name: JavaScript syntax
+        run: |
+          node --check assets/global.js
+          node --check assets/personalization-dynamic.js
+
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli@latest
 

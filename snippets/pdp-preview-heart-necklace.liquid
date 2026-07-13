@@ -1,0 +1,25 @@
+{% style %}
+  .ep--heart svg { display:block; width:min(230px, 80%); height:auto; margin:0 auto; }
+  .ep--heart .ep__heart-chain { fill:none; stroke:#8b8b95; stroke-width:1.4; }
+  .ep--heart .ep__engrave-text { font-size:9px; letter-spacing:.08em; }
+{% endstyle %}
+<div class="engrave-field" data-heart-engraving>
+  <label class="option-group buy-step" for="engrave-heart-front">Front engraving</label>
+  <div class="ep ep--heart" aria-hidden="true">
+    <svg viewBox="0 0 260 220">
+      <path class="ep__heart-chain" d="M8 0 L130 44 L252 0"/>
+      <path class="ep__metal" d="M130 196 C112 177 62 139 62 95 C62 60 105 49 130 79 C155 49 198 60 198 95 C198 139 148 177 130 196 Z"/>
+      <text x="130" y="123" class="ep__engrave-text"
+            data-engrave-preview data-fit="108" data-fit-chars="15"
+            data-placeholder="{{ engraving_placeholder | escape }}">{{ engraving_placeholder }}</text>
+    </svg>
+    <p class="ep__hint">Front engraving preview</p>
+  </div>
+  <input id="engrave-heart-front" type="text" data-engrave-input
+         name="properties[Engraving - Front]"
+         maxlength="{{ engraving_max }}"
+         placeholder="{{ engraving_placeholder | escape }}"
+         {% if engraving_required %}required{% endif %}
+         autocomplete="off">
+  <div class="field-row"><span data-engrave-count>0 / {{ engraving_max }}</span></div>
+</div>

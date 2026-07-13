@@ -6,9 +6,17 @@
   assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
   assign delivery_high = delivery_low | plus: 259200
   assign preview_type = section.settings.preview_type | default: 'horizontal-bar'
+  assign personalization_release = 'oc-order-safe-2026-07-13-1'
+  assign personalization_contract = preview_type
+  unless section.settings.show_engraving
+    assign personalization_contract = 'none'
+  endunless
 -%}
 
-<section class="section" data-product data-preview-type="{{ preview_type }}">
+<section class="section" data-product
+         data-preview-type="{{ preview_type }}"
+         data-personalization-release="{{ personalization_release }}"
+         data-personalization-contract="{{ personalization_contract }}">
   <div class="page-width pdp">
 
     {%- comment -%} ---------- GALLERY ---------- {%- endcomment -%}
@@ -138,8 +146,36 @@
             </defs>
           </svg>
 
+          {%- comment -%} ---- HEART NECKLACE ---- {%- endcomment -%}
+          {%- if preview_type == 'heart-necklace' -%}
+            {% render 'pdp-preview-heart-necklace', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+
+          {%- comment -%} ---- MATCHING NECKLACES ---- {%- endcomment -%}
+          {%- elsif preview_type == 'matching-necklaces' -%}
+            {% render 'pdp-preview-matching-necklaces', engraving_max: section.settings.engraving_max %}
+
+          {%- comment -%} ---- COUPLE RINGS ---- {%- endcomment -%}
+          {%- elsif preview_type == 'couple-rings' -%}
+            {% render 'pdp-preview-couple-rings', engraving_max: section.settings.engraving_max, current_variant: current_variant %}
+
+          {%- comment -%} ---- CHARM NAME NECKLACE ---- {%- endcomment -%}
+          {%- elsif preview_type == 'charm-name-necklace' -%}
+            {% render 'pdp-preview-charm-name-necklace', engraving_max: section.settings.engraving_max, current_variant: current_variant %}
+
+          {%- comment -%} ---- BIRTHSTONE RING ---- {%- endcomment -%}
+          {%- elsif preview_type == 'birthstone-ring' -%}
+            {% render 'pdp-preview-birthstone-ring', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max %}
+
+          {%- comment -%} ---- HORIZONTAL NAMEPLATE ---- {%- endcomment -%}
+          {%- elsif preview_type == 'nameplate' -%}
+            {% render 'pdp-preview-nameplate', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max %}
+
+          {%- comment -%} ---- VERTICAL NAMEPLATE ---- {%- endcomment -%}
+          {%- elsif preview_type == 'vertical-name' -%}
+            {% render 'pdp-preview-vertical-name', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max %}
+
           {%- comment -%} ---- FOUR-SIDED BAR ---- {%- endcomment -%}
-          {%- if preview_type == 'four-sided' -%}
+          {%- elsif preview_type == 'four-sided' -%}
             {% render 'pdp-preview-four-sided', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required, current_variant: current_variant %}
 
           {%- comment -%} ---- DOG TAG (multi-line) ---- {%- endcomment -%}
@@ -329,6 +365,10 @@
 {%- comment -%} ── Product JSON-LD Schema (rich snippets) ── {%- endcomment -%}
   {% render 'pdp-json-ld' %}
 
+{%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' or preview_type == 'charm-name-necklace' -%}
+  <script src="{{ 'personalization-dynamic.js' | asset_url }}" defer></script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Product page",
@@ -339,6 +379,13 @@
       "label": "Engraving preview shape",
       "options": [
         { "value": "horizontal-bar", "label": "Horizontal bar (flat bar pendant)" },
+        { "value": "heart-necklace", "label": "Heart pendant (front engraving)" },
+        { "value": "matching-necklaces", "label": "Matching necklaces (two engravings)" },
+        { "value": "couple-rings", "label": "Couple rings (two-ring preview)" },
+        { "value": "charm-name-necklace", "label": "Charm necklace (variant name count)" },
+        { "value": "birthstone-ring", "label": "Birthstone ring (month and name)" },
+        { "value": "nameplate", "label": "Horizontal nameplate" },
+        { "value": "vertical-name", "label": "Vertical nameplate" },
         { "value": "vertical-bar", "label": "Vertical bar (tall pendant, text top→bottom)" },
         { "value": "ring", "label": "Ring band (text along curve)" },
         { "value": "bracelet", "label": "Bracelet / cuff (text along curve)" },

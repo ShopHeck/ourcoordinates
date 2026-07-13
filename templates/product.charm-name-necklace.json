@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Product details",
+            "content": "<p>The existing Names variant controls exactly how many personalized charm fields are required.</p>"
+          }
+        }
+      },
+      "block_order": ["details"],
+      "settings": {
+        "preview_type": "charm-name-necklace",
+        "show_engraving": true,
+        "engraving_required": true,
+        "engraving_placeholder": "ALEX",
+        "engraving_max": 15,
+        "atc_label": "Add to cart — free personalization"
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": ["main", "cross"]
+}
