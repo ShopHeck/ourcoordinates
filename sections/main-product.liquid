@@ -6,9 +6,17 @@
   assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
   assign delivery_high = delivery_low | plus: 259200
   assign preview_type = section.settings.preview_type | default: 'horizontal-bar'
+  assign personalization_release = 'oc-order-safe-2026-07-13-1'
+  assign personalization_contract = preview_type
+  unless section.settings.show_engraving
+    assign personalization_contract = 'none'
+  endunless
 -%}
 
-<section class="section" data-product data-preview-type="{{ preview_type }}">
+<section class="section" data-product
+         data-preview-type="{{ preview_type }}"
+         data-personalization-release="{{ personalization_release }}"
+         data-personalization-contract="{{ personalization_contract }}">
   <div class="page-width pdp">
 
     {%- comment -%} ---------- GALLERY ---------- {%- endcomment -%}
