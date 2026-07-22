@@ -1,0 +1,191 @@
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+-%}
+<section class="atelier-chap-{{ sid }}">
+  <div class="ach-shell">
+    {%- if s.eyebrow != blank -%}<div class="ach-eyebrow">{{ s.eyebrow }}</div>{%- endif -%}
+    <h2 class="ach-h2">{{ s.heading }}</h2>
+
+    <div class="ach-grid">
+      <div class="ach-visual">
+        <div class="ach-frame">
+          {%- assign shown = false -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.image != blank -%}
+              {%- assign imgclass = 'ach-img ach-i' | append: forloop.index0 -%}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', class: imgclass, alt: block.settings.heading_plain, widths: '600, 800, 1000' }}
+              {%- assign shown = true -%}
+            {%- else -%}
+              {%- assign fidx = forloop.index0 | modulo: 3 -%}
+              {%- case fidx -%}
+                {%- when 0 -%}
+                  {%- assign fb = 'lifestyle-necklace.jpg' -%}{%- assign fbw = 1024 -%}{%- assign fbh = 1478 -%}
+                {%- when 1 -%}
+                  {%- assign fb = 'gift-box.jpg' -%}{%- assign fbw = 1024 -%}{%- assign fbh = 966 -%}
+                {%- else -%}
+                  {%- assign fb = 'hero-necklace.jpg' -%}{%- assign fbw = 2048 -%}{%- assign fbh = 1088 -%}
+              {%- endcase -%}
+              <img src="{{ fb | asset_url }}" alt="{{ block.settings.heading_plain | escape }}" width="{{ fbw }}" height="{{ fbh }}" loading="lazy" class="ach-img ach-i{{ forloop.index0 }}">
+              {%- assign shown = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless shown -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'ach-img ach-show' }}
+          {%- endunless -%}
+          <span class="ach-tag"></span>
+        </div>
+      </div>
+
+      <div class="ach-list">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          <div class="ach-chap" data-img="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <span class="ach-idx">{{ b.label }}</span>
+            <h3 class="ach-h3">{{ b.heading }}</h3>
+            {%- if b.text != blank -%}<p class="ach-p">{{ b.text }}</p>{%- endif -%}
+            {%- if b.coords != blank -%}<span class="ach-coord">{{ b.coords }}</span>{%- endif -%}
+            {%- if b.cta_label != blank -%}<a class="ach-cta" href="{{ b.cta_link | default: '#' }}">{{ b.cta_label }}</a>{%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ sid }} .atelier-chap-{{ sid }}{
+    background:{{ s.color_bg }};color:{{ s.color_text }};
+    border-top:1px solid rgba(121,94,63,.15);
+    font-family:'Inter', -apple-system, sans-serif;font-size:15px;line-height:1.55;
+    padding:clamp(72px,9vw,130px) clamp(20px,5vw,72px);
+  }
+  #shopify-section-{{ sid }} .ach-shell{max-width:1240px;margin:0 auto}
+  #shopify-section-{{ sid }} .ach-eyebrow{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(121,94,63,.45);
+    margin-bottom:20px;display:flex;align-items:center;gap:14px;
+  }
+  #shopify-section-{{ sid }} .ach-eyebrow::before{content:"";width:36px;height:1px;background:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .ach-h2{
+    font-family:'Instrument Serif', Georgia, serif;font-weight:400;
+    font-size:clamp(34px,4.2vw,60px);line-height:1.04;letter-spacing:-.015em;margin:0;color:{{ s.color_text }};
+  }
+  #shopify-section-{{ sid }} .ach-h2 em{font-style:italic}
+  #shopify-section-{{ sid }} .ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,90px);margin-top:52px}
+  #shopify-section-{{ sid }} .ach-visual{position:sticky;top:100px;align-self:start}
+  #shopify-section-{{ sid }} .ach-frame{position:relative;overflow:hidden;border:1px solid rgba(121,94,63,.15);aspect-ratio:4/4.6;background:#f6eeda}
+  #shopify-section-{{ sid }} .ach-frame .ach-img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+    opacity:0;transition:opacity .8s ease;
+  }
+  #shopify-section-{{ sid }} .ach-frame .ach-img.ach-show{opacity:1}
+  #shopify-section-{{ sid }} .ach-frame .ach-img:first-child{position:relative}
+  #shopify-section-{{ sid }} .ach-tag{
+    position:absolute;left:16px;bottom:16px;background:rgba(255,249,239,.9);
+    padding:8px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:{{ s.color_text }};
+    border:1px solid rgba(121,94,63,.15);max-width:calc(100% - 32px);
+  }
+  #shopify-section-{{ sid }} .ach-list{display:flex;flex-direction:column}
+  #shopify-section-{{ sid }} .ach-chap{min-height:52vh;display:flex;flex-direction:column;justify-content:center;border-top:1px solid rgba(121,94,63,.15);padding:36px 0}
+  #shopify-section-{{ sid }} .ach-chap:last-child{border-bottom:1px solid rgba(121,94,63,.15)}
+  #shopify-section-{{ sid }} .ach-idx{font-size:11px;letter-spacing:.2em;color:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .ach-h3{font-family:'Instrument Serif', Georgia, serif;font-weight:400;font-size:clamp(26px,2.6vw,36px);margin:12px 0 0}
+  #shopify-section-{{ sid }} .ach-h3 em{font-style:italic}
+  #shopify-section-{{ sid }} .ach-p{margin:12px 0 0;color:rgba(121,94,63,.7);max-width:42ch;font-size:14.5px}
+  #shopify-section-{{ sid }} .ach-coord{margin-top:14px;font-size:12.5px;letter-spacing:.12em;color:{{ s.color_text }}}
+  #shopify-section-{{ sid }} .ach-cta{
+    margin-top:16px;align-self:flex-start;
+    color:{{ s.color_text }};text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    border-bottom:1px solid rgba(121,94,63,.45);padding-bottom:3px;transition:border-color .3s;
+  }
+  #shopify-section-{{ sid }} .ach-cta:hover{border-color:{{ s.color_text }}}
+  @media(max-width:900px){
+    #shopify-section-{{ sid }} .ach-grid{grid-template-columns:1fr}
+    #shopify-section-{{ sid }} .ach-visual{position:relative;top:0}
+    #shopify-section-{{ sid }} .ach-chap{min-height:0}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #shopify-section-{{ sid }} .ach-frame .ach-img{transition:none}
+  }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  var root = document.getElementById('shopify-section-{{ sid }}');
+  if (!root) return;
+  var imgs = Array.prototype.slice.call(root.querySelectorAll('.ach-frame .ach-img'));
+  var tag = root.querySelector('.ach-tag');
+  var chaps = Array.prototype.slice.call(root.querySelectorAll('.ach-chap'));
+  if (!chaps.length) return;
+
+  function activate(chap){
+    var idx = chap.getAttribute('data-img');
+    var any = false;
+    imgs.forEach(function(im){
+      var match = im.classList.contains('ach-i' + idx);
+      im.classList.toggle('ach-show', match);
+      if (match) any = true;
+    });
+    if (!any && imgs.length){ imgs[0].classList.add('ach-show'); }
+    var label = chap.querySelector('.ach-idx');
+    var heading = chap.querySelector('.ach-h3');
+    if (tag && label && heading){
+      tag.textContent = label.textContent + ' — ' + heading.textContent.toUpperCase();
+    }
+  }
+
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(en){
+      en.forEach(function(e){ if (e.isIntersecting) activate(e.target); });
+    }, {rootMargin: "-45% 0px -45% 0px"});
+    chaps.forEach(function(c){ io.observe(c); });
+  }
+  activate(chaps[0]);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Atelier Story Chapters",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why coordinates" },
+    { "type": "textarea", "id": "heading", "label": "Heading (HTML allowed)", "default": "Start with the story.<br><em>We’ll find the spot.</em>" },
+    { "type": "color", "id": "color_bg", "label": "Background", "default": "#f7f0e1" },
+    { "type": "color", "id": "color_text", "label": "Text", "default": "#795e3f" }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Eyebrow label", "default": "CHAPTER I" },
+        { "type": "textarea", "id": "heading", "label": "Chapter heading (HTML allowed)", "default": "The <em>proposal</em>" },
+        { "type": "text", "id": "heading_plain", "label": "Heading (plain, for alt/tag)", "default": "The proposal" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "He got down on one knee between the pigeons and the orchestra. The coordinates fit on 38 millimeters of gold." },
+        { "type": "text", "id": "coords", "label": "Coordinates line", "default": "PONT ALEXANDRE III, PARIS — 48.8634° N, 2.3135° E" },
+        { "type": "image_picker", "id": "image", "label": "Visual (optional)" },
+        { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Engrave this story →" },
+        { "type": "url", "id": "cta_link", "label": "CTA link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Atelier Story Chapters",
+      "category": "Atelier",
+      "blocks": [
+        { "type": "chapter", "settings": { "label": "CHAPTER I", "heading": "The <em>proposal</em>", "heading_plain": "The proposal", "text": "He got down on one knee between the pigeons and the orchestra. The coordinates fit on 38 millimeters of gold.", "coords": "PONT ALEXANDRE III, PARIS — 48.8634° N, 2.3135° E" } },
+        { "type": "chapter", "settings": { "label": "CHAPTER II", "heading": "Their <em>birthplace</em>", "heading_plain": "Their birthplace", "text": "The hospital room, the exact minute. A first birthday gift she’ll understand in eighteen years.", "coords": "SAVANNAH, GEORGIA — 32.0809° N, 81.0912° W" } },
+        { "type": "chapter", "settings": { "label": "CHAPTER III", "heading": "The <em>hometown</em>", "heading_plain": "The hometown", "text": "You can leave. The porch light doesn’t. Carry the zip code that raised you.", "coords": "DES MOINES, IOWA — 41.5868° N, 93.6250° W" } },
+        { "type": "chapter", "settings": { "label": "CHAPTER IV", "heading": "Where you <em>met</em>", "heading_plain": "Where you met", "text": "A spilled coffee, a shared umbrella, a wrong train. Some coordinates change everything after them.", "coords": "MADISON SQUARE, NYC — 40.7411° N, 73.9897° W" } },
+        { "type": "chapter", "settings": { "label": "CHAPTER V", "heading": "In <em>memory</em>", "heading_plain": "In memory", "text": "Her bench, his dock, their overlook. Grief softens when it has somewhere to live.", "coords": "BATTERY SPENCER — 37.8277° N, 122.4819° W" } },
+        { "type": "chapter", "settings": { "label": "CHAPTER VI", "heading": "The <em>dream</em>", "heading_plain": "The dream", "text": "Not yet — but soon. Wear the place you’re saving for, and let it pull you there.", "coords": "OIA, SANTORINI — 36.4618° N, 25.3760° E" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
