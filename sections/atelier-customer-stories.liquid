@@ -1,0 +1,180 @@
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+-%}
+<section class="atelier-cust-{{ sid }}">
+  <div class="acu-shell">
+    {%- if s.eyebrow != blank -%}<div class="acu-eyebrow">{{ s.eyebrow }}</div>{%- endif -%}
+    <h2 class="acu-h2">{{ s.heading }}</h2>
+    <div class="acu-counter-row">
+      <span class="acu-counter" data-target="{{ s.counter_number }}">0</span>
+      <span class="acu-counter-cap">{{ s.counter_caption }}</span>
+    </div>
+
+    <div class="acu-rows">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <div class="acu-row{% if forloop.even %} acu-flip{% endif %}" {{ block.shopify_attributes }}>
+          <div class="acu-photo">
+            {%- if b.photo != blank -%}
+              {{ b.photo | image_url: width: 1000 | image_tag: loading: 'lazy', alt: b.name, widths: '500, 750, 1000' }}
+            {%- else -%}
+              {%- assign fidx = forloop.index0 | modulo: 3 -%}
+              {%- case fidx -%}
+                {%- when 0 -%}{%- assign fb = 'customer-couple.jpg' -%}
+                {%- when 1 -%}{%- assign fb = 'customer-mother.jpg' -%}
+                {%- else -%}{%- assign fb = 'customer-friends.jpg' -%}
+              {%- endcase -%}
+              <img src="{{ fb | asset_url }}" alt="{{ b.name | escape }}" width="1024" height="966" loading="lazy">
+            {%- endif -%}
+          </div>
+          <div>
+            <div class="acu-stars" aria-label="{{ b.stars }} out of 5 stars">
+              {%- for i in (1..5) -%}{% if i <= b.stars %}★{% else %}<span class="acu-star-off">★</span>{% endif %}{%- endfor -%}
+            </div>
+            {%- if b.quote != blank -%}<p class="acu-quote">{{ b.quote }}</p>{%- endif -%}
+            {%- if b.story != blank -%}<p class="acu-story">{{ b.story }}</p>{%- endif -%}
+            <div class="acu-coord"><b>{{ b.coord_label }}</b> — {{ b.coord_value }} · {{ b.name }}</div>
+            {%- if b.piece_product != blank -%}
+              <a class="acu-shop" href="{{ b.piece_product.url }}">{{ s.shop_label }} — {{ b.piece_product.title }}, {{ b.piece_product.price | money }} →</a>
+            {%- elsif b.piece_link != blank -%}
+              <a class="acu-shop" href="{{ b.piece_link }}">{{ s.shop_label }} →</a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ sid }} .atelier-cust-{{ sid }}{
+    background:{{ s.color_bg }};color:{{ s.color_text }};
+    font-family:'Inter', -apple-system, sans-serif;font-size:15px;line-height:1.55;
+    padding:clamp(72px,9vw,130px) clamp(20px,5vw,72px);
+  }
+  #shopify-section-{{ sid }} .acu-shell{max-width:1240px;margin:0 auto}
+  #shopify-section-{{ sid }} .acu-eyebrow{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,249,239,.5);
+    margin-bottom:20px;display:flex;align-items:center;gap:14px;
+  }
+  #shopify-section-{{ sid }} .acu-eyebrow::before{content:"";width:36px;height:1px;background:rgba(255,249,239,.5)}
+  #shopify-section-{{ sid }} .acu-h2{
+    font-family:'Instrument Serif', Georgia, serif;font-weight:400;
+    font-size:clamp(34px,4.2vw,60px);line-height:1.04;letter-spacing:-.015em;margin:0;color:{{ s.color_text }};
+  }
+  #shopify-section-{{ sid }} .acu-h2 em{font-style:italic}
+  #shopify-section-{{ sid }} .acu-counter-row{display:flex;align-items:baseline;gap:18px;margin-top:26px;flex-wrap:wrap}
+  #shopify-section-{{ sid }} .acu-counter{font-family:'Instrument Serif', Georgia, serif;font-size:clamp(40px,4.6vw,64px);line-height:1}
+  #shopify-section-{{ sid }} .acu-counter-cap{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;max-width:24ch;line-height:1.6}
+  #shopify-section-{{ sid }} .acu-rows{margin-top:clamp(48px,6vw,80px);display:flex;flex-direction:column}
+  #shopify-section-{{ sid }} .acu-row{
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,72px);align-items:center;
+    padding:clamp(36px,4vw,60px) 0;border-top:1px solid rgba(255,249,239,.22);
+  }
+  #shopify-section-{{ sid }} .acu-row:last-child{border-bottom:1px solid rgba(255,249,239,.22)}
+  #shopify-section-{{ sid }} .acu-photo{overflow:hidden}
+  #shopify-section-{{ sid }} .acu-photo img,
+  #shopify-section-{{ sid }} .acu-photo svg{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+  #shopify-section-{{ sid }} .acu-row:hover .acu-photo img{transform:scale(1.03)}
+  #shopify-section-{{ sid }} .acu-flip .acu-photo{order:2}
+  #shopify-section-{{ sid }} .acu-stars{color:{{ s.color_text }};letter-spacing:5px;font-size:14px}
+  #shopify-section-{{ sid }} .acu-star-off{opacity:.35}
+  #shopify-section-{{ sid }} .acu-quote{margin:18px 0 0;font-family:'Instrument Serif', Georgia, serif;font-size:clamp(22px,2.2vw,30px);line-height:1.3}
+  #shopify-section-{{ sid }} .acu-quote em{font-style:italic}
+  #shopify-section-{{ sid }} .acu-story{margin:16px 0 0;color:rgba(255,249,239,.75);font-size:14.5px;max-width:46ch}
+  #shopify-section-{{ sid }} .acu-coord{margin-top:18px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,249,239,.65)}
+  #shopify-section-{{ sid }} .acu-coord b{color:{{ s.color_text }};font-weight:600}
+  #shopify-section-{{ sid }} .acu-shop{
+    margin-top:22px;display:inline-flex;align-items:center;gap:10px;
+    font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:18px;color:{{ s.color_text }};
+    text-decoration:none;border-bottom:1px solid rgba(255,249,239,.5);padding-bottom:3px;
+    transition:border-color .3s,gap .3s;
+  }
+  #shopify-section-{{ sid }} .acu-shop:hover{border-color:{{ s.color_text }};gap:16px}
+  @media(max-width:820px){
+    #shopify-section-{{ sid }} .acu-row{grid-template-columns:1fr}
+    #shopify-section-{{ sid }} .acu-flip .acu-photo{order:0}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #shopify-section-{{ sid }} .acu-photo img{transition:none}
+  }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  var root = document.getElementById('shopify-section-{{ sid }}');
+  if (!root) return;
+  var el = root.querySelector('.acu-counter');
+  if (!el) return;
+  var target = parseInt((el.getAttribute('data-target') || '0').replace(/[^0-9]/g, ''), 10) || 0;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function render(v){ el.textContent = v.toLocaleString('en-US'); }
+  if (reduced){ render(target); return; }
+  var done = false;
+  function count(){
+    if (done) return; done = true;
+    var t0 = null;
+    function step(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / 1600);
+      render(Math.floor(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(step); else render(target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(en){
+      en.forEach(function(e){ if (e.isIntersecting){ count(); io.disconnect(); } });
+    }, {threshold:.4});
+    io.observe(el);
+  } else { count(); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Atelier Customer Stories",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Worn daily · verified stories" },
+    { "type": "textarea", "id": "heading", "label": "Heading (HTML allowed)", "default": "Proof it lands<br><em>every time.</em>" },
+    { "type": "text", "id": "counter_number", "label": "Engraved-places counter", "default": "12408" },
+    { "type": "text", "id": "counter_caption", "label": "Counter caption", "default": "places engraved to date — each one somebody’s whole world" },
+    { "type": "text", "id": "shop_label", "label": "“Shop their piece” label", "default": "Shop their piece" },
+    { "type": "color", "id": "color_bg", "label": "Background", "default": "#795e3f" },
+    { "type": "color", "id": "color_text", "label": "Text", "default": "#fff9ef" }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Customer story",
+      "settings": [
+        { "type": "image_picker", "id": "photo", "label": "Customer photo" },
+        { "type": "text", "id": "name", "label": "Customer name(s)", "default": "MAYA & DANIEL R." },
+        { "type": "range", "id": "stars", "label": "Star rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "“He pointed at the necklace and said ‘that’s where.’ I cried before I even read the numbers.”" },
+        { "type": "textarea", "id": "story", "label": "Story", "default": "Daniel proposed at the north end of the beach at sunset. Maya wears those exact six digits every day — and his matching leather bracelet carries the same ones." },
+        { "type": "text", "id": "coord_label", "label": "Coordinates label", "default": "Where she said yes" },
+        { "type": "text", "id": "coord_value", "label": "Coordinates", "default": "27.7676° N, 82.6403° W" },
+        { "type": "product", "id": "piece_product", "label": "Product (“Shop their piece”)" },
+        { "type": "url", "id": "piece_link", "label": "Fallback link (if no product picked)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Atelier Customer Stories",
+      "category": "Atelier",
+      "blocks": [
+        { "type": "story" },
+        { "type": "story", "settings": { "name": "PRIYA S.", "quote": "“The hospital, 6:14 a.m. Three days after ordering I got a photo of her actual necklace — before it shipped.”", "story": "Priya typed in the address of the hospital where her daughter was born. The proof email arrived on a Tuesday; the tears arrived immediately. Her wife hasn’t taken it off since.", "coord_label": "Their birthplace", "coord_value": "32.7767° N, 96.7970° W" } },
+        { "type": "story", "settings": { "name": "JESS & LAUREN", "quote": "“Eleven years of friendship, one café table, two matching cuffs. The engraving is exact.”", "story": "Jess and Lauren met over a spilled latte in Madison Square and have been inseparable since. For the eleventh anniversary of that morning: matching cuffs, one shared dot on the map.", "coord_label": "Where they met", "coord_value": "40.7411° N, 73.9897° W" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
