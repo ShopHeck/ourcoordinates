@@ -1,18 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero",
       "settings": {
-        "image": "shopify:\/\/shop_images\/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-8884822.png",
+        "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-8884822.png",
         "eyebrow": "Free engraving on every piece",
         "heading": "Some places deserve to be worn",
         "subheading": "The exact latitude and longitude of the spot that changed your life - laser-engraved on jewelry made to order, one piece at a time.",
         "button_label": "Find your coordinates",
-        "button_link": "shopify:\/\/collections\/coordinates-collection",
+        "button_link": "shopify://collections/coordinates-collection",
         "fallback_collection": "",
         "button_label_2": "How it works",
-        "button_link_2": "shopify:\/\/pages\/how-it-works",
-        "corner_coords": "27.7676 N \/ 82.6403 W - ST. PETERSBURG, FL"
+        "button_link_2": "shopify://pages/how-it-works",
+        "corner_coords": "27.7676 N / 82.6403 W - ST. PETERSBURG, FL"
       }
     },
     "marquee": {
@@ -76,6 +85,7 @@
       "settings": {
         "eyebrow": "Best sellers",
         "heading": "Most-gifted this month",
+        "subheading": "",
         "collection": "best-sellers",
         "limit": 8,
         "hide_sold_out": true
@@ -84,12 +94,37 @@
     "trust": {
       "type": "trust-strip",
       "blocks": {
-        "t1": { "type": "badge", "settings": { "text": "Engraved to order in the USA" } },
-        "t2": { "type": "badge", "settings": { "text": "Photo proof before shipping" } },
-        "t3": { "type": "badge", "settings": { "text": "30-day happiness guarantee" } },
-        "t4": { "type": "badge", "settings": { "text": "Free engraving on every piece" } }
+        "t1": {
+          "type": "badge",
+          "settings": {
+            "text": "Engraved to order in the USA"
+          }
+        },
+        "t2": {
+          "type": "badge",
+          "settings": {
+            "text": "Photo proof before shipping"
+          }
+        },
+        "t3": {
+          "type": "badge",
+          "settings": {
+            "text": "30-day happiness guarantee"
+          }
+        },
+        "t4": {
+          "type": "badge",
+          "settings": {
+            "text": "Free engraving on every piece"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4"],
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
       "settings": {}
     },
     "sets": {
@@ -110,6 +145,104 @@
         "text": "A photo fades. An address changes. But two numbers can hold a whole life - and nobody else will ever know what they mean."
       }
     },
+    "atelier_story_chapters_RgniKp": {
+      "type": "atelier-story-chapters",
+      "blocks": {
+        "chapter_PaKcMc": {
+          "type": "chapter",
+          "settings": {
+            "label": "CHAPTER I",
+            "heading": "The <em>proposal</em>",
+            "heading_plain": "The proposal",
+            "text": "He got down on one knee between the pigeons and the orchestra. The coordinates fit on 38 millimeters of gold.",
+            "coords": "PONT ALEXANDRE III, PARIS — 48.8634° N, 2.3135° E",
+            "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-2646488.jpg",
+            "cta_label": "Engrave this story →",
+            "cta_link": "shopify://collections/coordinates-sets"
+          }
+        },
+        "chapter_n6DBCQ": {
+          "type": "chapter",
+          "settings": {
+            "label": "CHAPTER II",
+            "heading": "Their <em>birthplace</em>",
+            "heading_plain": "Their birthplace",
+            "text": "The hospital room, the exact minute. A first birthday gift she’ll understand in eighteen years.",
+            "coords": "SAVANNAH, GEORGIA — 32.0809° N, 81.0912° W",
+            "image": "shopify://shop_images/jAUTBbD4iryfubsDy9DjZY.webp",
+            "cta_label": "Engrave this story →",
+            "cta_link": ""
+          }
+        },
+        "chapter_z88Kmy": {
+          "type": "chapter",
+          "settings": {
+            "label": "CHAPTER III",
+            "heading": "The <em>hometown</em>",
+            "heading_plain": "The hometown",
+            "text": "You can leave. The porch light doesn’t. Carry the zip code that raised you.",
+            "coords": "DES MOINES, IOWA — 41.5868° N, 93.6250° W",
+            "image": "shopify://shop_images/nrm67Yu38xg4whqWaEJwmt.webp",
+            "cta_label": "Engrave this story →",
+            "cta_link": ""
+          }
+        },
+        "chapter_DHrQEq": {
+          "type": "chapter",
+          "settings": {
+            "label": "CHAPTER IV",
+            "heading": "Where you <em>met</em>",
+            "heading_plain": "Where you met",
+            "text": "A spilled coffee, a shared umbrella, a wrong train. Some coordinates change everything after them.",
+            "coords": "MADISON SQUARE, NYC — 40.7411° N, 73.9897° W",
+            "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-6865525.jpg",
+            "cta_label": "Engrave this story →",
+            "cta_link": "shopify://collections/coordinates-sets"
+          }
+        },
+        "chapter_bDftKa": {
+          "type": "chapter",
+          "settings": {
+            "label": "CHAPTER V",
+            "heading": "In <em>memory</em>",
+            "heading_plain": "In memory",
+            "text": "Her bench, his dock, their overlook. Grief softens when it has somewhere to live.",
+            "coords": "BATTERY SPENCER — 37.8277° N, 122.4819° W",
+            "image": "shopify://shop_images/proof.jpg",
+            "cta_label": "Engrave this story →",
+            "cta_link": "shopify://products/personalized-horizontal-bar-necklace"
+          }
+        },
+        "chapter_Rjq7cj": {
+          "type": "chapter",
+          "settings": {
+            "label": "CHAPTER VI",
+            "heading": "The <em>dream</em>",
+            "heading_plain": "The dream",
+            "text": "Not yet — but soon. Wear the place you’re saving for, and let it pull you there.",
+            "coords": "OIA, SANTORINI — 36.4618° N, 25.3760° E",
+            "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-1792919.png",
+            "cta_label": "Engrave this story →",
+            "cta_link": "shopify://products/personalized-horizontal-bar-necklace"
+          }
+        }
+      },
+      "block_order": [
+        "chapter_PaKcMc",
+        "chapter_n6DBCQ",
+        "chapter_z88Kmy",
+        "chapter_DHrQEq",
+        "chapter_bDftKa",
+        "chapter_Rjq7cj"
+      ],
+      "name": "Atelier Story Chapters",
+      "settings": {
+        "eyebrow": "Why coordinates",
+        "heading": "Start with the story.<br><em>We’ll find the spot.</em>",
+        "color_bg": "#f7f0e1",
+        "color_text": "#795e3f"
+      }
+    },
     "moments": {
       "type": "moments",
       "blocks": {
@@ -119,7 +252,7 @@
             "coords": "THE QUESTION",
             "title": "The proposal",
             "text": "The exact spot you knelt down. Engraved where only you two will know what it means.",
-            "link": "shopify:\/\/collections\/for-couples"
+            "link": "shopify://collections/for-couples"
           }
         },
         "mo2": {
@@ -128,7 +261,7 @@
             "coords": "DAY ONE",
             "title": "Their birthplace",
             "text": "The hospital, the town, the street. A first chapter they can carry.",
-            "link": "shopify:\/\/collections\/coordinates-collection"
+            "link": "shopify://collections/coordinates-collection"
           }
         },
         "mo3": {
@@ -137,7 +270,7 @@
             "coords": "STILL HOME",
             "title": "The hometown",
             "text": "For the one who moved away but never really left.",
-            "link": "shopify:\/\/collections\/coordinates-collection"
+            "link": "shopify://collections/coordinates-collection"
           }
         },
         "mo4": {
@@ -146,7 +279,7 @@
             "coords": "FIRST MEETING",
             "title": "Where you met",
             "text": "A coffee shop. A concert. Gate B12. The odds were impossible and it happened anyway.",
-            "link": "shopify:\/\/collections\/shop-couples-necklaces"
+            "link": "shopify://collections/shop-couples-necklaces"
           }
         },
         "mo5": {
@@ -155,7 +288,7 @@
             "coords": "IN MEMORY",
             "title": "A resting place",
             "text": "Quiet, personal, always close. A way to keep someone with you.",
-            "link": "shopify:\/\/collections\/coordinates-collection"
+            "link": "shopify://collections/coordinates-collection"
           }
         },
         "mo6": {
@@ -164,7 +297,7 @@
             "coords": "SOMEDAY",
             "title": "The dream",
             "text": "The place you haven't been yet. Wear it until you get there.",
-            "link": "shopify:\/\/collections\/coordinates-collection"
+            "link": "shopify://collections/coordinates-collection"
           }
         }
       },
@@ -176,6 +309,7 @@
         "mo5",
         "mo6"
       ],
+      "disabled": true,
       "settings": {}
     },
     "story": {
@@ -185,31 +319,94 @@
         "heading": "Start with the story. We'll find the spot.",
         "text": "Tell us about the person and the moment — a first date, a hometown, the place you said yes. Our 60-second gift finder turns the story into the right piece, exact coordinates and all.",
         "button_label": "Find the perfect piece",
-        "button_link": "\/pages\/gift-finder",
+        "button_link": "/pages/gift-finder",
         "button_label_2": "See how it works",
-        "button_link_2": "shopify:\/\/pages\/how-it-works"
+        "button_link_2": "shopify://pages/how-it-works"
       }
     },
     "how": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/untitled_ChatGPT_Images_2.0_2026-06-12_15-39-34.png",
+        "image": "shopify://shop_images/untitled_ChatGPT_Images_2.0_2026-06-12_15-39-34.png",
         "flip": false,
         "eyebrow": "How it works",
         "heading": "Pick the place. We engrave the rest.",
-        "text": "<p>Tell us your spot — a first date, a hometown, a summit. We convert it to exact coordinates, engrave it by laser, and send you a photo proof before it ships.<\/p>",
+        "text": "<p>Tell us your spot — a first date, a hometown, a summit. We convert it to exact coordinates, engrave it by laser, and send you a photo proof before it ships.</p>",
         "button_label": "Create Your Coordinates Necklace",
-        "button_link": "shopify:\/\/products\/coordinates-necklace"
+        "button_link": "shopify://products/coordinates-necklace"
+      }
+    },
+    "atelier_customer_stories_MeFCbT": {
+      "type": "atelier-customer-stories",
+      "blocks": {
+        "story_7A9z6D": {
+          "type": "story",
+          "settings": {
+            "photo": "shopify://shop_images/customer-couple.jpg",
+            "name": "MAYA & DANIEL R.",
+            "stars": 5,
+            "quote": "“He pointed at the necklace and said ‘that’s where.’ I cried before I even read the numbers.”",
+            "story": "Daniel proposed at the north end of the beach at sunset. Maya wears those exact six digits every day — and his matching leather bracelet carries the same ones.",
+            "coord_label": "Where she said yes",
+            "coord_value": "27.7676° N, 82.6403° W",
+            "piece_product": "coordinates-necklace",
+            "piece_link": ""
+          }
+        },
+        "story_9rKXUG": {
+          "type": "story",
+          "settings": {
+            "photo": "shopify://shop_images/customer-mother.jpg",
+            "name": "PRIYA S.",
+            "stars": 5,
+            "quote": "“The hospital, 6:14 a.m. Three days after ordering I got a photo of her actual necklace — before it shipped.”",
+            "story": "Priya typed in the address of the hospital where her daughter was born. The proof email arrived on a Tuesday; the tears arrived immediately. Her wife hasn’t taken it off since.",
+            "coord_label": "Their birthplace",
+            "coord_value": "32.7767° N, 96.7970° W",
+            "piece_product": "personalized-horizontal-bar-necklace",
+            "piece_link": ""
+          }
+        },
+        "story_7WDbAJ": {
+          "type": "story",
+          "settings": {
+            "photo": "shopify://shop_images/customer-friends.jpg",
+            "name": "JESS & LAUREN",
+            "stars": 5,
+            "quote": "“Eleven years of friendship, one café table, two matching cuffs. The engraving is exact.”",
+            "story": "Jess and Lauren met over a spilled latte in Madison Square and have been inseparable since. For the eleventh anniversary of that morning: matching cuffs, one shared dot on the map.",
+            "coord_label": "Where they met",
+            "coord_value": "40.7411° N, 73.9897° W",
+            "piece_product": "coordinates-bracelet",
+            "piece_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "story_7A9z6D",
+        "story_9rKXUG",
+        "story_7WDbAJ"
+      ],
+      "name": "Atelier Customer Stories",
+      "settings": {
+        "eyebrow": "Worn daily · verified stories",
+        "heading": "Proof it lands<br><em>every time.</em>",
+        "counter_number": "12408",
+        "counter_caption": "places engraved to date — each one somebody’s whole world",
+        "shop_label": "Shop their piece",
+        "color_bg": "#795e3f",
+        "color_text": "#fff9ef"
       }
     },
     "quote": {
       "type": "testimonial",
+      "disabled": true,
       "settings": {
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",
         "attribution": "Lucy — United States",
         "button_label": "Shop matching sets",
-        "button_link": "shopify:\/\/collections\/coordinates-collection"
+        "button_link": "shopify://collections/coordinates-collection"
       }
     },
     "featured2": {
@@ -217,6 +414,7 @@
       "settings": {
         "eyebrow": "For him",
         "heading": "Men's coordinates jewelry",
+        "subheading": "",
         "collection": "mens",
         "limit": 4,
         "hide_sold_out": true
@@ -230,9 +428,11 @@
     "trust",
     "sets",
     "manifesto",
+    "atelier_story_chapters_RgniKp",
     "moments",
     "story",
     "how",
+    "atelier_customer_stories_MeFCbT",
     "quote",
     "featured2"
   ]
