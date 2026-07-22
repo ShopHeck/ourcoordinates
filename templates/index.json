@@ -140,6 +140,7 @@
     },
     "manifesto": {
       "type": "manifesto",
+      "disabled": true,
       "settings": {
         "eyebrow": "Why coordinates",
         "text": "A photo fades. An address changes. But two numbers can hold a whole life - and nobody else will ever know what they mean."
