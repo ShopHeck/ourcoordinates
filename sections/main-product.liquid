@@ -34,7 +34,7 @@
       </div>
       {%- if product.images.size > 1 -%}
         <div class="pdp__thumbs">
-          {%- for image in product.images limit: 12 -%}
+          {%- for image in product.images limit: 24 -%}
             <button type="button" data-thumb data-image-id="{{ image.id }}" data-full="{{ image | image_url: width: 1200 }}"
                     data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
                     {% if forloop.first %}aria-current="true"{% endif %}
