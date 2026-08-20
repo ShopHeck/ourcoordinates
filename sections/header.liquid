@@ -6,8 +6,89 @@
 
     <nav class="site-nav" data-site-nav aria-label="Main">
       {%- for link in section.settings.menu.links -%}
-        <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- assign menu_title = link.title | downcase -%}
+        {%- if section.settings.enable_mega_menu and menu_title == 'shop' -%}
+          <details class="site-nav__mega" data-mega-menu>
+            <summary class="site-nav__mega-trigger">
+              <span>{{ link.title }}</span>
+              <svg viewBox="0 0 12 8" aria-hidden="true" focusable="false"><path d="M1 1.5 6 6.5l5-5"/></svg>
+            </summary>
+            <div class="mega-menu" data-mega-panel>
+              <div class="page-width mega-menu__layout">
+                <div class="mega-menu__groups">
+                  {%- liquid
+                    assign has_grouped_children = false
+                    for child_link in link.links
+                      if child_link.links.size > 0
+                        assign has_grouped_children = true
+                        break
+                      endif
+                    endfor
+                  -%}
+                  {%- if has_grouped_children -%}
+                    {%- for child_link in link.links limit: 3 -%}
+                      <section class="mega-menu__group" aria-labelledby="mega-heading-{{ forloop.index }}-{{ section.id }}">
+                        <p class="mega-menu__eyebrow" id="mega-heading-{{ forloop.index }}-{{ section.id }}">{{ child_link.title }}</p>
+                        <ul>
+                          {%- if child_link.links.size > 0 -%}
+                            {%- for grandchild_link in child_link.links -%}
+                              <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title }} <span aria-hidden="true">→</span></a></li>
+                            {%- endfor -%}
+                          {%- else -%}
+                            <li><a href="{{ child_link.url }}">Shop {{ child_link.title }} <span aria-hidden="true">→</span></a></li>
+                          {%- endif -%}
+                        </ul>
+                      </section>
+                    {%- endfor -%}
+                  {%- else -%}
+                    <section class="mega-menu__group" aria-labelledby="mega-jewelry-{{ section.id }}">
+                      <p class="mega-menu__eyebrow" id="mega-jewelry-{{ section.id }}">Jewelry</p>
+                      <ul>
+                        <li><a href="{{ routes.collections_url }}/necklaces">Necklaces <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/bracelets">Bracelets <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/rings">Rings <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/coordinates-sets">Jewelry sets <span aria-hidden="true">→</span></a></li>
+                      </ul>
+                    </section>
+                    <section class="mega-menu__group" aria-labelledby="mega-personalize-{{ section.id }}">
+                      <p class="mega-menu__eyebrow" id="mega-personalize-{{ section.id }}">Personalize</p>
+                      <ul>
+                        <li><a href="{{ routes.collections_url }}/coordinates-collection">Coordinates jewelry <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/personalized-jewelry">Personalized jewelry <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/shop-couples-necklaces">Couples necklaces <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/coordinates-bracelets">Coordinates bracelets <span aria-hidden="true">→</span></a></li>
+                      </ul>
+                    </section>
+                    <section class="mega-menu__group" aria-labelledby="mega-shop-for-{{ section.id }}">
+                      <p class="mega-menu__eyebrow" id="mega-shop-for-{{ section.id }}">Shop for</p>
+                      <ul>
+                        <li><a href="{{ routes.collections_url }}/best-sellers">Best sellers <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/womens">Women’s jewelry <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/mens">Men’s jewelry <span aria-hidden="true">→</span></a></li>
+                        <li><a href="{{ routes.collections_url }}/in-stock">In-stock gifts <span aria-hidden="true">→</span></a></li>
+                      </ul>
+                    </section>
+                  {%- endif -%}
+                </div>
+
+                <aside class="mega-menu__feature">
+                  <p class="mega-menu__coordinates">27.7676° N&nbsp; / &nbsp;82.6403° W</p>
+                  <p class="mega-menu__feature-title">Find the piece that fits their story.</p>
+                  <p>Choose who it’s for, what the moment means, and your budget.</p>
+                  <a href="/pages/gift-finder">Use the gift finder <span aria-hidden="true">→</span></a>
+                </aside>
+
+                <a class="mega-menu__all" href="{{ link.url }}">Shop all jewelry <span aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </details>
+        {%- else -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endif -%}
       {%- endfor -%}
+      {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+        <a class="site-nav__mobile-cta" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
     </nav>
 
     <a class="site-header__logo" href="{{ routes.root_url }}">
@@ -36,6 +117,7 @@
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu", "info": "Keep it to 5–6 links. Fewer choices, more buying." },
+    { "type": "checkbox", "id": "enable_mega_menu", "label": "Enable Shop mega menu", "default": true, "info": "Uses grouped Shop menu children when configured, otherwise shows the store’s core shopping categories." },
     { "type": "text", "id": "cta_label", "label": "Header button label", "info": "Optional. A persistent call-to-action, e.g. 'Start your piece'. Desktop only.", "default": "Start your piece" },
     { "type": "url", "id": "cta_link", "label": "Header button link", "info": "e.g. your best-selling product or the gift finder." }
   ]

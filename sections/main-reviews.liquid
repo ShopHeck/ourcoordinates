@@ -1,0 +1,37 @@
+<section class="section reviews-page">
+  <div class="page-width">
+    <header class="reviews-page__head">
+      <p class="coord-eyebrow">Customer feedback</p>
+      <h1>Customer Reviews</h1>
+      <p>Read product reviews submitted through our review partner. Product-specific ratings also appear on the corresponding product page.</p>
+    </header>
+
+    <div class="reviews-page__widget" data-all-reviews>
+      <div class="jdgm-widget jdgm-all-reviews-widget" data-from-snippet="true"></div>
+      <p class="reviews-page__fallback" data-reviews-fallback>Customer reviews will appear here as they are published. Have feedback about an order? <a href="/pages/contact">Contact us</a>.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-all-reviews]');
+    if (!root) return;
+    var widget = root.querySelector('.jdgm-all-reviews-widget');
+    var fallback = root.querySelector('[data-reviews-fallback]');
+    if (!widget || !fallback || !('MutationObserver' in window)) return;
+    function sync() {
+      var hasReviews = widget.querySelector('.jdgm-rev, .jdgm-all-reviews-page__wrapper, [data-review-id]');
+      fallback.hidden = Boolean(hasReviews);
+    }
+    new MutationObserver(sync).observe(widget, { childList: true, subtree: true });
+    sync();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Customer reviews",
+  "settings": []
+}
+{% endschema %}

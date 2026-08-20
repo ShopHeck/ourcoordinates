@@ -163,7 +163,7 @@
                 {%- if quick_addable -%}
                   <button type="button" class="cart-upsell__btn" data-drawer-add="{{ prod.selected_or_first_available_variant.id }}">Add</button>
                 {%- else -%}
-                  <a class="cart-upsell__btn" href="{{ prod.url }}">Personalize</a>
+                  <a class="cart-upsell__btn" href="{{ prod.url }}">View options</a>
                 {%- endif -%}
               </div>
             {%- endfor -%}
@@ -198,14 +198,13 @@
             {{ cart.total_price | money }}
           </span>
         </div>
-        <p class="cart-drawer__meta">Engraved to order — ships in {{ settings.production_days }} business days. Taxes &amp; shipping calculated at checkout.</p>
+        <p class="cart-drawer__meta">Orders ship in {{ settings.production_days }} business days. Taxes &amp; shipping calculated at checkout.</p>
 
         <button type="submit" name="checkout" class="btn btn--full cart-drawer__checkout">Check out</button>
         <a class="cart-drawer__viewcart" href="{{ routes.cart_url }}">View full cart</a>
 
         <ul class="guarantees guarantees--drawer">
           {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
-          {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
         </ul>
       </form>
 

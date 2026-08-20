@@ -2,7 +2,10 @@
   <div class="page-width">
     <div class="collection-head">
       <p class="coord-eyebrow">{{ section.settings.eyebrow | default: 'Collection' }}</p>
-      <h1>{{ collection.title }}</h1>
+      <h1>{% if collection.handle == 'all' %}Personalized Jewelry &amp; Coordinates Gifts{% else %}{{ collection.title }}{% endif %}</h1>
+      {%- if collection.handle == 'all' and collection.description == blank -%}
+        <p class="collection-head__intro">Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes made to hold a place or message that matters.</p>
+      {%- endif -%}
       {%- if collection.description != blank -%}
         <div class="rte" style="max-width:62ch">{{ collection.description }}</div>
       {%- endif -%}
@@ -31,6 +34,52 @@
       {%- endif -%}
     </div>
 
+    {%- liquid
+      assign selected_sort = collection.sort_by | default: collection.default_sort_by
+      assign active_filter_count = 0
+      for filter in collection.filters
+        assign active_filter_count = active_filter_count | plus: filter.active_values.size
+        if filter.min_value.value != nil or filter.max_value.value != nil
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+      endfor
+    -%}
+    <form class="collection-controls" method="get">
+      <label class="collection-controls__sort">
+        <span>Sort</span>
+        <select name="sort_by" onchange="this.form.submit()">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value | escape }}"{% if option.value == selected_sort %} selected{% endif %}>{{ option.name }}</option>
+          {%- endfor -%}
+        </select>
+      </label>
+
+      {%- for filter in collection.filters -%}
+        <details class="collection-filter"{% if filter.active_values.size > 0 %} open{% endif %}>
+          <summary>{{ filter.label }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</summary>
+          <div class="collection-filter__body">
+            {%- case filter.type -%}
+              {%- when 'boolean', 'list' -%}
+                {%- for value in filter.values -%}
+                  <label>
+                    <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                    <span>{{ value.label }} <small>({{ value.count }})</small></span>
+                  </label>
+                {%- endfor -%}
+              {%- when 'price_range' -%}
+                <div class="collection-filter__price">
+                  <label>Min <input name="{{ filter.min_value.param_name }}" inputmode="decimal" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" placeholder="0"></label>
+                  <label>Max <input name="{{ filter.max_value.param_name }}" inputmode="decimal" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"></label>
+                </div>
+            {%- endcase -%}
+          </div>
+        </details>
+      {%- endfor -%}
+
+      {%- if collection.filters.size > 0 -%}<button class="btn btn--ghost collection-controls__apply" type="submit">Apply</button>{%- endif -%}
+      {%- if active_filter_count > 0 -%}<a href="{{ collection.url }}?sort_by={{ selected_sort }}">Clear filters</a>{%- endif -%}
+    </form>
+
     {%- paginate collection.products by 24 -%}
       {%- if collection.products_count == 0 -%}
         <div class="collection-empty">
@@ -39,11 +88,20 @@
           <a class="btn" href="{{ routes.all_products_collection_url }}">Shop all pieces</a>
         </div>
       {%- else -%}
+        {%- assign rendered_products = 0 -%}
         <div class="product-grid">
           {%- for product in collection.products -%}
+            {%- if section.settings.hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
+            {%- assign rendered_products = rendered_products | plus: 1 -%}
             {%- render 'product-card', card_product: product -%}
           {%- endfor -%}
         </div>
+        {%- if rendered_products == 0 -%}
+          <div class="collection-empty">
+            <p>No available pieces match this page or filter yet.</p>
+            <a class="btn" href="{{ collection.url }}">Clear filters</a>
+          </div>
+        {%- endif -%}
       {%- endif -%}
 
       {%- if paginate.pages > 1 -%}
@@ -87,6 +145,12 @@
       "id": "occasion_date",
       "label": "Occasion date (YYYY-MM-DD)",
       "info": "The banner hides itself automatically once it's too late to deliver in time, or after the date passes."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_sold_out",
+      "label": "Hide sold-out products",
+      "default": true
     }
   ]
 }

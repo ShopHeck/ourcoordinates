@@ -9,6 +9,85 @@
       var nav = document.querySelector('[data-site-nav]');
       var open = nav.classList.toggle('is-open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+  });
+
+  /* ---------- category mega menu ---------- */
+  var siteHeader = document.querySelector('.site-header');
+  var siteNav = document.querySelector('[data-site-nav]');
+  var menuToggle = document.querySelector('[data-menu-toggle]');
+  var megaMenus = document.querySelectorAll('[data-mega-menu]');
+  var desktopMenu = window.matchMedia('(min-width: 861px)');
+
+  function closeMegaMenus(except) {
+    megaMenus.forEach(function (menu) {
+      if (menu !== except) menu.removeAttribute('open');
+    });
+  }
+
+  megaMenus.forEach(function (menu) {
+    var trigger = menu.querySelector('summary');
+    if (trigger) {
+      trigger.addEventListener('click', function (event) {
+        if (!desktopMenu.matches) return;
+        event.preventDefault();
+        closeMegaMenus(menu);
+        menu.setAttribute('open', '');
+      });
+      trigger.addEventListener('keydown', function (event) {
+        if (!desktopMenu.matches || event.key !== 'ArrowDown') return;
+        event.preventDefault();
+        closeMegaMenus(menu);
+        menu.setAttribute('open', '');
+        var firstLink = menu.querySelector('[data-mega-panel] a');
+        if (firstLink) firstLink.focus();
+      });
+    }
+    menu.addEventListener('mouseenter', function () {
+      if (desktopMenu.matches) {
+        closeMegaMenus(menu);
+        menu.setAttribute('open', '');
+      }
+    });
+    menu.addEventListener('mouseleave', function () {
+      if (desktopMenu.matches && !menu.contains(document.activeElement)) menu.removeAttribute('open');
+    });
+    menu.addEventListener('focusin', function () {
+      if (desktopMenu.matches) {
+        closeMegaMenus(menu);
+        menu.setAttribute('open', '');
+      }
+    });
+    menu.addEventListener('focusout', function (event) {
+      if (desktopMenu.matches && !menu.contains(event.relatedTarget)) menu.removeAttribute('open');
+    });
+    menu.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        menu.removeAttribute('open');
+        if (trigger) trigger.focus();
+      }
+    });
+  });
+
+  document.addEventListener('click', function (event) {
+    if (siteHeader && !siteHeader.contains(event.target)) {
+      closeMegaMenus();
+      if (siteNav) siteNav.classList.remove('is-open');
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Open menu');
+      }
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    closeMegaMenus();
+    if (siteNav) siteNav.classList.remove('is-open');
+    if (menuToggle) {
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'Open menu');
     }
   });
 
@@ -24,6 +103,18 @@
     var priceEl = root.querySelector('[data-price]');
     var stickyPrice = document.querySelector('[data-sticky-price]');
     var atcBtns = document.querySelectorAll('[data-atc]');
+    var restockForm = root.querySelector('[data-restock-form]');
+    var mainImg = root.querySelector('[data-main-image]');
+
+    function selectThumb(btn) {
+      if (!btn || !mainImg) return;
+      mainImg.src = btn.dataset.full;
+      if (btn.dataset.fullSrcset) mainImg.srcset = btn.dataset.fullSrcset;
+      else mainImg.removeAttribute('srcset');
+      mainImg.alt = btn.querySelector('img') ? btn.querySelector('img').alt : '';
+      root.querySelectorAll('[data-thumb]').forEach(function (item) { item.removeAttribute('aria-current'); });
+      btn.setAttribute('aria-current', 'true');
+    }
 
     /* variant resolution from option radios */
     function currentOptions() {
@@ -77,6 +168,10 @@
         btn.querySelector('[data-atc-label]').textContent = v.available
           ? btn.dataset.labelAdd : btn.dataset.labelSoldOut;
       });
+      if (restockForm) restockForm.hidden = v.available;
+      if (v.featured_image && v.featured_image.id) {
+        selectThumb(root.querySelector('[data-thumb][data-image-id="' + v.featured_image.id + '"]'));
+      }
       var url = new URL(window.location);
       url.searchParams.set('variant', v.id);
       history.replaceState({}, '', url);
@@ -124,17 +219,9 @@
     }
 
     /* gallery */
-    var mainImg = root.querySelector('[data-main-image]');
     root.querySelectorAll('[data-thumb]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        if (mainImg) {
-          mainImg.src = btn.dataset.full;
-          if (btn.dataset.fullSrcset) mainImg.srcset = btn.dataset.fullSrcset;
-          else mainImg.removeAttribute('srcset');
-          mainImg.alt = btn.querySelector('img') ? btn.querySelector('img').alt : '';
-        }
-        root.querySelectorAll('[data-thumb]').forEach(function (b) { b.removeAttribute('aria-current'); });
-        btn.setAttribute('aria-current', 'true');
+        selectThumb(btn);
       });
     });
 
@@ -390,7 +477,6 @@
     /* locator auto-fills: split lat/lng into line 1 + line 2 */
     var mainInput = root.querySelector('[data-engrave-input]'); /* line 1 has both attrs */
     if (mainInput) {
-      var origDispatch = mainInput.dispatchEvent.bind(mainInput);
       /* After locator sets value like "27.7676° N, 82.6403° W", split it */
       mainInput.addEventListener('input', function () {
         if (mainInput.dataset.fromLocator) {
@@ -416,6 +502,55 @@
           line1.setCustomValidity('Add your coordinates for line 1.');
           line1.reportValidity();
           line1.addEventListener('input', function () { line1.setCustomValidity(''); }, { once: true });
+        }
+      });
+    }
+  }
+
+  /* ---- PADLOCK (two-line front engraving) ---- */
+  if (previewType === 'padlock') {
+    var lockInputs = root.querySelectorAll('[data-lock-input]');
+
+    function renderLockLine(inp) {
+      var lineNum = inp.dataset.lockInput;
+      var preview = root.querySelector('[data-lock-line="' + lineNum + '"]');
+      var count = root.querySelector('[data-lock-count="' + lineNum + '"]');
+      if (!preview) return;
+      var placeholder = preview.dataset.placeholder || '';
+      var val = inp.value.trim();
+      preview.textContent = val || placeholder;
+      preview.style.opacity = val ? '1' : '0.4';
+      clampFit(preview, (val || placeholder).length);
+      if (count) count.textContent = inp.value.length + ' / ' + inp.maxLength + (lineNum === '2' ? ' · optional' : '');
+      if (!inp.dataset.fromLocator) {
+        ['[data-prop-latlng]', '[data-prop-place]', '[data-prop-maplink]'].forEach(function (sel) {
+          var el = root.querySelector(sel);
+          if (el) el.value = '';
+        });
+      }
+    }
+
+    lockInputs.forEach(function (inp) {
+      inp.addEventListener('input', function () { renderLockLine(inp); });
+      renderLockLine(inp);
+    });
+
+    /* The coordinate locator returns one comma-separated pair. Split it
+       into the two physical engraving lines without changing hidden proof data. */
+    var lockMainInput = root.querySelector('[data-lock-input="1"]');
+    if (lockMainInput) {
+      lockMainInput.addEventListener('input', function () {
+        if (!lockMainInput.dataset.fromLocator) return;
+        var parts = lockMainInput.value.split(',').map(function (part) { return part.trim(); });
+        if (parts.length < 2) return;
+        var lockLine2 = root.querySelector('[data-lock-input="2"]');
+        lockMainInput.value = parts[0];
+        renderLockLine(lockMainInput);
+        if (lockLine2) {
+          lockLine2.value = parts.slice(1).join(', ');
+          lockLine2.dataset.fromLocator = '1';
+          renderLockLine(lockLine2);
+          delete lockLine2.dataset.fromLocator;
         }
       });
     }

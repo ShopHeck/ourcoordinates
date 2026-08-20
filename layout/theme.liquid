@@ -9,15 +9,32 @@
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
   {%- endif -%}
 
+  {%- liquid
+    assign seo_title = page_title
+    assign seo_description = page_description
+    if request.page_type == 'collection' and collection.handle == 'all'
+      assign seo_title = 'Personalized Coordinates Jewelry & Gifts | OurCoordinates'
+      if seo_description == blank
+        assign seo_description = 'Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes personalized with a place or message that matters.'
+      endif
+    elsif request.page_type == 'page' and page.handle == 'gift-finder'
+      assign seo_title = 'Gift Finder | Personalized Coordinates Jewelry'
+      assign seo_description = 'Find an in-stock personalized coordinates gift by recipient, story, and budget in about a minute.'
+    elsif request.page_type == 'page' and page.handle == 'reviews'
+      assign seo_title = 'Customer Reviews | OurCoordinates'
+      assign seo_description = 'Read product feedback published through the OurCoordinates review partner and browse reviews by personalized jewelry piece.'
+    endif
+  -%}
+
   <title>
-    {{ page_title }}
+    {{ seo_title }}
     {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
     {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    {%- unless seo_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
   </title>
 
-  {% if page_description %}
-    <meta name="description" content="{{ page_description | escape }}">
+  {% if seo_description %}
+    <meta name="description" content="{{ seo_description | escape }}">
   {% endif %}
 
   {%- comment -%}
@@ -34,6 +51,7 @@
       --c-ink: {{ settings.color_ink }};
       --c-paper: {{ settings.color_paper }};
       --c-gold: {{ settings.color_gold }};
+      --c-gold-text: #6f522f;
       --c-graphite: {{ settings.color_graphite }};
       --c-line: {{ settings.color_ink | color_modify: 'alpha', 0.12 }};
       --c-ink-soft: {{ settings.color_ink | color_modify: 'alpha', 0.64 }};

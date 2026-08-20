@@ -1,0 +1,151 @@
+<section class="section gift-finder" data-gift-finder>
+  <div class="page-width gift-finder__shell">
+    <header class="gift-finder__head">
+      <p class="coord-eyebrow">A meaningful gift in about a minute</p>
+      <h1>{{ page.title }}</h1>
+      <p>Tell us who and what the piece should remember. We’ll narrow the store to three available options that fit the story and budget.</p>
+    </header>
+
+    <form class="gift-finder__form" data-gift-finder-form>
+      <fieldset>
+        <legend><span>1</span> Who is the gift for?</legend>
+        <div class="gift-finder__choices">
+          <label><input type="radio" name="recipient" value="partner" required><span>Partner</span></label>
+          <label><input type="radio" name="recipient" value="parent"><span>Parent or family</span></label>
+          <label><input type="radio" name="recipient" value="friend"><span>Friend</span></label>
+          <label><input type="radio" name="recipient" value="self"><span>Myself</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>2</span> What should it remember?</legend>
+        <div class="gift-finder__choices">
+          <label><input type="radio" name="occasion" value="couple" required><span>Where we met or said yes</span></label>
+          <label><input type="radio" name="occasion" value="birthplace"><span>A birthplace or family place</span></label>
+          <label><input type="radio" name="occasion" value="home"><span>A hometown or new home</span></label>
+          <label><input type="radio" name="occasion" value="memorial"><span>A person, pet, or place remembered</span></label>
+          <label><input type="radio" name="occasion" value="milestone"><span>A trip, graduation, or goal</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>3</span> What budget feels right?</legend>
+        <div class="gift-finder__choices gift-finder__choices--three">
+          <label><input type="radio" name="budget" value="under-40" required><span>Under $40</span></label>
+          <label><input type="radio" name="budget" value="40-75"><span>$40–$75</span></label>
+          <label><input type="radio" name="budget" value="75-plus"><span>$75+</span></label>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="btn">Show my best matches</button>
+    </form>
+
+    <div class="gift-finder__results" data-gift-results hidden tabindex="-1">
+      <p class="coord-eyebrow">Recommended for your story</p>
+      <h2>Three pieces worth personalizing</h2>
+      <p data-gift-summary></p>
+      <div class="gift-finder__grid" data-gift-grid></div>
+      <button type="button" class="gift-finder__restart" data-gift-restart>Change my answers</button>
+    </div>
+
+    <div hidden data-gift-candidates>
+      {%- for block in section.blocks -%}
+        {%- assign item = block.settings.product -%}
+        {%- if item != blank and item.available -%}
+          <article data-gift-candidate
+                   data-audiences="{{ block.settings.audiences | downcase | escape }}"
+                   data-occasions="{{ block.settings.occasions | downcase | escape }}"
+                   data-budget="{{ block.settings.budget }}"
+                   {{ block.shopify_attributes }}>
+            <a class="gift-result" href="{{ item.url }}">
+              <div class="gift-result__media">
+                {{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '320, 500, 700', sizes: '(max-width: 700px) 88vw, 30vw', alt: item.featured_image.alt }}
+              </div>
+              <div class="gift-result__body">
+                <h3>{{ item.title }}</h3>
+                <p>{{ block.settings.reason }}</p>
+                <span>{{ item.price | money }} · Personalize this →</span>
+              </div>
+            </a>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-gift-finder]');
+    if (!root) return;
+    var form = root.querySelector('[data-gift-finder-form]');
+    var results = root.querySelector('[data-gift-results]');
+    var grid = root.querySelector('[data-gift-grid]');
+    var summary = root.querySelector('[data-gift-summary]');
+    var candidates = Array.prototype.slice.call(root.querySelectorAll('[data-gift-candidate]'));
+
+    function includes(list, value) {
+      return list.split(',').map(function (item) { return item.trim(); }).indexOf(value) > -1;
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      var data = new FormData(form);
+      var recipient = data.get('recipient');
+      var occasion = data.get('occasion');
+      var budget = data.get('budget');
+      var ranked = candidates.map(function (card, index) {
+        var score = 0;
+        if (includes(card.dataset.audiences, recipient) || includes(card.dataset.audiences, 'all')) score += 3;
+        if (includes(card.dataset.occasions, occasion) || includes(card.dataset.occasions, 'all')) score += 4;
+        if (card.dataset.budget === budget) score += 5;
+        return { card: card, score: score, index: index };
+      }).sort(function (a, b) { return b.score - a.score || a.index - b.index; }).slice(0, 3);
+
+      grid.replaceChildren();
+      ranked.forEach(function (entry) { grid.appendChild(entry.card.cloneNode(true)); });
+      summary.textContent = 'Available now, matched to your recipient, story, and budget. Choose one to add the exact coordinates on its product page.';
+      results.hidden = false;
+      results.focus();
+      results.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    root.querySelector('[data-gift-restart]').addEventListener('click', function () {
+      results.hidden = true;
+      form.scrollIntoView({ behavior: 'auto', block: 'start' });
+      form.querySelector('input').focus();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Gift finder",
+  "max_blocks": 12,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "recommendation",
+      "name": "Recommendation",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "audiences", "label": "Recipients", "info": "Comma-separated: partner, parent, friend, self, all" },
+        { "type": "text", "id": "occasions", "label": "Stories", "info": "Comma-separated: couple, birthplace, home, memorial, milestone, all" },
+        {
+          "type": "select",
+          "id": "budget",
+          "label": "Budget",
+          "options": [
+            { "value": "under-40", "label": "Under $40" },
+            { "value": "40-75", "label": "$40–$75" },
+            { "value": "75-plus", "label": "$75+" }
+          ],
+          "default": "40-75"
+        },
+        { "type": "textarea", "id": "reason", "label": "Why it fits", "default": "A meaningful, easy-to-wear way to keep the place close." }
+      ]
+    }
+  ]
+}
+{% endschema %}

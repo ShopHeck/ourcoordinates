@@ -1,0 +1,82 @@
+{
+  "sections": {
+    "main": {
+      "type": "gift-finder",
+      "blocks": {
+        "bracelet": {
+          "type": "recommendation",
+          "settings": {
+            "product": "coordinates-bracelet",
+            "audiences": "partner,parent,friend,self,all",
+            "occasions": "couple,birthplace,home,memorial,milestone,all",
+            "budget": "40-75",
+            "reason": "An adjustable everyday cuff with a clear live coordinates preview."
+          }
+        },
+        "keychain": {
+          "type": "recommendation",
+          "settings": {
+            "product": "coordinates-keychain",
+            "audiences": "partner,parent,friend,self,all",
+            "occasions": "home,birthplace,milestone,memorial",
+            "budget": "under-40",
+            "reason": "A practical daily reminder that works for almost any recipient."
+          }
+        },
+        "ring": {
+          "type": "recommendation",
+          "settings": {
+            "product": "coordinates-flat-band-ring",
+            "audiences": "partner,self,friend",
+            "occasions": "couple,memorial,milestone",
+            "budget": "under-40",
+            "reason": "A subtle, private engraving for a place with personal meaning."
+          }
+        },
+        "leather": {
+          "type": "recommendation",
+          "settings": {
+            "product": "leather-coordinate-bracelet",
+            "audiences": "partner,parent,friend,self",
+            "occasions": "couple,home,milestone,memorial",
+            "budget": "40-75",
+            "reason": "A relaxed unisex option for someone who prefers leather to polished metal."
+          }
+        },
+        "star_map": {
+          "type": "recommendation",
+          "settings": {
+            "product": "star-map-necklace",
+            "audiences": "partner,parent,friend,self",
+            "occasions": "couple,birthplace,milestone",
+            "budget": "40-75",
+            "reason": "Turns a meaningful date and location into the night sky above it."
+          }
+        },
+        "matching": {
+          "type": "recommendation",
+          "settings": {
+            "product": "matching-coordinates-necklaces",
+            "audiences": "partner,friend",
+            "occasions": "couple,home,milestone",
+            "budget": "75-plus",
+            "reason": "Two personalized necklaces for two people who share the same place."
+          }
+        },
+        "complete": {
+          "type": "recommendation",
+          "settings": {
+            "product": "complete-coordinates-set",
+            "audiences": "partner,parent,self",
+            "occasions": "couple,birthplace,home,milestone",
+            "budget": "75-plus",
+            "reason": "Three coordinated pieces with one order-safe preview and photo proof."
+          }
+        }
+      },
+      "block_order": ["bracelet", "keychain", "ring", "leather", "star_map", "matching", "complete"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

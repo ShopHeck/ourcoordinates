@@ -2,6 +2,9 @@
   <div class="page-width">
     <h1>Search</h1>
     <form action="{{ routes.search_url }}" method="get" style="display:flex;max-width:480px;margin-bottom:32px">
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[unavailable_products]" value="hide">
+      <input type="hidden" name="options[prefix]" value="last">
       <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search products" aria-label="Search" style="flex:1;padding:13px 14px;border:1px solid var(--c-line)">
       <button type="submit" class="btn">Search</button>
     </form>
@@ -9,10 +12,11 @@
       {%- if search.results_count == 0 -%}
         <p>No results for "{{ search.terms }}". Try "coordinates necklace" or "bracelet".</p>
       {%- else -%}
+        <p class="search-summary">Available product matches for “{{ search.terms }}”</p>
         {%- paginate search.results by 24 -%}
           <div class="product-grid">
             {%- for item in search.results -%}
-              {%- if item.object_type == 'product' -%}
+              {%- if item.object_type == 'product' and item.available -%}
                 {%- render 'product-card', card_product: item -%}
               {%- endif -%}
             {%- endfor -%}

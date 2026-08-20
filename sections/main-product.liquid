@@ -6,7 +6,10 @@
   assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
   assign delivery_high = delivery_low | plus: 259200
   assign preview_type = section.settings.preview_type | default: 'horizontal-bar'
-  assign personalization_release = 'oc-order-safe-2026-07-13-2'
+  if product.handle == 'personalized-lock-necklace'
+    assign preview_type = 'padlock'
+  endif
+  assign personalization_release = 'oc-order-safe-2026-07-22-1'
   assign personalization_contract = preview_type
   unless section.settings.show_engraving
     assign personalization_contract = 'none'
@@ -32,7 +35,7 @@
       {%- if product.images.size > 1 -%}
         <div class="pdp__thumbs">
           {%- for image in product.images limit: 12 -%}
-            <button type="button" data-thumb data-full="{{ image | image_url: width: 1200 }}"
+            <button type="button" data-thumb data-image-id="{{ image.id }}" data-full="{{ image | image_url: width: 1200 }}"
                     data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
                     {% if forloop.first %}aria-current="true"{% endif %}
                     aria-label="View image {{ forloop.index }}">
@@ -59,7 +62,7 @@
         </div>
       {%- elsif section.settings.review_style == 'link' -%}
         <p class="pdp__reviews">
-          <a href="/pages/reviews">Read verified customer reviews</a>
+          <a href="/pages/reviews">Read customer reviews</a>
         </p>
       {%- endif -%}
 
@@ -75,9 +78,9 @@
         {%- if section.settings.show_engraving -%}
           Engraved to order — ships in {{ settings.production_days }} business days,
         {%- else -%}
-          Made to order — ships in {{ settings.production_days }} business days,
+          Ships in {{ settings.production_days }} business days,
         {%- endif -%}
-        estimated delivery {{ delivery_low | date: '%b %-d' }}–{{ delivery_high | date: '%b %-d' }}.
+        &nbsp;estimated delivery {{ delivery_low | date: '%b %-d' }}–{{ delivery_high | date: '%b %-d' }}.
       </p>
 
       {%- comment -%}
@@ -147,7 +150,11 @@
           </svg>
 
           {%- comment -%} ---- HEART NECKLACE ---- {%- endcomment -%}
-          {%- if preview_type == 'heart-necklace' -%}
+          {%- if preview_type == 'padlock' -%}
+            {% render 'pdp-preview-padlock', engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+
+          {%- comment -%} ---- HEART NECKLACE ---- {%- endcomment -%}
+          {%- elsif preview_type == 'heart-necklace' -%}
             {% render 'pdp-preview-heart-necklace', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
 
           {%- comment -%} ---- MATCHING NECKLACES ---- {%- endcomment -%}
@@ -259,28 +266,62 @@
 
         <button type="submit" class="btn btn--full" data-atc
                 data-label-add="{{ section.settings.atc_label | escape }}"
-                data-label-sold-out="Back soon — notify me">
+                data-label-sold-out="Sold out">
           <span data-atc-label>{{ section.settings.atc_label }}</span>
         </button>
 
         <ul class="guarantees">
           {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
-          {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
-          {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
+          {%- if section.settings.show_engraving -%}
+            {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
+            {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
+          {%- endif -%}
         </ul>
       {%- endform -%}
+
+      <div class="restock" data-restock-form{% if current_variant.available %} hidden{% endif %}>
+        <p class="restock__title">Want to know when this piece returns?</p>
+        <p class="restock__text">Leave your email and we’ll send a restock update for {{ product.title }}. No unrelated marketing.</p>
+        {%- form 'contact', id: 'RestockForm', class: 'restock__form' -%}
+          <input type="hidden" name="contact[tags]" value="back-in-stock,{{ product.handle }}">
+          <input type="hidden" name="contact[body]" value="Restock request for {{ product.title | escape }} — {{ shop.url }}{{ product.url }}">
+          <label class="visually-hidden" for="RestockEmail-{{ section.id }}">Email address</label>
+          <input id="RestockEmail-{{ section.id }}" type="email" name="contact[email]" autocomplete="email" placeholder="Email address" required>
+          <button type="submit" class="btn">Notify me</button>
+          {%- if form.posted_successfully? -%}<p class="restock__success" role="status">You’re on the list. We’ll email you when it is available.</p>{%- endif -%}
+          {{ form.errors | default_errors }}
+        {%- endform -%}
+      </div>
 
       {%- comment -%} ---------- ACCORDIONS ---------- {%- endcomment -%}
       <div class="pdp__accordions">
         <details open>
           <summary>Description</summary>
-          <div class="accordion-body rte">{{ product.description }}</div>
+          <div class="accordion-body rte">
+            {%- if product.handle == 'personalized-lock-necklace' -%}
+              {% render 'pdp-description-padlock' %}
+            {%- else -%}
+              {{ product.description }}
+            {%- endif -%}
+          </div>
         </details>
         {%- for block in section.blocks -%}
           {%- if block.type == 'accordion' -%}
             <details {{ block.shopify_attributes }}>
               <summary>{{ block.settings.title }}</summary>
-              <div class="accordion-body rte">{{ block.settings.content }}</div>
+              <div class="accordion-body rte">
+                {%- if product.handle == 'personalized-lock-necklace' and block.settings.title == 'Product details' -%}
+                  <ul>
+                    <li>Stainless-steel padlock pendant and chain.</li>
+                    <li>45 cm chain length.</li>
+                    <li>Black, silver, gold, and rose-gold color options.</li>
+                    <li>Custom front engraving arranged over one or two lines, with up to 15 characters per line.</li>
+                  </ul>
+                  <p><strong>Care:</strong> Wipe with a soft, dry cloth after wear. Avoid prolonged contact with water, fragrance, and household cleaners.</p>
+                {%- else -%}
+                  {{ block.settings.content }}
+                {%- endif -%}
+              </div>
             </details>
           {%- endif -%}
         {%- endfor -%}
@@ -357,7 +398,7 @@
   <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
   <button type="button" class="btn" data-sticky-submit data-atc
           data-label-add="{{ section.settings.atc_label | escape }}"
-          data-label-sold-out="Back soon">
+          data-label-sold-out="Sold out">
     <span data-atc-label>{{ section.settings.atc_label }}</span>
   </button>
 </div>
@@ -379,6 +420,7 @@
       "label": "Engraving preview shape",
       "options": [
         { "value": "horizontal-bar", "label": "Horizontal bar (flat bar pendant)" },
+        { "value": "padlock", "label": "Padlock (two-line front engraving)" },
         { "value": "heart-necklace", "label": "Heart pendant (front engraving)" },
         { "value": "matching-necklaces", "label": "Matching necklaces (two engravings)" },
         { "value": "couple-rings", "label": "Couple rings (two-ring preview)" },

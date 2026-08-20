@@ -48,7 +48,7 @@
   </p>
   {%- if settings.card_note != blank -%}
     {%- assign card_tags = card_product.tags | join: ',' | downcase -%}
-    {%- unless card_tags contains 'no-personalization' -%}
+    {%- unless card_tags contains 'no-personalization' or card_product.template_suffix == 'non-custom' or card_product.handle == 'premium-gift-packaging' or card_product.handle == 'routeins' -%}
       <p class="product-card__note">{{ settings.card_note }}</p>
     {%- endunless -%}
   {%- endif -%}

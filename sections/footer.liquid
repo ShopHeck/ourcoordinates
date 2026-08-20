@@ -15,7 +15,7 @@
       <h3>{{ section.settings.menu_1_title }}</h3>
       <ul>
         {%- for link in section.settings.menu_1.links -%}
-          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          <li><a href="{{ link.url }}">{% if link.url contains '/pages/reviews' %}Customer Reviews{% else %}{{ link.title }}{% endif %}</a></li>
         {%- endfor -%}
       </ul>
     </div>
@@ -24,7 +24,7 @@
       <h3>{{ section.settings.menu_2_title }}</h3>
       <ul>
         {%- for link in section.settings.menu_2.links -%}
-          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          <li><a href="{{ link.url }}">{% if link.url contains '/pages/reviews' %}Customer Reviews{% else %}{{ link.title }}{% endif %}</a></li>
         {%- endfor -%}
       </ul>
     </div>

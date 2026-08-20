@@ -1,0 +1,423 @@
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+  assign prod = s.product
+  if prod != blank
+    assign price_text = prod.price | money
+    assign cta_href = prod.url
+  else
+    assign price_text = s.price_fallback
+    assign cta_href = s.cta_link | default: '#'
+  endif
+-%}
+<section class="atelier-studio-{{ sid }}">
+  <div class="as-shell">
+    {%- if s.eyebrow != blank -%}<div class="as-eyebrow">{{ s.eyebrow }}</div>{%- endif -%}
+    <h2 class="as-h2">{{ s.heading }}</h2>
+
+    <div class="as-grid">
+      <div>
+        <div class="as-stage">
+          <div class="as-shadow" aria-hidden="true"></div>
+          {%- if s.pendant_image != blank -%}
+            {{ s.pendant_image | image_url: width: 1536 | image_tag: loading: 'lazy', alt: 'Blank gold bar pendant awaiting engraving', widths: '600, 900, 1200, 1536' }}
+          {%- else -%}
+            <img src="{{ 'blank-bar.png' | asset_url }}" alt="Blank gold bar pendant awaiting engraving" width="1536" height="1024" loading="lazy">
+          {%- endif -%}
+          <svg class="as-overlay" viewBox="0 0 1536 1024" aria-hidden="true">
+            <defs>
+              <filter id="asGroove-{{ sid }}" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="0.7"/>
+              </filter>
+              <clipPath id="asClip-{{ sid }}"><rect class="as-rect" x="180" y="400" width="1176" height="170"/></clipPath>
+            </defs>
+            <g clip-path="url(#asClip-{{ sid }})">
+              <g transform="rotate(-0.3 768 487)">
+                <text class="as-eng as-eng-shadow" x="768" y="487" text-anchor="middle"
+                      font-family="Inter, sans-serif" font-weight="600" font-size="62" letter-spacing="8"
+                      fill="rgba(60,40,10,.35)" transform="translate(0,-1.6)"></text>
+                <text class="as-eng as-eng-hi" x="768" y="487" text-anchor="middle"
+                      font-family="Inter, sans-serif" font-weight="600" font-size="62" letter-spacing="8"
+                      fill="rgba(255,241,205,.75)" transform="translate(0,2.4)"></text>
+                <text class="as-eng as-eng-main" x="768" y="487" text-anchor="middle"
+                      font-family="Inter, sans-serif" font-weight="600" font-size="62" letter-spacing="8"
+                      fill="#5e451a" filter="url(#asGroove-{{ sid }})"></text>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="as-stage-note"><span>BENCH PREVIEW — 1:1 SCALE</span><span class="as-ok">{{ s.stage_note_ready }}</span></div>
+      </div>
+
+      <div class="as-controls">
+        <h3 class="as-h3">{{ s.controls_heading }}</h3>
+        <div class="as-tabs" role="tablist">
+          <button class="as-tab as-on" data-pane="place" type="button">{{ s.tab_place }}</button>
+          <button class="as-tab" data-pane="latlong" type="button">{{ s.tab_latlong }}</button>
+          <button class="as-tab" data-pane="pin" type="button">{{ s.tab_pin }}</button>
+        </div>
+
+        <div class="as-pane as-on" data-pane="place">
+          <label class="as-fld">{{ s.label_place }}</label>
+          <input type="text" class="as-place-input" list="asPlaces-{{ sid }}" placeholder="{{ s.placeholder_place }}" autocomplete="off">
+          <datalist id="asPlaces-{{ sid }}"></datalist>
+        </div>
+
+        <div class="as-pane" data-pane="latlong">
+          <div class="as-ll-row">
+            <div>
+              <label class="as-fld">{{ s.label_lat }}</label>
+              <input type="text" class="as-lat" placeholder="48.8584 N" autocomplete="off">
+            </div>
+            <div>
+              <label class="as-fld">{{ s.label_lon }}</label>
+              <input type="text" class="as-lon" placeholder="2.2945 E" autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <div class="as-pane" data-pane="pin">
+          <label class="as-fld">{{ s.label_map }}</label>
+          <div class="as-map-wrap">
+            <svg class="as-map" viewBox="0 0 720 360">
+              <rect width="720" height="360" fill="#fdf4e3"/>
+              <g class="as-grat" stroke="rgba(121,94,63,.15)" stroke-width="1"></g>
+              <g class="as-cont" fill="rgba(121,94,63,.08)" stroke="rgba(121,94,63,.45)" stroke-width="1.2" stroke-linejoin="round"></g>
+              <g class="as-dots" fill="rgba(121,94,63,.45)"></g>
+              <g class="as-pin" style="display:none">
+                <circle class="as-pin-ring" r="10" fill="none" stroke="{{ s.color_text }}" stroke-width="1.5"/>
+                <circle class="as-pin-dot" r="3.5" fill="{{ s.color_text }}"/>
+              </g>
+            </svg>
+          </div>
+          <div class="as-map-hint"><span>{{ s.map_hint }}</span><span class="as-readout">—</span></div>
+        </div>
+
+        <div class="as-chosen">
+          <span class="as-chosen-place"></span>
+          <span class="as-chosen-coords"></span>
+        </div>
+
+        <p class="as-proof">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="{{ s.color_text }}" stroke-width="1.2"><rect x="1.5" y="1.5" width="12" height="12" rx="1"/><path d="M4.5 7.5l2 2 4-4.5"/></svg>
+          {{ s.proof_line }}
+        </p>
+
+        <div class="as-cta-row">
+          <a class="as-btn" href="{{ cta_href }}">{{ s.cta_label }} — {{ price_text }}</a>
+          <span class="as-cta-meta">{{ s.cta_meta }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ sid }} .atelier-studio-{{ sid }}{
+    background:{{ s.color_bg }};color:{{ s.color_text }};
+    border-top:1px solid rgba(121,94,63,.15);border-bottom:1px solid rgba(121,94,63,.15);
+    font-family:'Inter', -apple-system, sans-serif;font-size:15px;line-height:1.55;
+    padding:clamp(72px,9vw,130px) clamp(20px,5vw,72px);
+  }
+  #shopify-section-{{ sid }} .as-shell{max-width:1240px;margin:0 auto}
+  #shopify-section-{{ sid }} .as-eyebrow{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(121,94,63,.45);
+    margin-bottom:20px;display:flex;align-items:center;gap:14px;
+  }
+  #shopify-section-{{ sid }} .as-eyebrow::before{content:"";width:36px;height:1px;background:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .as-h2{
+    font-family:'Instrument Serif', Georgia, serif;font-weight:400;
+    font-size:clamp(34px,4.2vw,60px);line-height:1.04;letter-spacing:-.015em;margin:0;color:{{ s.color_text }};
+  }
+  #shopify-section-{{ sid }} .as-h2 em{font-style:italic}
+  #shopify-section-{{ sid }} .as-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(36px,5vw,80px);align-items:start;margin-top:52px}
+  #shopify-section-{{ sid }} .as-stage{
+    position:relative;aspect-ratio:3/2;
+    background:radial-gradient(ellipse 90% 80% at 50% 38%, #fdf6e7 0%, #f3e9d3 58%, #eadcc0 100%);
+    border:1px solid rgba(121,94,63,.15);
+  }
+  #shopify-section-{{ sid }} .as-stage::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 90px rgba(121,94,63,.1);pointer-events:none}
+  #shopify-section-{{ sid }} .as-stage img,
+  #shopify-section-{{ sid }} .as-stage svg.as-ph{position:absolute;inset:0;width:100%;height:100%}
+  #shopify-section-{{ sid }} .as-shadow{position:absolute;left:22%;right:22%;bottom:12%;height:5%;background:radial-gradient(ellipse,rgba(121,94,63,.22),transparent 70%);filter:blur(6px)}
+  #shopify-section-{{ sid }} .as-overlay{position:absolute;inset:0;width:100%;height:100%}
+  #shopify-section-{{ sid }} .as-stage-note{margin-top:14px;display:flex;justify-content:space-between;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .as-stage-note .as-ok{color:{{ s.color_text }}}
+  #shopify-section-{{ sid }} .as-h3{font-family:'Instrument Serif', Georgia, serif;font-weight:400;font-size:clamp(24px,2.4vw,32px);line-height:1.15;margin:0}
+  #shopify-section-{{ sid }} .as-tabs{display:flex;gap:0;margin-top:26px;border-bottom:1px solid rgba(121,94,63,.15)}
+  #shopify-section-{{ sid }} .as-tab{
+    background:none;border:none;cursor:pointer;font-family:'Inter', -apple-system, sans-serif;
+    font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(121,94,63,.45);
+    padding:12px 4px;margin-right:28px;border-bottom:1px solid transparent;margin-bottom:-1px;
+    transition:color .25s,border-color .25s;
+  }
+  #shopify-section-{{ sid }} .as-tab.as-on{color:{{ s.color_text }};border-bottom-color:{{ s.color_text }}}
+  #shopify-section-{{ sid }} .as-pane{display:none;padding-top:24px}
+  #shopify-section-{{ sid }} .as-pane.as-on{display:block}
+  #shopify-section-{{ sid }} .as-fld{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(121,94,63,.45);margin-bottom:10px;display:block}
+  #shopify-section-{{ sid }} .as-controls input[type=text]{
+    width:100%;background:transparent;border:none;border-bottom:1px solid {{ s.color_text }};
+    outline:none;font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:22px;color:{{ s.color_text }};
+    padding:6px 0 12px;border-radius:0;box-shadow:none;
+  }
+  #shopify-section-{{ sid }} .as-controls input[type=text]::placeholder{color:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .as-ll-row{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  #shopify-section-{{ sid }} .as-map-wrap{position:relative;border:1px solid rgba(121,94,63,.15);background:#fdf4e3}
+  #shopify-section-{{ sid }} .as-map{width:100%;height:auto;display:block;cursor:crosshair}
+  #shopify-section-{{ sid }} .as-map-hint{margin-top:10px;font-size:12px;color:rgba(121,94,63,.7);display:flex;justify-content:space-between}
+  #shopify-section-{{ sid }} .as-chosen{margin-top:26px;padding-top:20px;border-top:1px solid rgba(121,94,63,.15);display:flex;flex-direction:column;gap:4px}
+  #shopify-section-{{ sid }} .as-chosen-place{font-family:'Instrument Serif', Georgia, serif;font-size:22px}
+  #shopify-section-{{ sid }} .as-chosen-place em{font-style:italic;color:rgba(121,94,63,.7)}
+  #shopify-section-{{ sid }} .as-chosen-coords{font-size:13px;letter-spacing:.14em;color:rgba(121,94,63,.7)}
+  #shopify-section-{{ sid }} .as-proof{margin:16px 0 0;font-size:12.5px;color:rgba(121,94,63,.7);display:flex;gap:10px;align-items:flex-start}
+  #shopify-section-{{ sid }} .as-proof svg{flex:0 0 auto;margin-top:2px}
+  #shopify-section-{{ sid }} .as-cta-row{margin-top:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  #shopify-section-{{ sid }} .as-btn{
+    font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:19px;
+    background:{{ s.color_text }};color:#fff9ef;text-decoration:none;
+    padding:14px 34px;border-radius:100px;border:none;cursor:pointer;
+    transition:background .3s cubic-bezier(.2,.8,.2,1),letter-spacing .3s;display:inline-block;
+  }
+  #shopify-section-{{ sid }} .as-btn:hover{background:#5f4830;letter-spacing:.02em}
+  #shopify-section-{{ sid }} .as-cta-meta{font-size:12px;color:rgba(121,94,63,.7);max-width:22ch}
+  @media(max-width:920px){#shopify-section-{{ sid }} .as-grid{grid-template-columns:1fr}}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  var root = document.getElementById('shopify-section-{{ sid }}');
+  if (!root) return;
+
+  var PLACES = [
+    ["Eiffel Tower, Paris", 48.8584, 2.2945, "where you said yes"],
+    ["Central Park, New York", 40.7812, -73.9665, "the first picnic"],
+    ["Sydney Opera House", -33.8568, 151.2153, "opening night"],
+    ["Santorini (Oia), Greece", 36.4610, 25.3760, "the dream"],
+    ["Kyoto, Japan", 35.0116, 135.7681, "cherry blossoms"],
+    ["Honolulu, Hawaii", 21.3099, -157.8581, "the honeymoon"],
+    ["Big Ben, London", 51.5007, -0.1246, "study abroad"],
+    ["Colosseum, Rome", 41.8902, 12.4922, "that summer"],
+    ["Shibuya Crossing, Tokyo", 35.6595, 139.7005, "lost together"],
+    ["Table Mountain, Cape Town", -33.9628, 18.4098, "the climb"],
+    ["Reykjavik, Iceland", 64.1466, -21.9426, "northern lights"],
+    ["Lake Louise, Banff", 51.4254, -116.1773, "the canoe"],
+    ["Machu Picchu, Peru", -13.1631, -72.5450, "sunrise at the gate"],
+    ["Grand Canyon, South Rim", 36.0619, -112.1077, "the road trip"],
+    ["Niagara Falls", 43.0962, -79.0377, "soaked and laughing"],
+    ["Everest Base Camp", 28.0026, 86.8528, "the summit of us"],
+    ["Brooklyn Bridge, New York", 40.7061, -73.9969, "the walk home"],
+    ["Bixby Bridge, Big Sur", 36.3714, -121.9019, "Highway 1"],
+    ["Bellagio, Lake Como", 45.9871, 9.2572, "the anniversary"],
+    ["Petra, Jordan", 30.3285, 35.4444, "the treasury at dawn"],
+    ["Uluwatu, Bali", -8.8291, 115.0849, "the temple cliffs"],
+    ["Edinburgh Castle", 55.9486, -3.1999, "the festival"],
+    ["French Quarter, New Orleans", 29.9584, -90.0644, "the jazz bar"],
+    ["Golden Gate Bridge", 37.8199, -122.4783, "the fog lifted"],
+    ["The Battery, Charleston", 32.7729, -79.9294, "the pier"]
+  ];
+
+  function fmt(lat, lon){
+    var la = Math.abs(lat).toFixed(4) + "° " + (lat >= 0 ? "N" : "S");
+    var lo = Math.abs(lon).toFixed(4) + "° " + (lon >= 0 ? "E" : "W");
+    return la + ", " + lo;
+  }
+
+  var engMain = root.querySelector('.as-eng-main');
+  var engHi = root.querySelector('.as-eng-hi');
+  var engShadow = root.querySelector('.as-eng-shadow');
+  var engRect = root.querySelector('.as-rect');
+  var chosenPlace = root.querySelector('.as-chosen-place');
+  var chosenCoords = root.querySelector('.as-chosen-coords');
+  var stageStatus = root.querySelector('.as-ok');
+  var readyLabel = {{ s.stage_note_ready | json }};
+  var engravingLabel = "● ENGRAVING…";
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var revealTween = null;
+  function setEngraving(text){
+    [engMain, engHi, engShadow].forEach(function(el){ el.textContent = text; });
+    var size = 62;
+    try {
+      var w = engMain.getComputedTextLength();
+      while (w > 1060 && size > 34){
+        size -= 4;
+        [engMain, engHi, engShadow].forEach(function(el){ el.setAttribute('font-size', size); });
+        w = engMain.getComputedTextLength();
+      }
+      if (size === 62){ [engMain, engHi, engShadow].forEach(function(el){ el.setAttribute('font-size', size); }); }
+    } catch(_){}
+    if (revealTween) cancelAnimationFrame(revealTween);
+    if (reduced){ engRect.setAttribute('width', 1176); return; }
+    var t0 = null;
+    stageStatus.textContent = engravingLabel;
+    function step(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / 750);
+      engRect.setAttribute('width', 1176 * p);
+      if (p < 1){ revealTween = requestAnimationFrame(step); }
+      else { stageStatus.textContent = readyLabel; revealTween = null; }
+    }
+    revealTween = requestAnimationFrame(step);
+  }
+
+  function choose(name, note, lat, lon){
+    chosenPlace.innerHTML = "";
+    chosenPlace.appendChild(document.createTextNode(name));
+    if (note){
+      var em = document.createElement('em');
+      em.textContent = " — “" + note + "”";
+      chosenPlace.appendChild(em);
+    }
+    chosenCoords.textContent = fmt(lat, lon);
+    setEngraving(fmt(lat, lon));
+  }
+
+  var dl = root.querySelector('#asPlaces-{{ sid }}');
+  PLACES.forEach(function(p){
+    var o = document.createElement('option');
+    o.value = p[0]; dl.appendChild(o);
+  });
+  root.querySelector('.as-place-input').addEventListener('input', function(){
+    var v = this.value.trim().toLowerCase();
+    if (!v) return;
+    for (var i = 0; i < PLACES.length; i++){
+      var p = PLACES[i];
+      if (p[0].toLowerCase() === v || p[0].toLowerCase().indexOf(v) === 0 || (v.length >= 4 && p[0].toLowerCase().indexOf(v) > -1)){
+        choose(p[0], p[3], p[1], p[2]); return;
+      }
+    }
+  });
+
+  function parseCoord(str, isLat){
+    str = str.trim().toUpperCase();
+    var m = str.match(/(-?\d+(?:\.\d+)?)\s*([NSEW])?/);
+    if (!m) return null;
+    var v = parseFloat(m[1]);
+    if (m[2] === 'S' || m[2] === 'W') v = -Math.abs(v);
+    if (m[2] === 'N' || m[2] === 'E') v = Math.abs(v);
+    var lim = isLat ? 90 : 180;
+    if (Math.abs(v) > lim) return null;
+    return v;
+  }
+  var latIn = root.querySelector('.as-lat'), lonIn = root.querySelector('.as-lon');
+  function customUpdate(){
+    var la = parseCoord(latIn.value, true), lo = parseCoord(lonIn.value, false);
+    if (la !== null && lo !== null){ choose("Your coordinates", "custom spot", la, lo); }
+  }
+  latIn.addEventListener('input', customUpdate);
+  lonIn.addEventListener('input', customUpdate);
+
+  /* world map */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var cont = root.querySelector('.as-cont');
+  var grat = root.querySelector('.as-grat');
+  for (var gx = 60; gx < 720; gx += 60){
+    var l1 = document.createElementNS(SVGNS, 'line');
+    l1.setAttribute('x1', gx); l1.setAttribute('y1', 0); l1.setAttribute('x2', gx); l1.setAttribute('y2', 360);
+    grat.appendChild(l1);
+  }
+  for (var gy = 60; gy < 360; gy += 60){
+    var l2 = document.createElementNS(SVGNS, 'line');
+    l2.setAttribute('x1', 0); l2.setAttribute('y1', gy); l2.setAttribute('x2', 720); l2.setAttribute('y2', gy);
+    grat.appendChild(l2);
+  }
+  var CONTINENTS = [
+    [[-168,66],[-140,70],[-120,72],[-95,80],[-75,72],[-60,60],[-65,45],[-75,35],[-80,25],[-90,20],[-97,16],[-105,20],[-115,30],[-125,40],[-130,55],[-150,60]],
+    [[-80,10],[-60,5],[-50,0],[-40,-5],[-35,-10],[-40,-20],[-50,-30],[-60,-40],[-70,-50],[-75,-40],[-72,-30],[-70,-20],[-78,-10],[-80,0]],
+    [[-45,60],[-40,65],[-30,68],[-22,70],[-20,76],[-30,80],[-45,78],[-55,75],[-58,68],[-53,62]],
+    [[-17,21],[-16,16],[-10,8],[-5,5],[5,4],[9,4],[12,-2],[16,-12],[19,-25],[20,-35],[26,-34],[33,-27],[36,-18],[40,-10],[42,-2],[48,2],[51,11],[43,12],[38,18],[33,27],[30,31],[22,33],[11,37],[3,37],[-6,35],[-10,31]],
+    [[-10,36],[0,44],[-5,48],[0,50],[-2,54],[5,58],[10,64],[18,70],[30,70],[40,68],[50,70],[60,70],[70,73],[80,73],[90,75],[100,77],[110,74],[120,73],[130,71],[140,72],[150,70],[160,70],[170,67],[178,65],[178,62],[160,60],[150,60],[142,55],[135,45],[128,40],[122,38],[122,30],[115,23],[108,18],[105,10],[100,8],[97,16],[92,22],[88,22],[85,20],[80,15],[77,8],[73,20],[68,23],[60,25],[57,27],[52,26],[48,30],[44,29],[40,32],[36,36],[30,36],[26,38],[22,37],[18,40],[12,44],[8,44],[3,43],[-2,37],[-9,37]],
+    [[-5,50],[-3,53],[-5,57],[-2,58],[1,52],[-5,50]],
+    [[130,31],[133,34],[137,35],[140,36],[141,40],[142,44],[140,42],[138,37],[134,34],[131,33]],
+    [[114,-22],[122,-17],[132,-12],[137,-15],[142,-11],[147,-19],[150,-23],[153,-27],[150,-37],[145,-39],[140,-38],[135,-35],[129,-32],[124,-33],[118,-35],[114,-30],[113,-26]],
+    [[44,-16],[47,-15],[50,-16],[49,-20],[46,-25],[44,-22],[43,-18]],
+    [[167,-45],[172,-41],[174,-37],[176,-38],[173,-42],[168,-46]],
+    [[95,5],[100,0],[104,-3],[106,-5],[102,-4],[98,2]],
+    [[110,1],[115,5],[119,2],[117,-2],[112,-3],[109,0]]
+  ];
+  function xy(lat, lon){ return [ (lon + 180) * 2, (90 - lat) * 2 ]; }
+  CONTINENTS.forEach(function(poly){
+    var d = poly.map(function(pt, i){
+      var c = xy(pt[1], pt[0]);
+      return (i ? "L" : "M") + c[0].toFixed(1) + " " + c[1].toFixed(1);
+    }).join(" ") + " Z";
+    var path = document.createElementNS(SVGNS, "path");
+    path.setAttribute("d", d);
+    cont.appendChild(path);
+  });
+  var dots = root.querySelector('.as-dots');
+  PLACES.forEach(function(p){
+    var c = xy(p[1], p[2]);
+    var el = document.createElementNS(SVGNS, "circle");
+    el.setAttribute("cx", c[0]); el.setAttribute("cy", c[1]); el.setAttribute("r", 2.6);
+    dots.appendChild(el);
+  });
+  var pin = root.querySelector('.as-pin');
+  var pinDot = root.querySelector('.as-pin-dot'), pinRing = root.querySelector('.as-pin-ring');
+  var readout = root.querySelector('.as-readout');
+  root.querySelector('.as-map').addEventListener('click', function(e){
+    var rect = this.getBoundingClientRect();
+    var mx = (e.clientX - rect.left) / rect.width * 720;
+    var my = (e.clientY - rect.top) / rect.height * 360;
+    var lon = Math.max(-180, Math.min(180, mx / 2 - 180));
+    var lat = Math.max(-90, Math.min(90, 90 - my / 2));
+    pin.style.display = "block";
+    pinDot.setAttribute("cx", mx); pinDot.setAttribute("cy", my);
+    pinRing.setAttribute("cx", mx); pinRing.setAttribute("cy", my);
+    readout.textContent = fmt(lat, lon);
+    choose("Your pin on the map", "dropped just now", lat, lon);
+  });
+
+  /* tabs */
+  Array.prototype.forEach.call(root.querySelectorAll('.as-tab'), function(t){
+    t.addEventListener('click', function(){
+      Array.prototype.forEach.call(root.querySelectorAll('.as-tab'), function(x){ x.classList.remove('as-on'); });
+      Array.prototype.forEach.call(root.querySelectorAll('.as-pane'), function(x){ x.classList.remove('as-on'); });
+      t.classList.add('as-on');
+      root.querySelector('.as-pane[data-pane="' + t.getAttribute('data-pane') + '"]').classList.add('as-on');
+    });
+  });
+
+  var defCoords = ({{ s.default_coords | default: "48.8584, 2.2945" | json }}).split(",");
+  choose({{ s.default_place_name | json }}, {{ s.default_place_note | json }}, parseFloat(defCoords[0]) || 48.8584, parseFloat(defCoords[1]) || 2.2945);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Atelier Preview Studio",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The preview studio · live engraving" },
+    { "type": "textarea", "id": "heading", "label": "Heading (HTML allowed)", "default": "See <em>your place</em> on the piece,<br>before we ever cut it." },
+    { "type": "image_picker", "id": "pendant_image", "label": "Blank pendant image", "info": "Upload images/blank-bar.png from the Atelier image set — it must be the transparent, unengraved pendant." },
+    { "type": "text", "id": "stage_note_ready", "label": "Status: ready", "default": "● READY TO ENGRAVE" },
+    { "type": "text", "id": "controls_heading", "label": "Controls heading", "default": "Three ways to find it." },
+    { "type": "text", "id": "tab_place", "label": "Tab 1", "default": "Name a place" },
+    { "type": "text", "id": "tab_latlong", "label": "Tab 2", "default": "Exact coordinates" },
+    { "type": "text", "id": "tab_pin", "label": "Tab 3", "default": "Drop a pin" },
+    { "type": "text", "id": "label_place", "label": "Place field label", "default": "The spot that matters" },
+    { "type": "text", "id": "placeholder_place", "label": "Place field placeholder", "default": "Try “Santorini” or “Brooklyn Bridge”…" },
+    { "type": "text", "id": "label_lat", "label": "Latitude label", "default": "Latitude" },
+    { "type": "text", "id": "label_lon", "label": "Longitude label", "default": "Longitude" },
+    { "type": "text", "id": "label_map", "label": "Map label", "default": "Click anywhere on the map" },
+    { "type": "text", "id": "map_hint", "label": "Map hint", "default": "◦ dots mark customer favorites" },
+    { "type": "textarea", "id": "proof_line", "label": "Proof promise line", "default": "This preview is exactly how your proof works — we photograph your real engraved piece and email it to you before shipping. You approve it, or we re-engrave." },
+    { "type": "product", "id": "product", "label": "Product (price + link pulled automatically)" },
+    { "type": "text", "id": "price_fallback", "label": "Price fallback text (if no product picked)", "default": "$89.99" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Make this piece" },
+    { "type": "url", "id": "cta_link", "label": "CTA link (if no product picked)" },
+    { "type": "text", "id": "cta_meta", "label": "CTA side note", "default": "14k gold fill · free engraving · ships in 5 business days" },
+    { "type": "text", "id": "default_place_name", "label": "Default place name", "default": "Eiffel Tower, Paris" },
+    { "type": "text", "id": "default_place_note", "label": "Default place note", "default": "where you said yes" },
+    { "type": "text", "id": "default_coords", "label": "Default coordinates (lat, lon)", "default": "48.8584, 2.2945" },
+    { "type": "color", "id": "color_bg", "label": "Background", "default": "#f7f0e1" },
+    { "type": "color", "id": "color_text", "label": "Text", "default": "#795e3f" }
+  ],
+  "presets": [
+    { "name": "Atelier Preview Studio", "category": "Atelier" }
+  ]
+}
+{% endschema %}
