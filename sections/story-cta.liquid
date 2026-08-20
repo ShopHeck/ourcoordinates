@@ -4,18 +4,25 @@
   emotional visitors become personalizers instead of bouncing.
 {%- endcomment -%}
 
-<section class="story-cta">
-  <div class="hero__topo" aria-hidden="true">
-    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
-      <path d="M-50 480 C 150 420, 280 520, 460 460 S 760 380, 940 440 S 1180 520, 1280 470"/>
-      <path d="M-50 400 C 170 340, 310 440, 490 380 S 780 300, 960 360 S 1200 440, 1280 390"/>
-      <path d="M-50 320 C 200 270, 340 360, 520 305 S 790 225, 970 285 S 1210 360, 1280 310"/>
-      <path d="M-50 240 C 230 200, 370 280, 550 235 S 800 165, 980 215 S 1220 280, 1280 232"/>
-      <path d="M-50 160 C 260 140, 400 200, 580 165 S 820 102, 1000 142 S 1240 200, 1280 155"/>
-    </svg>
-  </div>
+{%- assign guided_layout = false -%}
+{%- if request.page_type == 'index' -%}
+  {%- assign guided_layout = true -%}
+{%- endif -%}
 
-  <div class="page-width story-cta__inner">
+<section class="story-cta{% if guided_layout %} story-cta--guided{% endif %}">
+  {%- unless guided_layout -%}
+    <div class="hero__topo" aria-hidden="true">
+      <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
+        <path d="M-50 480 C 150 420, 280 520, 460 460 S 760 380, 940 440 S 1180 520, 1280 470"/>
+        <path d="M-50 400 C 170 340, 310 440, 490 380 S 780 300, 960 360 S 1200 440, 1280 390"/>
+        <path d="M-50 320 C 200 270, 340 360, 520 305 S 790 225, 970 285 S 1210 360, 1280 310"/>
+        <path d="M-50 240 C 230 200, 370 280, 550 235 S 800 165, 980 215 S 1220 280, 1280 232"/>
+        <path d="M-50 160 C 260 140, 400 200, 580 165 S 820 102, 1000 142 S 1240 200, 1280 155"/>
+      </svg>
+    </div>
+  {%- endunless -%}
+
+  <div class="page-width story-cta__inner{% if guided_layout %} story-cta__guide{% endif %}">
     <div class="story-cta__copy">
       <p class="coord-eyebrow">{{ section.settings.eyebrow }}</p>
       <h2>{{ section.settings.heading }}</h2>
@@ -35,9 +42,31 @@
           <a class="btn btn--hero-ghost" href="{{ section.settings.button_link_2 }}">{{ section.settings.button_label_2 }}</a>
         {%- endif -%}
       </div>
+      {%- if guided_layout -%}
+        <p class="story-cta__note">No coordinates needed to start.</p>
+      {%- endif -%}
     </div>
 
-    {%- if section.blocks.size > 0 -%}
+    {%- if guided_layout -%}
+      <div class="story-cta__match" aria-label="The gift finder matches by three details">
+        <p class="story-cta__match-label">We’ll match by</p>
+        <ol class="story-cta__path">
+          <li>
+            <span class="story-cta__step">01</span>
+            <span><strong>Who it’s for</strong><small>Partner, parent, friend, or you</small></span>
+          </li>
+          <li>
+            <span class="story-cta__step">02</span>
+            <span><strong>What the moment means</strong><small>Milestone, memory, or shared place</small></span>
+          </li>
+          <li>
+            <span class="story-cta__step">03</span>
+            <span><strong>Your budget</strong><small>Only available pieces that fit</small></span>
+          </li>
+        </ol>
+        <p class="story-cta__result"><span aria-hidden="true">→</span> Three personalized picks</p>
+      </div>
+    {%- elsif section.blocks.size > 0 -%}
       <div class="story-cta__stats">
         {%- for block in section.blocks -%}
           <div class="story-cta__stat" {{ block.shopify_attributes }}>

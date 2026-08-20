@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "included": {
+          "type": "accordion",
+          "settings": {
+            "title": "What’s included",
+            "content": "<ul><li>Two matching magnetic connection bracelets — one for you and one for your person.</li><li>Adjustable sliding cords.</li><li>One gift box, ready to give.</li></ul>"
+          }
+        },
+        "meaning": {
+          "type": "accordion",
+          "settings": {
+            "title": "How the connection works",
+            "content": "<p>Wear one bracelet each while you are apart. When you are together, bring the charms close and the magnets pull into place — a small ritual that makes the two halves feel whole again.</p>"
+          }
+        },
+        "fit-care": {
+          "type": "accordion",
+          "settings": {
+            "title": "Fit & care",
+            "content": "<p>Use the sliding cords to adjust each bracelet. Keep the bracelets dry and remove them before bathing, swimming, or exercising. Wipe the charms gently with a soft, dry cloth after wear.</p>"
+          }
+        },
+        "personalization": {
+          "type": "accordion",
+          "settings": {
+            "title": "Is this set personalized?",
+            "content": "<p>No. This matching set arrives ready to share, with no engraving or personalization required.</p>"
+          }
+        }
+      },
+      "block_order": ["included", "meaning", "fit-care", "personalization"],
+      "settings": {
+        "preview_type": "bracelet",
+        "show_engraving": false,
+        "engraving_required": false,
+        "engraving_placeholder": "",
+        "engraving_max": 30,
+        "atc_label": "Add both bracelets to cart",
+        "review_style": "app",
+        "show_recently_viewed": true
+      }
+    }
+  },
+  "order": ["main"]
+}

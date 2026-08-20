@@ -43,7 +43,7 @@
                     width="600"
                     height="450">
                 {%- else -%}
-                  {%- capture fallback_img -%}how-it-works-step-{{ step_count }}.png{%- endcapture -%}
+                  {%- capture fallback_img -%}how-it-works-step-{{ step_count }}.webp{%- endcapture -%}
                   <img class="hiw-step__image"
                     src="{{ fallback_img | asset_url }}"
                     alt="{{ block.settings.title | escape }}"

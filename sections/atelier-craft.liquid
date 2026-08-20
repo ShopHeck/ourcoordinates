@@ -1,0 +1,209 @@
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+-%}
+<section class="atelier-craft-{{ sid }}">
+  <div class="ac-shell">
+    <div class="ac-grid">
+      <div class="ac-sticky">
+        {%- if s.eyebrow != blank -%}<div class="ac-eyebrow">{{ s.eyebrow }}</div>{%- endif -%}
+        <h2 class="ac-h2">{{ s.heading }}</h2>
+        <div class="ac-steps">
+          {%- for block in section.blocks -%}
+          <div class="ac-step{% if forloop.first %} ac-lit{% endif %}" {{ block.shopify_attributes }}>
+            <div class="ac-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</div>
+            <div>
+              <h3 class="ac-step-h">{{ block.settings.title }}</h3>
+              <p class="ac-step-p">{{ block.settings.text }}</p>
+            </div>
+          </div>
+          {%- endfor -%}
+        </div>
+        <div class="ac-rail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="ac-visual">
+        <div class="ac-frame">
+          {%- if s.image_1 != blank -%}
+            {{ s.image_1 | image_url: width: 1400 | image_tag: loading: 'lazy', class: 'ac-img ac-v0 ac-show', alt: s.image_1_alt, widths: '700, 1000, 1400' }}
+          {%- else -%}
+            <img src="{{ 'macro-engraving.jpg' | asset_url }}" alt="{{ s.image_1_alt | escape }}" width="1536" height="964" loading="lazy" class="ac-img ac-v0 ac-show">
+          {%- endif -%}
+          {%- if s.image_2 != blank -%}
+            {{ s.image_2 | image_url: width: 1400 | image_tag: loading: 'lazy', class: 'ac-img ac-v1', alt: s.image_2_alt, widths: '700, 1000, 1400' }}
+          {%- else -%}
+            <img src="{{ 'macro-engraving.jpg' | asset_url }}" alt="{{ s.image_2_alt | escape }}" width="1536" height="964" loading="lazy" class="ac-img ac-v1" style="object-position:70% 60%">
+          {%- endif -%}
+          {%- if s.image_3 != blank -%}
+            {{ s.image_3 | image_url: width: 1400 | image_tag: loading: 'lazy', class: 'ac-img ac-v2', alt: s.image_3_alt, widths: '700, 1000, 1400' }}
+          {%- else -%}
+            <img src="{{ 'proof.jpg' | asset_url }}" alt="{{ s.image_3_alt | escape }}" width="1536" height="964" loading="lazy" class="ac-img ac-v2">
+          {%- endif -%}
+          <svg class="ac-laser" viewBox="0 0 600 400" aria-hidden="true">
+            <path class="ac-laser-path" d="M60 210 C 170 160, 250 250, 350 205 C 430 168, 490 235, 550 195"
+                  fill="none" stroke="#fff3d6" stroke-width="2.4" stroke-linecap="round"/>
+            <circle class="ac-laser-dot" r="4.5" fill="#fff3d6"/>
+            <circle class="ac-laser-glow" r="11" fill="none" stroke="#fff3d6" stroke-width="1" opacity=".6"/>
+          </svg>
+        </div>
+        <p class="ac-note"><b>{{ s.note_label }}</b> {{ s.note_text }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ sid }} .atelier-craft-{{ sid }}{
+    background:{{ s.color_bg }};color:{{ s.color_text }};
+    border-top:1px solid rgba(121,94,63,.15);
+    font-family:'Inter', -apple-system, sans-serif;font-size:15px;line-height:1.55;
+    padding:clamp(72px,9vw,130px) clamp(20px,5vw,72px);
+  }
+  #shopify-section-{{ sid }} .ac-shell{max-width:1240px;margin:0 auto}
+  #shopify-section-{{ sid }} .ac-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:clamp(32px,5vw,80px)}
+  #shopify-section-{{ sid }} .ac-sticky{position:sticky;top:100px;align-self:start}
+  #shopify-section-{{ sid }} .ac-eyebrow{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(121,94,63,.45);
+    margin-bottom:20px;display:flex;align-items:center;gap:14px;
+  }
+  #shopify-section-{{ sid }} .ac-eyebrow::before{content:"";width:36px;height:1px;background:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .ac-h2{
+    font-family:'Instrument Serif', Georgia, serif;font-weight:400;
+    font-size:clamp(34px,4.2vw,60px);line-height:1.04;letter-spacing:-.015em;margin:0;color:{{ s.color_text }};
+  }
+  #shopify-section-{{ sid }} .ac-h2 em{font-style:italic}
+  #shopify-section-{{ sid }} .ac-steps{margin-top:40px;display:flex;flex-direction:column}
+  #shopify-section-{{ sid }} .ac-step{display:grid;grid-template-columns:60px 1fr;gap:22px;padding:26px 0;border-top:1px solid rgba(121,94,63,.15);opacity:.45;transition:opacity .4s}
+  #shopify-section-{{ sid }} .ac-step.ac-lit{opacity:1}
+  #shopify-section-{{ sid }} .ac-num{font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:28px;color:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .ac-step.ac-lit .ac-num{color:{{ s.color_text }}}
+  #shopify-section-{{ sid }} .ac-step-h{font-family:'Instrument Serif', Georgia, serif;font-weight:400;font-size:23px;margin:0 0 7px}
+  #shopify-section-{{ sid }} .ac-step-p{color:rgba(121,94,63,.7);max-width:46ch;font-size:14px;margin:0}
+  #shopify-section-{{ sid }} .ac-rail{display:flex;gap:6px;margin-top:32px}
+  #shopify-section-{{ sid }} .ac-rail span{height:2px;width:14px;background:rgba(121,94,63,.15);transition:width .35s,background .35s}
+  #shopify-section-{{ sid }} .ac-rail span.ac-on{width:34px;background:{{ s.color_text }}}
+  #shopify-section-{{ sid }} .ac-frame{position:relative;overflow:hidden;border:1px solid rgba(121,94,63,.15);aspect-ratio:3/2;background:#f6eeda}
+  #shopify-section-{{ sid }} .ac-frame .ac-img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transition:opacity .7s ease;
+  }
+  #shopify-section-{{ sid }} .ac-frame .ac-img.ac-show{opacity:1;position:relative}
+  #shopify-section-{{ sid }} .ac-frame .ac-ph svg{width:100%;height:100%;object-fit:cover}
+  #shopify-section-{{ sid }} .ac-laser{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
+  #shopify-section-{{ sid }} .ac-note{margin:18px 0 0;font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:16px;color:rgba(121,94,63,.7);display:flex;gap:10px;align-items:baseline}
+  #shopify-section-{{ sid }} .ac-note b{font-family:'Inter', -apple-system, sans-serif;font-style:normal;font-weight:500;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:{{ s.color_text }}}
+
+  /* no-JS / reduced-motion fallback: everything visible and static */
+  #shopify-section-{{ sid }} .atelier-craft-{{ sid }}.ac-nojs .ac-step{opacity:1}
+  #shopify-section-{{ sid }} .atelier-craft-{{ sid }}.ac-nojs .ac-laser{display:none}
+  #shopify-section-{{ sid }} .atelier-craft-{{ sid }}.ac-nojs .ac-num{color:{{ s.color_text }}}
+
+  @media(max-width:900px){
+    #shopify-section-{{ sid }} .ac-grid{grid-template-columns:1fr}
+    #shopify-section-{{ sid }} .ac-sticky{position:static}
+    #shopify-section-{{ sid }} .ac-step{opacity:1}
+    #shopify-section-{{ sid }} .ac-step .ac-num{color:{{ s.color_text }}}
+    #shopify-section-{{ sid }} .ac-laser{display:none}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #shopify-section-{{ sid }} .ac-frame .ac-img{transition:none}
+  }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  var root = document.getElementById('shopify-section-{{ sid }}');
+  if (!root) return;
+  var sec = root.querySelector('.atelier-craft-{{ sid }}');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mobile = window.matchMedia('(max-width: 900px)');
+
+  var laser = root.querySelector('.ac-laser-path');
+  var dot = root.querySelector('.ac-laser-dot');
+  var glow = root.querySelector('.ac-laser-glow');
+  var steps = Array.prototype.slice.call(root.querySelectorAll('.ac-step'));
+  var rails = Array.prototype.slice.call(root.querySelectorAll('.ac-rail span'));
+  var imgs = Array.prototype.slice.call(root.querySelectorAll('.ac-frame .ac-img'));
+
+  if (reduced){
+    /* static, fully readable state */
+    sec.classList.add('ac-nojs');
+    steps.forEach(function(st){ st.classList.add('ac-lit'); });
+    rails.forEach(function(r){ r.classList.add('ac-on'); });
+    return;
+  }
+
+  var total = laser.getTotalLength();
+  laser.style.strokeDasharray = total;
+  laser.style.strokeDashoffset = total;
+
+  function update(){
+    if (mobile.matches){
+      laser.style.strokeDashoffset = total;
+      return;
+    }
+    var rect = sec.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var p = Math.max(0, Math.min(1, (vh * 0.7 - rect.top) / (rect.height * 0.9)));
+    laser.style.strokeDashoffset = total * (1 - p);
+    var pt = laser.getPointAtLength(total * p);
+    dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y);
+    glow.setAttribute('cx', pt.x); glow.setAttribute('cy', pt.y);
+    var active = Math.min(steps.length, Math.floor(p * (steps.length + 0.999)) + 1);
+    steps.forEach(function(st, i){ st.classList.toggle('ac-lit', i < active); });
+    rails.forEach(function(r, i){ r.classList.toggle('ac-on', p * 8 > i); });
+    if (imgs.length > 1){
+      var vis = Math.min(imgs.length - 1, Math.floor(p * imgs.length));
+      imgs.forEach(function(im){ im.classList.toggle('ac-show', im.classList.contains('ac-v' + vis)); });
+    }
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Atelier Craft",
+  "tag": "section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The craft · made to order" },
+    { "type": "textarea", "id": "heading", "label": "Heading (HTML allowed)", "default": "Five days from<br><em>your story</em> to<br>their doorstep." },
+    { "type": "image_picker", "id": "image_1", "label": "Image 1 — macro engraving", "info": "Use images/macro-engraving.jpg" },
+    { "type": "text", "id": "image_1_alt", "label": "Image 1 alt", "default": "Macro of laser-engraved coordinates on brushed gold" },
+    { "type": "image_picker", "id": "image_2", "label": "Image 2 — engraving detail (optional)" },
+    { "type": "text", "id": "image_2_alt", "label": "Image 2 alt", "default": "Engraving detail" },
+    { "type": "image_picker", "id": "image_3", "label": "Image 3 — photo proof", "info": "Use images/proof.jpg" },
+    { "type": "text", "id": "image_3_alt", "label": "Image 3 alt", "default": "Hands holding a photo-proof card beside the real engraved necklace on the workbench" },
+    { "type": "text", "id": "note_label", "label": "Note label", "default": "Macro detail" },
+    { "type": "text", "id": "note_text", "label": "Note text", "default": "Actual engraving at 4× — the same proof photo you’ll receive before shipping." },
+    { "type": "color", "id": "color_bg", "label": "Background", "default": "#fff9ef" },
+    { "type": "color", "id": "color_text", "label": "Text", "default": "#795e3f" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Step title", "default": "You name the place" },
+        { "type": "textarea", "id": "text", "label": "Step text", "default": "An address, a venue, a beach with no name — we convert it to exact latitude & longitude and lay out the engraving." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Atelier Craft",
+      "category": "Atelier",
+      "blocks": [
+        { "type": "step", "settings": { "title": "You name the place", "text": "An address, a venue, a beach with no name — we convert it to exact latitude & longitude and lay out the engraving." } },
+        { "type": "step", "settings": { "title": "We engrave it in Providence, RI", "text": "Laser-engraved to order at 0.3 mm depth — deep enough to read by touch, fine enough to catch the light at dinner." } },
+        { "type": "step", "settings": { "title": "You approve a photo proof", "text": "Before anything ships, we photograph your actual piece and email it to you. Nothing leaves the bench until you say yes." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

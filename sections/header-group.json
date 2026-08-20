@@ -1,1 +1,1 @@
-{"type":"header","name":"Header group","sections":{"announcement":{"type":"announcement-bar","settings":{"custom_text":""}},"header":{"type":"header","settings":{"menu":"main-menu"}}},"order":["announcement","header"]}
+{"type":"header","name":"Header group","sections":{"announcement":{"type":"announcement-bar","settings":{"custom_text":""}},"header":{"type":"header","settings":{"menu":"main-menu","cta_label":"Find a gift","cta_link":"/pages/gift-finder"}}},"order":["announcement","header"]}

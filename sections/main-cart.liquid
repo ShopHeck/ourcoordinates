@@ -93,19 +93,17 @@
         <div class="cart-footer">
           {%- if section.settings.show_gift_note -%}
             <div class="gift-note">
-              <label class="option-group" for="CartNote">Gift note (free — we'll handwrite it on the card)</label>
+              <label class="option-group" for="CartNote">Gift note (free — included with your order)</label>
               <textarea id="CartNote" name="note" placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
             </div>
           {%- endif -%}
 
           <p class="cart-footer__subtotal">Subtotal: {{ cart.total_price | money }}</p>
-          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Engraved orders ship in {{ settings.production_days }} business days.</p>
+          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Orders ship in {{ settings.production_days }} business days.</p>
           <button type="submit" name="checkout" class="btn">Check out</button>
 
           <ul class="guarantees guarantees--cart">
             {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
-            {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
-            {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
           </ul>
         </div>
       </form>

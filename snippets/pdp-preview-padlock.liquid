@@ -1,0 +1,67 @@
+{%- liquid
+  assign line_max = engraving_max | at_most: 15
+  if line_max == 0
+    assign line_max = 15
+  endif
+-%}
+{% style %}
+  .ep--padlock { padding: 18px 16px 12px; }
+  .ep--padlock svg { display:block; width:min(220px, 78%); height:auto; margin:0 auto; }
+  .ep--padlock .ep__lock-chain { fill:none; stroke:#8b8b95; stroke-width:1.4; }
+  .ep--padlock .ep__lock-shackle { fill:none; stroke:#1c1c24; stroke-width:18; stroke-linecap:round; }
+  [data-metal="gold"] .ep--padlock .ep__lock-shackle { stroke:#b18f58; }
+  [data-metal="rose-gold"] .ep--padlock .ep__lock-shackle { stroke:#c38c73; }
+  [data-metal="silver"] .ep--padlock .ep__lock-shackle { stroke:#b8b8c1; }
+  .ep--padlock .ep__lock-rim { fill:none; stroke:rgba(255,255,255,.24); stroke-width:1.5; }
+  .ep--padlock .ep__engrave-text { font-size:12px; letter-spacing:.1em; }
+  .padlock-line { margin-top:10px; }
+  .padlock-line label { display:flex; justify-content:space-between; gap:12px; margin-bottom:5px; font-size:.82rem; font-weight:600; }
+  .padlock-line label span { color:var(--c-ink-soft); font-size:.72rem; font-weight:400; }
+{% endstyle %}
+
+<div class="engrave-field" data-padlock-engraving>
+  <p class="option-group buy-step" style="margin-bottom:8px">Your engraving</p>
+
+  <div class="ep ep--padlock" aria-hidden="true">
+    <svg viewBox="0 0 220 250" role="img">
+      <path class="ep__lock-chain" d="M8 0 C50 18 72 36 110 48 C148 36 170 18 212 0"/>
+      <path class="ep__lock-shackle" d="M66 111 V82 C66 52 86 33 110 33 C134 33 154 52 154 82 V111"/>
+      <rect x="42" y="101" width="136" height="118" rx="10" class="ep__metal"/>
+      <rect x="49" y="108" width="122" height="104" rx="6" class="ep__lock-rim"/>
+      <text x="110" y="150" data-lock-line="1" class="ep__engrave-text"
+            data-fit="104" data-fit-chars="12" lengthAdjust="spacingAndGlyphs"
+            data-placeholder="UNLOCK">UNLOCK</text>
+      <text x="110" y="178" data-lock-line="2" class="ep__engrave-text ep__engrave-text--dim"
+            data-fit="104" data-fit-chars="12" lengthAdjust="spacingAndGlyphs"
+            data-placeholder="MY HEART">MY HEART</text>
+    </svg>
+    <p class="ep__hint">Two-line front engraving preview</p>
+  </div>
+
+  <div class="padlock-line">
+    <label for="engrave-lock-1">Line 1 <span data-lock-count="1">0 / {{ line_max }}</span></label>
+    <input type="text" id="engrave-lock-1" data-engrave-input data-lock-input="1"
+           name="properties[Engraving — Line 1]"
+           maxlength="{{ line_max }}"
+           placeholder="e.g. UNLOCK"
+           {% if engraving_required %}required{% endif %}
+           autocomplete="off">
+  </div>
+
+  <div class="padlock-line">
+    <label for="engrave-lock-2">Line 2 <span data-lock-count="2">0 / {{ line_max }} · optional</span></label>
+    <input type="text" id="engrave-lock-2" data-lock-input="2"
+           name="properties[Engraving — Line 2]"
+           maxlength="{{ line_max }}"
+           placeholder="e.g. MY HEART"
+           autocomplete="off">
+  </div>
+
+  <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+  <input type="hidden" data-prop-place name="properties[_Place Searched]">
+  <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+  <div class="field-row">
+    <button type="button" class="find-coords" data-locator-open>Find my coordinates →</button>
+    <span>Coordinates fill both lines</span>
+  </div>
+</div>

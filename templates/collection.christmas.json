@@ -58,6 +58,7 @@
     },
     "quote": {
       "type": "testimonial",
+      "disabled": true,
       "settings": {
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",

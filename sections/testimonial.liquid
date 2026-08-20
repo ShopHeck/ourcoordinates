@@ -1,22 +1,36 @@
-<section class="section testimonial">
-  <div class="page-width">
-    <p class="coord-eyebrow" style="justify-content:center">{{ section.settings.eyebrow }}</p>
-    <p class="stars" aria-label="5 out of 5 stars">★★★★★</p>
-    <blockquote>{{ section.settings.quote }}</blockquote>
-    <cite>{{ section.settings.attribution }}</cite>
-    {%- if section.settings.button_label != blank -%}
-      <p style="margin-top:28px"><a class="btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></p>
-    {%- endif -%}
-  </div>
-</section>
+{%- comment -%}
+  Reviews are trust claims, so this section fails closed unless the merchant
+  supplies a public source URL. The legacy theme contained an unsourced,
+  hard-coded five-star quote on collection pages.
+{%- endcomment -%}
+{%- if section.settings.quote != blank and section.settings.attribution != blank and section.settings.source_url != blank -%}
+  <section class="section testimonial">
+    <div class="page-width">
+      <p class="coord-eyebrow" style="justify-content:center">{{ section.settings.eyebrow }}</p>
+      {%- if section.settings.rating > 0 -%}
+        <p class="stars" aria-label="{{ section.settings.rating }} out of 5 stars">
+          {%- for star in (1..section.settings.rating) -%}★{%- endfor -%}
+        </p>
+      {%- endif -%}
+      <blockquote>{{ section.settings.quote }}</blockquote>
+      <cite>{{ section.settings.attribution }}</cite>
+      <p class="testimonial__source"><a href="{{ section.settings.source_url }}" rel="nofollow">View original review</a></p>
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <p style="margin-top:28px"><a class="btn" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></p>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
 
 {% schema %}
 {
   "name": "Testimonial",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Verified customer review" },
-    { "type": "textarea", "id": "quote", "label": "Quote", "default": "My husband and I love them. They have the coordinates of our first trip together." },
-    { "type": "text", "id": "attribution", "label": "Attribution", "default": "Lucy — United States" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Customer review" },
+    { "type": "textarea", "id": "quote", "label": "Quote" },
+    { "type": "text", "id": "attribution", "label": "Attribution" },
+    { "type": "range", "id": "rating", "label": "Rating", "min": 0, "max": 5, "step": 1, "default": 0 },
+    { "type": "url", "id": "source_url", "label": "Public review source URL", "info": "Required. The section stays hidden without a source that shoppers can verify." },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop matching sets" },
     { "type": "url", "id": "button_link", "label": "Button link" }
   ],
