@@ -86,17 +86,6 @@
       ],
       "settings": {}
     },
-    "featured": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Featured gifts",
-        "heading": "Personalized jewelry for every story",
-        "subheading": "",
-        "collection": "best-sellers",
-        "limit": 8,
-        "hide_sold_out": true
-      }
-    },
     "trust": {
       "type": "trust-strip",
       "blocks": {
@@ -121,7 +110,7 @@
         "t4": {
           "type": "badge",
           "settings": {
-            "text": "Personalization included where shown"
+            "text": "Personalization included"
           }
         }
       },
@@ -132,6 +121,17 @@
         "t4"
       ],
       "settings": {}
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Featured gifts",
+        "heading": "Personalized jewelry for every story",
+        "subheading": "",
+        "collection": "best-sellers",
+        "limit": 8,
+        "hide_sold_out": true
+      }
     },
     "sets": {
       "type": "featured-collection",
@@ -337,8 +337,8 @@
   "order": [
     "atelier_hero_ApVc6Q",
     "marquee",
-    "featured",
     "trust",
+    "featured",
     "sets",
     "atelier_story_chapters_RgniKp",
     "story",

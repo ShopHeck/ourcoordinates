@@ -15,7 +15,7 @@
     "color_graphite": "#3E3E3E",
     "shipping_promise": "Free US shipping on orders over $50",
     "free_shipping_threshold": 50,
-    "production_days": 1,
+    "production_days": 5,
     "transit_days": 5,
     "guarantee_1": "30-day happiness guarantee",
     "guarantee_2": "Photo proof before we ship",
