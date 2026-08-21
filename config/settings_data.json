@@ -1,1 +1,53 @@
-{"current":{"color_ink":"#0B0B0D","color_paper":"#FAF7F2","color_gold":"#B6976A","color_graphite":"#3E3E3E","shipping_promise":"Free US shipping on orders over $50","free_shipping_threshold":50,"production_days":5,"transit_days":7,"guarantee_1":"30-day happiness guarantee","guarantee_2":"Photo proof before we ship","guarantee_3":"Engraved to order in the USA","gift_wrap_product":"","upsell_collection":"best-sellers","social_instagram":"https:\/\/www.instagram.com\/ourcoordinates\/","social_facebook":"https:\/\/www.facebook.com\/ourcoordinate","social_pinterest":"https:\/\/www.pinterest.com\/ourcoordinates\/","sections":{"cart-drawer":{"type":"cart-drawer","settings":{"enable_drawer":true,"heading":"Your cart","show_upsells":true,"upsell_heading":"Complete the gift","show_gift_note":true,"empty_primary_label":"Shop best sellers","empty_primary_link":"","empty_secondary_label":"Not sure? Take the 60-second gift finder","empty_secondary_link":""}}},"content_for_index":[],"blocks":{"14060646107696862457":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/judgeme_core\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","disabled":false,"settings":{}}}}}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "color_ink": "#0B0B0D",
+    "color_paper": "#FAF7F2",
+    "color_gold": "#B6976A",
+    "color_graphite": "#3E3E3E",
+    "shipping_promise": "Free US shipping on orders over $50",
+    "free_shipping_threshold": 50,
+    "production_days": 1,
+    "transit_days": 5,
+    "guarantee_1": "30-day happiness guarantee",
+    "guarantee_2": "Photo proof before we ship",
+    "guarantee_3": "Engraved to order in the USA",
+    "gift_wrap_product": "",
+    "upsell_collection": "best-sellers",
+    "social_instagram": "https://www.instagram.com/ourcoordinates/",
+    "social_facebook": "https://www.facebook.com/ourcoordinate",
+    "social_pinterest": "https://www.pinterest.com/ourcoordinates/",
+    "sections": {
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {
+          "enable_drawer": true,
+          "heading": "Your cart",
+          "show_upsells": true,
+          "upsell_heading": "Complete the gift",
+          "show_gift_note": true,
+          "empty_primary_label": "Shop best sellers",
+          "empty_primary_link": "",
+          "empty_secondary_label": "Not sure? Take the 60-second gift finder",
+          "empty_secondary_link": ""
+        }
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      }
+    }
+  }
+}
