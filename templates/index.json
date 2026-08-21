@@ -149,6 +149,7 @@
     },
     "atelier_story_chapters_RgniKp": {
       "type": "atelier-story-chapters",
+      "disabled": true,
       "blocks": {
         "chapter_PaKcMc": {
           "type": "chapter",
@@ -312,6 +313,7 @@
     },
     "how": {
       "type": "image-with-text",
+      "disabled": true,
       "settings": {
         "image": "shopify://shop_images/untitled_ChatGPT_Images_2.0_2026-06-12_15-39-34.png",
         "flip": false,
@@ -391,6 +393,7 @@
     },
     "featured2": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "eyebrow": "For him",
         "heading": "Men's coordinates jewelry",
@@ -408,12 +411,12 @@
     "trust",
     "featured",
     "sets",
+    "story",
+    "atelier_customer_stories_MeFCbT",
     "manifesto",
     "atelier_story_chapters_RgniKp",
     "moments",
-    "story",
     "how",
-    "atelier_customer_stories_MeFCbT",
     "quote",
     "featured2"
   ]
