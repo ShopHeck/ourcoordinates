@@ -1,21 +1,14 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "hero": {
-      "type": "hero",
-      "disabled": true,
-      "settings": {
-        "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-8884822.png",
-        "eyebrow": "Personalization included where shown",
-        "heading": "Some places deserve to be worn",
-        "subheading": "The exact latitude and longitude of the spot that changed your life - laser-engraved on jewelry made to order, one piece at a time.",
-        "button_label": "Find your coordinates",
-        "button_link": "shopify://collections/coordinates-collection",
-        "fallback_collection": "",
-        "button_label_2": "How it works",
-        "button_link_2": "shopify://pages/how-it-works",
-        "corner_coords": "27.7676 N / 82.6403 W - ST. PETERSBURG, FL"
-      }
-    },
     "atelier_hero_ApVc6Q": {
       "type": "atelier-hero",
       "name": "Atelier Hero",
@@ -83,7 +76,14 @@
           }
         }
       },
-      "block_order": ["m1", "m2", "m3", "m4", "m5", "m6"],
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6"
+      ],
       "settings": {}
     },
     "trust": {
@@ -114,7 +114,12 @@
           }
         }
       },
-      "block_order": ["t1", "t2", "t3", "t4"],
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
       "settings": {}
     },
     "featured": {
@@ -128,6 +133,18 @@
         "hide_sold_out": true
       }
     },
+    "story": {
+      "type": "story-cta",
+      "settings": {
+        "eyebrow": "Need help choosing?",
+        "heading": "Tell us the story. Get three pieces that fit.",
+        "text": "Choose who it’s for, what the moment means, and your budget. We’ll narrow the store to available pieces you can personalize.",
+        "button_label": "Find their piece",
+        "button_link": "/pages/gift-finder",
+        "button_label_2": "",
+        "button_link_2": ""
+      }
+    },
     "sets": {
       "type": "featured-collection",
       "settings": {
@@ -139,17 +156,66 @@
         "hide_sold_out": true
       }
     },
-    "manifesto": {
-      "type": "manifesto",
-      "disabled": true,
+    "atelier_customer_stories_MeFCbT": {
+      "type": "atelier-customer-stories",
+      "blocks": {
+        "story_7A9z6D": {
+          "type": "story",
+          "settings": {
+            "photo": "shopify://shop_images/customer-couple.jpg",
+            "name": "THE PROPOSAL",
+            "quote": "I engraved the exact spot he proposed. Every time I look down I feel it again.",
+            "story": "Engrave the coordinates of where you said yes, then add the date or a short message that only the two of you understand.",
+            "coord_label": "A proposal place",
+            "coord_value": "27.7676° N, 82.6403° W",
+            "piece_product": "",
+            "piece_link": "shopify://collections/coordinates-collection"
+          }
+        },
+        "story_9rKXUG": {
+          "type": "story",
+          "settings": {
+            "photo": "shopify://shop_images/customer-mother.jpg",
+            "name": "A NEW BEGINNING",
+            "quote": "We marked the hospital where she was born. It’s the first gift that actually means something.",
+            "story": "Mark a birthplace, first home, or city that began a new chapter with coordinates chosen by the person giving the gift.",
+            "coord_label": "A meaningful beginning",
+            "coord_value": "32.7767° N, 96.7970° W",
+            "piece_product": "",
+            "piece_link": "shopify://collections/coordinates-collection"
+          }
+        },
+        "story_7WDbAJ": {
+          "type": "story",
+          "settings": {
+            "photo": "shopify://shop_images/customer-friends.jpg",
+            "name": "WHERE YOU MET",
+            "quote": "Matching bracelets with the café where we first met. We still click them when we’re together.",
+            "story": "Turn the café, campus, station, or neighborhood where your paths crossed into a matching everyday reminder.",
+            "coord_label": "A shared starting point",
+            "coord_value": "40.7411° N, 73.9897° W",
+            "piece_product": "coordinates-bracelet",
+            "piece_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "story_7A9z6D",
+        "story_9rKXUG",
+        "story_7WDbAJ"
+      ],
+      "name": "Atelier Story Ideas",
       "settings": {
-        "eyebrow": "Why coordinates",
-        "text": "A photo fades. An address changes. But two numbers can hold a whole life - and nobody else will ever know what they mean."
+        "eyebrow": "Real places. Real meaning.",
+        "heading": "Places people<br><em>carry with them.</em>",
+        "counter_number": "",
+        "counter_caption": "",
+        "shop_label": "Explore this idea",
+        "color_scheme": "dark"
       }
     },
     "atelier_story_chapters_RgniKp": {
       "type": "atelier-story-chapters",
-      "disabled": true,
       "blocks": {
         "chapter_PaKcMc": {
           "type": "chapter",
@@ -166,6 +232,7 @@
         },
         "chapter_n6DBCQ": {
           "type": "chapter",
+          "disabled": true,
           "settings": {
             "label": "CHAPTER II",
             "heading": "Their <em>birthplace</em>",
@@ -178,6 +245,7 @@
         },
         "chapter_z88Kmy": {
           "type": "chapter",
+          "disabled": true,
           "settings": {
             "label": "CHAPTER III",
             "heading": "The <em>hometown</em>",
@@ -228,87 +296,21 @@
           }
         }
       },
-      "block_order": ["chapter_PaKcMc", "chapter_n6DBCQ", "chapter_z88Kmy", "chapter_DHrQEq", "chapter_bDftKa", "chapter_Rjq7cj"],
+      "block_order": [
+        "chapter_PaKcMc",
+        "chapter_n6DBCQ",
+        "chapter_z88Kmy",
+        "chapter_DHrQEq",
+        "chapter_bDftKa",
+        "chapter_Rjq7cj"
+      ],
+      "disabled": true,
       "name": "Atelier Story Chapters",
       "settings": {
         "eyebrow": "Why coordinates",
         "heading": "Start with the story.<br><em>We’ll find the spot.</em>",
         "color_bg": "#faf7f2",
         "color_text": "#795e3f"
-      }
-    },
-    "moments": {
-      "type": "moments",
-      "blocks": {
-        "mo1": {
-          "type": "moment",
-          "settings": {
-            "coords": "THE QUESTION",
-            "title": "The proposal",
-            "text": "The exact spot you knelt down. Engraved where only you two will know what it means.",
-            "link": "shopify://collections/for-couples"
-          }
-        },
-        "mo2": {
-          "type": "moment",
-          "settings": {
-            "coords": "DAY ONE",
-            "title": "Their birthplace",
-            "text": "The hospital, the town, the street. A first chapter they can carry.",
-            "link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "mo3": {
-          "type": "moment",
-          "settings": {
-            "coords": "STILL HOME",
-            "title": "The hometown",
-            "text": "For the one who moved away but never really left.",
-            "link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "mo4": {
-          "type": "moment",
-          "settings": {
-            "coords": "FIRST MEETING",
-            "title": "Where you met",
-            "text": "A coffee shop. A concert. Gate B12. The odds were impossible and it happened anyway.",
-            "link": "shopify://collections/shop-couples-necklaces"
-          }
-        },
-        "mo5": {
-          "type": "moment",
-          "settings": {
-            "coords": "IN MEMORY",
-            "title": "A resting place",
-            "text": "Quiet, personal, always close. A way to keep someone with you.",
-            "link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "mo6": {
-          "type": "moment",
-          "settings": {
-            "coords": "SOMEDAY",
-            "title": "The dream",
-            "text": "The place you haven't been yet. Wear it until you get there.",
-            "link": "shopify://collections/coordinates-collection"
-          }
-        }
-      },
-      "block_order": ["mo1", "mo2", "mo3", "mo4", "mo5", "mo6"],
-      "disabled": true,
-      "settings": {}
-    },
-    "story": {
-      "type": "story-cta",
-      "settings": {
-        "eyebrow": "Need help choosing?",
-        "heading": "Tell us the story. Get three pieces that fit.",
-        "text": "Choose who it’s for, what the moment means, and your budget. We’ll narrow the store to available pieces you can personalize.",
-        "button_label": "Find their piece",
-        "button_link": "/pages/gift-finder",
-        "button_label_2": "",
-        "button_link_2": ""
       }
     },
     "how": {
@@ -324,60 +326,6 @@
         "button_link": "shopify://collections/coordinates-collection"
       }
     },
-    "atelier_customer_stories_MeFCbT": {
-      "type": "atelier-customer-stories",
-      "blocks": {
-        "story_7A9z6D": {
-          "type": "story",
-          "settings": {
-            "photo": "shopify://shop_images/customer-couple.jpg",
-            "name": "THE PROPOSAL",
-            "quote": "I engraved the exact spot he proposed. Every time I look down I feel it again.",
-            "story": "Engrave the coordinates of where you said yes, then add the date or a short message that only the two of you understand.",
-            "coord_label": "A proposal place",
-            "coord_value": "27.7676° N, 82.6403° W",
-            "piece_product": "",
-            "piece_link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "story_9rKXUG": {
-          "type": "story",
-          "settings": {
-            "photo": "shopify://shop_images/customer-mother.jpg",
-            "name": "A NEW BEGINNING",
-            "quote": "We marked the hospital where she was born. It’s the first gift that actually means something.",
-            "story": "Mark a birthplace, first home, or city that began a new chapter with coordinates chosen by the person giving the gift.",
-            "coord_label": "A meaningful beginning",
-            "coord_value": "32.7767° N, 96.7970° W",
-            "piece_product": "",
-            "piece_link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "story_7WDbAJ": {
-          "type": "story",
-          "settings": {
-            "photo": "shopify://shop_images/customer-friends.jpg",
-            "name": "WHERE YOU MET",
-            "quote": "Matching bracelets with the café where we first met. We still click them when we’re together.",
-            "story": "Turn the café, campus, station, or neighborhood where your paths crossed into a matching everyday reminder.",
-            "coord_label": "A shared starting point",
-            "coord_value": "40.7411° N, 73.9897° W",
-            "piece_product": "coordinates-bracelet",
-            "piece_link": ""
-          }
-        }
-      },
-      "block_order": ["story_7A9z6D", "story_9rKXUG", "story_7WDbAJ"],
-      "name": "Atelier Story Ideas",
-      "settings": {
-        "eyebrow": "Real places. Real meaning.",
-        "heading": "Places people<br><em>carry with them.</em>",
-        "counter_number": "",
-        "counter_caption": "",
-        "shop_label": "Explore this idea",
-        "color_scheme": "dark"
-      }
-    },
     "quote": {
       "type": "testimonial",
       "disabled": true,
@@ -385,39 +333,23 @@
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",
         "attribution": "Lucy — United States",
-        "rating": 0,
+        "rating": 5,
         "source_url": "",
         "button_label": "Shop matching sets",
         "button_link": "shopify://collections/coordinates-collection"
       }
-    },
-    "featured2": {
-      "type": "featured-collection",
-      "disabled": true,
-      "settings": {
-        "eyebrow": "For him",
-        "heading": "Men's coordinates jewelry",
-        "subheading": "",
-        "collection": "mens",
-        "limit": 4,
-        "hide_sold_out": true
-      }
     }
   },
   "order": [
-    "hero",
     "atelier_hero_ApVc6Q",
     "marquee",
     "trust",
     "featured",
-    "sets",
     "story",
+    "sets",
     "atelier_customer_stories_MeFCbT",
-    "manifesto",
     "atelier_story_chapters_RgniKp",
-    "moments",
     "how",
-    "quote",
-    "featured2"
+    "quote"
   ]
 }
