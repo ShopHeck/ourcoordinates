@@ -1,7 +1,12 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign ships_by = 'now' | date: '%s' | plus: 0
+  assign same_day_shipping = false
   assign prod_seconds = settings.production_days | times: 86400
+  if product.handle == 'magnetic-couples-bracelet-set'
+    assign same_day_shipping = true
+    assign prod_seconds = 0
+  endif
   assign transit_seconds = settings.transit_days | times: 86400
   assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
   assign delivery_high = delivery_low | plus: 259200
@@ -75,7 +80,9 @@
 
       <p class="pdp__shipline">
         <strong>{{ settings.shipping_promise }}.</strong>
-        {%- if section.settings.show_engraving -%}
+        {%- if same_day_shipping -%}
+          &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
+        {%- elsif section.settings.show_engraving -%}
           Engraved to order — ships in {{ settings.production_days }} business days,
         {%- else -%}
           Ships in {{ settings.production_days }} business days,
@@ -328,7 +335,9 @@
         <details>
           <summary>Shipping &amp; returns</summary>
           <div class="accordion-body">
-            {%- if section.settings.show_engraving -%}
+            {%- if same_day_shipping -%}
+              <p>{{ settings.shipping_promise }}. In stock and ships the same day when ordered by 12 PM ET. 30-day happiness guarantee — if it's not right, we'll replace it or refund you.</p>
+            {%- elsif section.settings.show_engraving -%}
               <p>{{ settings.shipping_promise }}. Each piece is engraved to order and ships within {{ settings.production_days }} business days. 30-day happiness guarantee — if it's not right, we'll remake it or refund you.</p>
             {%- else -%}
               <p>{{ settings.shipping_promise }}. Ships within {{ settings.production_days }} business days. 30-day happiness guarantee — if it's not right, we'll replace it or refund you.</p>
