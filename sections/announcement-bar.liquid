@@ -3,7 +3,9 @@
   shows in the announcement bar, PDP, and cart progress bar.
 {%- endcomment -%}
 <div class="announcement">
-  {%- if section.settings.custom_text != blank -%}
+  {%- if product.handle == 'magnetic-couples-bracelet-set' -%}
+    <strong>{{ settings.shipping_promise }}</strong> &nbsp;·&nbsp; Order by 12 PM ET for same-day shipping
+  {%- elsif section.settings.custom_text != blank -%}
     {{ section.settings.custom_text }}
   {%- else -%}
     <strong>{{ settings.shipping_promise }}</strong> &nbsp;·&nbsp; Ships in {{ settings.production_days }} business days
