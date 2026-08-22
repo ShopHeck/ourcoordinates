@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-labelledby="title description">
+  <title id="title">OurCoordinates monogram</title>
+  <desc id="description">OC monogram centered on a coordinate crosshair.</desc>
+  <style>
+    .oc-display {
+      font-family: "Fraunces", Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      font-variation-settings: "opsz" 72;
+    }
+  </style>
+
+  <g fill="none" stroke="#B6976A" stroke-linecap="square">
+    <path d="M110 20V200M20 110H200" stroke-width="1.5"/>
+    <path d="M110 35A75 75 0 0 1 185 110" stroke-width="1.5"/>
+    <path d="M110 185A75 75 0 0 1 35 110" stroke-width="1.5"/>
+  </g>
+  <circle cx="110" cy="110" r="7" fill="#B6976A"/>
+  <text class="oc-display" x="25" y="157" fill="#0B0B0D" font-size="142">O</text>
+  <text class="oc-display" x="86" y="157" fill="#0B0B0D" font-size="142">C</text>
+</svg>

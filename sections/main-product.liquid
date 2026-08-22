@@ -17,6 +17,17 @@
   if product.handle == 'interlocking-circle-necklace' or product.handle contains 'interlocking-circle'
     assign preview_type = 'interlocking-circles'
   endif
+  assign variant_options_text = current_variant.options | join: ' ' | downcase
+  assign initial_metal = ''
+  if variant_options_text contains 'rose'
+    assign initial_metal = 'rose-gold'
+  elsif variant_options_text contains 'gold' or variant_options_text contains 'brass'
+    assign initial_metal = 'gold'
+  elsif variant_options_text contains 'silver' or variant_options_text contains 'steel' or variant_options_text contains 'platinum'
+    assign initial_metal = 'silver'
+  elsif variant_options_text contains 'black' or variant_options_text contains 'gunmetal' or variant_options_text contains 'graphite' or variant_options_text contains 'onyx'
+    assign initial_metal = 'black'
+  endif
   assign personalization_release = 'oc-order-safe-2026-07-22-1'
   assign personalization_contract = preview_type
   unless section.settings.show_engraving
@@ -26,6 +37,7 @@
 
 <section class="section" data-product
          data-preview-type="{{ preview_type }}"
+         {% if initial_metal != blank %}data-metal="{{ initial_metal }}"{% endif %}
          data-personalization-release="{{ personalization_release }}"
          data-personalization-contract="{{ personalization_contract }}">
   <div class="page-width pdp">
@@ -404,6 +416,13 @@
 
 {%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' or preview_type == 'charm-name-necklace' -%}
   <script src="{{ 'personalization-dynamic.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- if preview_type == 'star-map' -%}
+  <script src="{{ 'astronomy-engine.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'tz-lookup.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'star-map-catalog.js' | asset_url }}" defer></script>
+  <script src="{{ 'star-map.js' | asset_url }}" defer></script>
 {%- endif -%}
 
 {% schema %}

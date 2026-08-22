@@ -10,8 +10,8 @@
               <p class="option-group buy-step" style="margin-bottom:4px">Your moment</p>
               <p class="ep__set-sub">Pick the date and place — we chart the exact night sky above it</p>
 
-              <div class="ep ep--star-map" aria-hidden="true">
-                <svg viewBox="0 0 260 300" class="ep__sm-svg">
+              <div class="ep ep--star-map">
+                <svg viewBox="0 0 260 300" class="ep__sm-svg" aria-hidden="true" focusable="false">
                   <defs>
                     <radialGradient id="sm-face" cx="0.5" cy="0.42" r="0.78">
                       <stop offset="0" stop-color="#242a3a"/>
@@ -35,7 +35,7 @@
                   <circle cx="130" cy="170" r="99" fill="none" class="ep__sm-ring"/>
                   <g clip-path="url(#sm-clip)">
                     {%- comment -%}
-                      Static fallback sky (no-JS). global.js replaces this
+                      Static fallback sky (no-JS). star-map.js replaces this
                       with the real star positions for the chosen moment.
                     {%- endcomment -%}
                     <g data-sm-sky>
@@ -68,7 +68,7 @@
                   <text x="130" y="251" data-sm-date class="ep__sm-text ep__sm-text--small"
                         data-fit="118" data-fit-chars="16" lengthAdjust="spacingAndGlyphs">{{ 'now' | date: '%b %-d, %Y' | upcase }}</text>
                 </svg>
-                <p class="ep__hint" data-sm-hint>Live preview — real star positions for your date, time &amp; place</p>
+                <p class="ep__hint" id="sm-status" data-sm-status data-state="waiting" role="status">Choose a date and exact place to chart the sky.</p>
               </div>
 
               <div class="ep__sm-fields">
@@ -87,16 +87,20 @@
               </div>
 
               <div class="ep__sm-field">
-                <label for="sm-location">Place — where you stood</label>
+                <label for="sm-location">Place or coordinates — where you stood</label>
                 <input type="text" id="sm-location" data-sm-input-location data-engrave-input
                        name="properties[Star Map — Location]"
                        maxlength="60"
                        placeholder="27.7676° N, 82.6403° W"
-                       required autocomplete="off">
+                       required autocomplete="off" inputmode="decimal"
+                       aria-describedby="sm-location-help sm-status">
+                <p class="engrave-help" id="sm-location-help">Enter latitude and longitude, or use the finder to choose the exact place.</p>
               </div>
               <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
               <input type="hidden" data-prop-place name="properties[_Place Searched]">
               <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <input type="hidden" data-sm-timezone name="properties[_Star Map Time Zone]">
+              <input type="hidden" data-sm-utc name="properties[_Star Map UTC]">
               <div class="field-row">
                 <button type="button" class="find-coords" data-locator-open>
                   Find my coordinates →

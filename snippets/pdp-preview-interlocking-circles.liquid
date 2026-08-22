@@ -7,8 +7,17 @@
   .ep--interlocking svg { width: min(100%, 300px); height: auto; display: block; margin: 0 auto; }
   .ep--interlocking .ep__ring-band {
     fill: none;
+    stroke: url(#interlock-metal-silver);
     stroke-width: 16;
     stroke-linecap: round;
+  }
+  [data-metal="gold"] .ep--interlocking .ep__ring-band,
+  [data-metal="Gold"] .ep--interlocking .ep__ring-band {
+    stroke: url(#interlock-metal-gold);
+  }
+  [data-metal="silver"] .ep--interlocking .ep__ring-band,
+  [data-metal="Silver"] .ep--interlocking .ep__ring-band {
+    stroke: url(#interlock-metal-silver);
   }
   .ep--interlocking .ep__ring-inner {
     fill: none;
@@ -39,6 +48,12 @@
   <div class="ep ep--interlocking" aria-hidden="true">
     <svg viewBox="0 0 300 180" class="ep__interlock-svg">
       <defs>
+        <linearGradient id="interlock-metal-gold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#f2dda5"/><stop offset="0.45" stop-color="#c9a259"/><stop offset="1" stop-color="#8f6d32"/>
+        </linearGradient>
+        <linearGradient id="interlock-metal-silver" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#f6f7f8"/><stop offset="0.45" stop-color="#c5c9ce"/><stop offset="1" stop-color="#8f959c"/>
+        </linearGradient>
         <path id="interlock-text-path" d="M 132,100 A 62,38 0 0 0 244,100" fill="none"/>
       </defs>
       <ellipse cx="110" cy="78" rx="62" ry="38" class="ep__ring-band"/>

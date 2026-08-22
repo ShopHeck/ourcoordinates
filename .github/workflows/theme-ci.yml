@@ -129,6 +129,8 @@ jobs:
         run: |
           node --check assets/global.js
           node --check assets/personalization-dynamic.js
+          node --check assets/star-map-catalog.js
+          node --check assets/star-map.js
 
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli@latest
