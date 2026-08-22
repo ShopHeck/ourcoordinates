@@ -1,0 +1,45 @@
+{%- comment -%}
+  Interlocking circle / family-names necklace live preview.
+  Single engraving field curved along the front ring.
+{%- endcomment -%}
+{% style %}
+  .ep--interlocking { padding: 20px 12px 12px; }
+  .ep--interlocking svg { width: min(100%, 280px); height: auto; display: block; margin: 0 auto; }
+  .ep--interlocking .ep__ring-band { fill: none; stroke-width: 14; }
+  .ep--interlocking .ep__engrave-text { font-size: 10px; letter-spacing: 0.14em; }
+{% endstyle %}
+<div class="engrave-field">
+  <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+  <div class="ep ep--interlocking" aria-hidden="true">
+    <svg viewBox="0 0 280 160" class="ep__interlock-svg">
+      <defs>
+        <path id="interlock-text-path" d="M 55,95 A 70,42 0 0 0 225,95" fill="none"/>
+      </defs>
+      {%- comment -%} Back ring (offset left) {%- endcomment -%}
+      <ellipse cx="105" cy="72" rx="70" ry="42" class="ep__ring-band ep__metal" style="fill:none"/>
+      {%- comment -%} Front ring (offset right) {%- endcomment -%}
+      <ellipse cx="175" cy="78" rx="70" ry="42" class="ep__ring-band ep__metal" style="fill:none"/>
+      {%- comment -%} Subtle inner tracks {%- endcomment -%}
+      <ellipse cx="105" cy="72" rx="70" ry="42" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="11"/>
+      <ellipse cx="175" cy="78" rx="70" ry="42" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="11"/>
+      <text class="ep__engrave-text ep__engrave-text--curve" text-anchor="middle">
+        <textPath href="#interlock-text-path" startOffset="50%"
+                  data-engrave-preview
+                  data-fit="160" data-fit-chars="18" lengthAdjust="spacingAndGlyphs"
+                  data-placeholder="{{ engraving_placeholder | escape }}">{{ engraving_placeholder }}</textPath>
+      </text>
+    </svg>
+    <p class="ep__hint">Live preview — names &amp; words curve around the rings</p>
+  </div>
+  <input type="text" id="engrave-input" data-engrave-input
+         name="properties[Engraving]"
+         maxlength="{{ engraving_max }}"
+         placeholder="{{ engraving_placeholder | escape }}"
+         {% if engraving_required %}required{% endif %}
+         autocomplete="off">
+  <p class="engrave-help">Add names, a short message, or a date — we engrave exactly what you type along the rings.</p>
+  <div class="field-row">
+    <span></span>
+    <span data-engrave-count>0 / {{ engraving_max }}</span>
+  </div>
+</div>
