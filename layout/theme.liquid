@@ -7,6 +7,8 @@
   <link rel="canonical" href="{{ canonical_url }}">
   {%- if settings.favicon != blank -%}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
+  {%- else -%}
+    <link rel="icon" type="image/svg+xml" href="{{ 'ourcoordinates-logo-mark.svg' | asset_url }}">
   {%- endif -%}
 
   {%- liquid
@@ -43,7 +45,7 @@
     2. Full stylesheet loaded async via preload swap.
     3. Fonts: Fraunces + Inter + IBM Plex Mono + Instrument Serif (Atelier display),
        display=swap, loaded async. System fonts paint first; brand fonts swap in.
-    4. JS is one small deferred file, no dependencies, no jQuery.
+    4. Sitewide JS is one small deferred file; product-only tools load only where needed.
   {%- endcomment -%}
 
   {% style %}
