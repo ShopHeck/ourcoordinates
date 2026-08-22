@@ -1,1 +1,48 @@
-PLACEHOLDER
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);font-size:16px;line-height:1.6;color:var(--c-ink);background:var(--c-paper);-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:2px}
+button,input,select,textarea{font:inherit}
+.page-width{width:min(1120px,calc(100% - 2rem));margin-inline:auto}
+.section{padding-block:clamp(2.5rem,5vw,4.5rem)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.25rem;border:0;border-radius:999px;background:var(--c-ink);color:var(--c-paper);font-weight:600;text-decoration:none;cursor:pointer}
+.btn--full{width:100%}
+.btn--ghost{background:transparent;color:var(--c-ink);border:1px solid var(--c-line)}
+.coord-eyebrow{font-family:var(--f-coord);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--c-ink-soft);margin:0}
+.pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.5rem,4vw,3rem);align-items:start}
+.pdp__gallery{position:sticky;top:1rem}
+.pdp__main-image{border-radius:14px;overflow:hidden;background:#eee}
+.pdp__main-image img{width:100%;aspect-ratio:1;object-fit:cover}
+.pdp__thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}
+.pdp__thumbs button{padding:0;border:1px solid var(--c-line);background:#fff;aspect-ratio:1;overflow:hidden;border-radius:8px}
+.pdp__thumbs img{width:100%;height:100%;object-fit:cover}
+@media(max-width:880px){.pdp{grid-template-columns:1fr}.pdp__gallery{position:static}}
+.pdp__vendor{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink-soft);margin:0}
+.pdp__title{margin:.15rem 0 .4rem;font-family:var(--f-display);font-weight:500;font-size:clamp(1.55rem,2.4vw,2rem);line-height:1.15}
+.pdp__price{font-size:1.15rem;font-weight:600;margin:.4rem 0}
+.pdp__shipline{font-size:.88rem;color:var(--c-ink-soft);margin:0 0 .75rem}
+.buy-step{font-size:.82rem;font-weight:600;margin-bottom:6px}
+.engrave-field{margin:1rem 0}
+.field-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.find-coords{background:none;border:0;padding:0;color:var(--c-gold);font-weight:600;cursor:pointer;font-size:.85rem}
+.guarantees{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:4px;font-size:.8rem;color:var(--c-ink-soft)}
+.guarantees li::before{content:"◆ ";color:var(--c-gold)}
+.sticky-atc{display:none}
+@media(max-width:880px){.sticky-atc{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;gap:12px;align-items:center;padding:10px 14px;background:var(--c-paper);border-top:1px solid var(--c-line);box-shadow:0 -6px 24px rgba(0,0,0,.06)}.sticky-atc .btn{flex:1}}
+.meridian-ruler{display:none}
+@media (min-width:1100px){
+.meridian-ruler{position:fixed;right:10px;top:0;bottom:0;z-index:40;display:flex;flex-direction:column;justify-content:space-between;padding-block:120px;font-family:var(--f-coord);font-size:.58rem;color:var(--c-ink-soft);pointer-events:none}
+.meridian-ruler span{display:flex;align-items:center;gap:6px}
+.meridian-ruler span::after{content:"";width:10px;height:1px;background:var(--c-ink-soft)}
+}
+/* Priority 3: sets upsell + engraving help + occasion */
+.engrave-help{margin:6px 0 0;font-size:.78rem;line-height:1.35;color:var(--c-ink-soft,#6b6560)}
+.set-upsell{display:flex;align-items:center;gap:12px;margin:12px 0 14px;padding:10px 12px;border:1px solid var(--c-line,#e6e0d6);border-radius:10px;text-decoration:none;color:inherit;background:var(--c-paper,#faf7f2);transition:border-color .15s ease,box-shadow .15s ease}
+.set-upsell:hover{border-color:var(--c-gold,#b6976a);box-shadow:0 1px 0 rgba(11,11,13,.04)}
+.set-upsell img{width:56px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.set-upsell__text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.set-upsell__text strong{font-size:.9rem;font-weight:600}
+.set-upsell__text em{font-style:normal;font-size:.78rem;color:var(--c-ink-soft,#6b6560);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-upsell__cta{font-size:.78rem;font-weight:600;color:var(--c-gold,#b6976a);white-space:nowrap}
+.pdp__occasion{display:flex;align-items:flex-start;gap:8px;margin:10px 0 0;padding:10px 12px;border-radius:8px;background:rgba(182,151,106,.08);font-size:.85rem;line-height:1.4}
+.pdp__occasion-dot{color:var(--c-gold,#b6976a);flex-shrink:0;margin-top:1px}
