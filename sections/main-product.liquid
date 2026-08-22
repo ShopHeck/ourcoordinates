@@ -62,9 +62,12 @@
         'link' is the no-app fallback: a plain link to the reviews page.
       {%- endcomment -%}
       {%- if section.settings.review_style == 'app' -%}
-        <div class="pdp__reviews">
-          <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}"></div>
-        </div>
+        <!-- Start of Judge.me code --> 
+  <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'> 
+ {{ product.metafields.judgeme.badge }} 
+ </div> 
+<!-- End of Judge.me code -->
+
       {%- elsif section.settings.review_style == 'link' -%}
         <p class="pdp__reviews">
           <a href="/pages/reviews">Read customer reviews</a>
