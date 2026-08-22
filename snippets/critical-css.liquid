@@ -143,8 +143,23 @@ h2{font-size:clamp(1.5rem,3.5vw,2.4rem)}
 .ep--dog-tag{padding:16px 12px}
 .ep__dog-tag-svg{width:min(100%,180px)}
 
-/* Star map */
-.ep--star-map svg{width:min(100%,240px)}
+/* Star map disc */
+.ep--star-map{padding:14px 12px 12px}
+.ep__sm-svg{max-width:252px;width:100%;height:auto;display:block;margin:0 auto}
+.ep__sm-ring{stroke:rgba(234,226,200,.22);stroke-width:.8}
+.ep__sm-star{fill:#efe9d8}
+.ep__sm-star--bright{filter:drop-shadow(0 0 1.4px rgba(239,233,216,.9))}
+.ep__sm-line{stroke:rgba(234,226,200,.3);stroke-width:.55}
+.ep__sm-cardinal{fill:rgba(234,226,200,.42);font-family:var(--f-coord);font-size:7px;letter-spacing:.1em;text-anchor:middle}
+.ep__sm-rule{stroke:rgba(234,226,200,.35);stroke-width:.6}
+.ep__sm-text{fill:#ead9b0;font-family:var(--f-coord);font-size:11px;letter-spacing:.2em;text-anchor:middle}
+.ep__sm-text--small{font-size:7.5px;letter-spacing:.24em;fill:rgba(234,217,176,.85)}
+.ep__sm-fields{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.ep__sm-field{margin-bottom:8px}
+.ep__sm-field label{font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--c-ink-soft);display:block;margin-bottom:4px}
+.ep__sm-field input[type=date],.ep__sm-field input[type=time]{width:100%;padding:11px 12px;border:1px solid var(--c-line);border-radius:2px;background:#fff;font-family:var(--f-coord)}
+.ep__sm-field input[type=date]:focus,.ep__sm-field input[type=time]:focus{border-color:var(--c-gold);outline:none}
+@media(max-width:520px){.ep__sm-fields{grid-template-columns:1fr}}
 
 /* Set / duo */
 .ep--set{padding:16px 12px}
