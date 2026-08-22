@@ -73,3 +73,44 @@ h2{font-size:clamp(1.5rem,3.5vw,2.4rem)}
 .set-upsell__text strong{font-size:.9rem;font-weight:600}
 .set-upsell__text em{font-style:normal;font-size:.78rem;color:var(--c-ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .set-upsell__cta{font-size:.78rem;font-weight:600;color:var(--c-gold-text);white-space:nowrap}
+
+/* Engraving previews — in critical path so they always paint (ep.css not synced by Shopify) */
+.ep{background:linear-gradient(120deg,#d8d3c9,#efece5 45%,#cfc9bd);border:1px solid var(--c-line);border-radius:3px;padding:24px 16px 12px;text-align:center;margin-bottom:10px}
+.ep__hint{font-family:var(--f-coord);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c-ink-soft);margin-top:10px;margin-bottom:0}
+.ep svg{max-width:100%;height:auto;display:block;margin:0 auto;overflow:visible}
+.ep__engrave-text{fill:#cdb88a;font-family:var(--f-coord);font-size:12px;letter-spacing:.18em;text-anchor:middle;dominant-baseline:middle}
+.ep__engrave-text--curve{letter-spacing:.12em}
+.ep__metal{fill:#1c1c24}
+.ep svg .ep__metal{fill:url(#ep-metal-black);filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+[data-metal=gold] .ep svg .ep__metal,[data-metal="Gold"] .ep svg .ep__metal{fill:url(#ep-metal-gold)}
+[data-metal="rose-gold"] .ep svg .ep__metal,[data-metal="Rose Gold"] .ep svg .ep__metal{fill:url(#ep-metal-rose-gold)}
+[data-metal=silver] .ep svg .ep__metal,[data-metal=Silver] .ep svg .ep__metal{fill:url(#ep-metal-silver)}
+[data-metal=black] .ep svg .ep__metal,[data-metal=Black] .ep svg .ep__metal{fill:url(#ep-metal-black)}
+.ep__ring-band{stroke:url(#ep-metal-black);fill:none}
+[data-metal=gold] .ep__ring-band{stroke:url(#ep-metal-gold)}
+[data-metal="rose-gold"] .ep__ring-band{stroke:url(#ep-metal-rose-gold)}
+[data-metal=silver] .ep__ring-band{stroke:url(#ep-metal-silver)}
+[data-metal=black] .ep__ring-band{stroke:url(#ep-metal-black)}
+.ep__cuff-sheen{stroke:rgba(255,255,255,.13);fill:none;stroke-linecap:round}
+.ep__cuff-rim{stroke:rgba(255,255,255,.22);fill:none}
+.ep__cuff-inner-shadow{stroke:rgba(0,0,0,.3);fill:none}
+.ep__cuff-channel{stroke:rgba(10,12,16,.42);fill:none;stroke-linecap:round}
+.ep__cuff-channel--core{stroke:rgba(10,12,16,.25)}
+.ep__cuff-engrave{fill:#f2e9d6}
+[data-metal=gold] .ep .ep__cuff-engrave,[data-metal="rose-gold"] .ep .ep__cuff-engrave,[data-metal=silver] .ep .ep__cuff-engrave{fill:#f7f1e2}
+.ep--bracelet{padding:24px 8px 12px}
+.ep--bracelet svg,.ep__set-svg--bracelet{width:min(100%,300px)}
+.ep__set-svg{width:100%;height:auto;overflow:visible}
+.ep__chain,.ep__chain-line{stroke:currentColor;stroke-width:1.2;fill:none;opacity:.55}
+.ep__sheen{fill:rgba(255,255,255,.12)}
+.collection-controls{display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px;margin:0 0 28px;padding-block:14px;border-block:1px solid var(--c-line)}
+.collection-controls__sort{display:flex;align-items:center;gap:8px}
+.collection-controls select,.collection-filter summary{min-height:42px;padding:9px 12px;border:1px solid var(--c-line);background:#fff;font:inherit}
+.collection-filter{position:relative}
+.collection-filter summary{cursor:pointer;list-style:none}
+.collection-filter summary::-webkit-details-marker{display:none}
+.collection-filter__body{position:absolute;z-index:20;top:calc(100% + 4px);left:0;min-width:240px;max-height:320px;overflow:auto;padding:14px;border:1px solid var(--c-line);background:#fff;box-shadow:0 14px 34px rgba(11,11,13,.12)}
+.collection-filter__body>label{display:flex;gap:8px;padding:6px 0}
+.collection-filter__price{display:flex;gap:8px}
+.collection-filter__price input{display:block;width:100px;margin-top:4px;padding:8px;border:1px solid var(--c-line)}
+.collection-controls__apply{min-height:42px;padding-block:9px}
