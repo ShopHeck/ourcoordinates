@@ -14,6 +14,9 @@
   if product.handle == 'personalized-lock-necklace'
     assign preview_type = 'padlock'
   endif
+  if product.handle == 'interlocking-circle-necklace' or product.handle contains 'interlocking-circle'
+    assign preview_type = 'interlocking-circles'
+  endif
   assign personalization_release = 'oc-order-safe-2026-07-22-1'
   assign personalization_contract = preview_type
   unless section.settings.show_engraving
@@ -172,6 +175,8 @@
             {% render 'pdp-preview-star-map', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
           {%- elsif preview_type == 'coordinates-set' -%}
             {% render 'pdp-preview-set', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required, set_pieces_setting: section.settings.set_pieces, set_necklace_style_setting: section.settings.set_necklace_style, current_variant: current_variant %}
+          {%- elsif preview_type == 'interlocking-circles' -%}
+            {% render 'pdp-preview-interlocking-circles', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
           {%- else -%}
             <div class="engrave-field">
               <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
@@ -219,11 +224,6 @@
           </label>
         {%- endif -%}
 
-        {%- comment -%}
-          Sets upsell on single-piece PDPs. Theme editor picks the matching
-          set product per product template. Hidden when unset or when the
-          current product is already the set (or tagged as a set).
-        {%- endcomment -%}
         {%- liquid
           assign set_product = section.settings.set_upsell_product
           assign is_set = false
@@ -430,7 +430,8 @@
         { "value": "four-sided", "label": "4-sided bar (multi-side inputs)" },
         { "value": "dog-tag", "label": "Dog tag (2–3 lines)" },
         { "value": "coordinates-set", "label": "Coordinates set (multi-piece preview)" },
-        { "value": "star-map", "label": "Star map disc (real night sky from a date + place)" }
+        { "value": "star-map", "label": "Star map disc (real night sky from a date + place)" },
+        { "value": "interlocking-circles", "label": "Interlocking circles (family names necklace)" }
       ],
       "default": "horizontal-bar"
     },
