@@ -70,6 +70,15 @@ test('star-map runtime accepts exact coordinates and rejects place-name guesses'
   assert.equal(sky.parseCoordinates('New York, NY'), null);
 });
 
+test('manual star-map location edits invalidate coordinates chosen by the finder', () => {
+  const runtime = read('assets/star-map.js');
+
+  assert.match(runtime, /event\.target === locationInput && !locationInput\.dataset\.fromLocator/);
+  assert.match(runtime, /function clearPinnedLocation\(\)[\s\S]*exactCoordinates\.value = ''/);
+  assert.match(runtime, /function clearPinnedLocation\(\)[\s\S]*searchedPlace\.value = ''/);
+  assert.match(runtime, /function clearPinnedLocation\(\)[\s\S]*verificationMap\.value = ''/);
+});
+
 test('star-map runtime projects Polaris near the observer latitude', () => {
   const runtimePath = join(ROOT, 'assets/star-map.js');
   assert.ok(existsSync(runtimePath), 'assets/star-map.js must exist');

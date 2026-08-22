@@ -219,6 +219,8 @@
     var locationInput = rig.querySelector('[data-sm-input-location]');
     var captionInput = rig.querySelector('[data-sm-input-caption]');
     var exactCoordinates = rig.querySelector('[data-prop-latlng]');
+    var searchedPlace = rig.querySelector('[data-prop-place]');
+    var verificationMap = rig.querySelector('[data-prop-maplink]');
     var timezoneProperty = rig.querySelector('[data-sm-timezone]');
     var utcProperty = rig.querySelector('[data-sm-utc]');
     var sky = rig.querySelector('[data-sm-sky]');
@@ -237,6 +239,12 @@
     function selectedLocation() {
       return parseCoordinates(exactCoordinates && exactCoordinates.value) ||
         parseCoordinates(locationInput && locationInput.value);
+    }
+
+    function clearPinnedLocation() {
+      if (exactCoordinates) exactCoordinates.value = '';
+      if (searchedPlace) searchedPlace.value = '';
+      if (verificationMap) verificationMap.value = '';
     }
 
     function updateCaption() {
@@ -308,7 +316,9 @@
 
     ['input', 'change'].forEach(function (eventName) {
       rig.addEventListener(eventName, function (event) {
-        if ([dateInput, timeInput, locationInput, captionInput].indexOf(event.target) !== -1) render();
+        if ([dateInput, timeInput, locationInput, captionInput].indexOf(event.target) === -1) return;
+        if (event.target === locationInput && !locationInput.dataset.fromLocator) clearPinnedLocation();
+        render();
       });
     });
 
