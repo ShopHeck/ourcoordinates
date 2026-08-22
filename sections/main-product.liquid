@@ -1,0 +1,495 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign ships_by = 'now' | date: '%s' | plus: 0
+  assign same_day_shipping = false
+  assign prod_seconds = settings.production_days | times: 86400
+  if product.handle == 'magnetic-couples-bracelet-set'
+    assign same_day_shipping = true
+    assign prod_seconds = 0
+  endif
+  assign transit_seconds = settings.transit_days | times: 86400
+  assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
+  assign delivery_high = delivery_low | plus: 259200
+  assign preview_type = section.settings.preview_type | default: 'horizontal-bar'
+  if product.handle == 'personalized-lock-necklace'
+    assign preview_type = 'padlock'
+  endif
+  assign personalization_release = 'oc-order-safe-2026-07-22-1'
+  assign personalization_contract = preview_type
+  unless section.settings.show_engraving
+    assign personalization_contract = 'none'
+  endunless
+-%}
+
+<section class="section" data-product
+         data-preview-type="{{ preview_type }}"
+         data-personalization-release="{{ personalization_release }}"
+         data-personalization-contract="{{ personalization_contract }}">
+  <div class="page-width pdp">
+
+    {%- comment -%} ---------- GALLERY ---------- {%- endcomment -%}
+    <div class="pdp__gallery">
+      <div class="pdp__main-image">
+        <img data-main-image
+             src="{{ product.featured_image | image_url: width: 1200 }}"
+             srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
+             sizes="(max-width: 880px) 100vw, min(52vw, 640px)"
+             alt="{{ product.featured_image.alt | escape }}" width="1200" height="1200"
+             fetchpriority="high" decoding="async">
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="pdp__thumbs">
+          {%- for image in product.images limit: 24 -%}
+            <button type="button" data-thumb data-image-id="{{ image.id }}" data-full="{{ image | image_url: width: 1200 }}"
+                    data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
+                    {% if forloop.first %}aria-current="true"{% endif %}
+                    aria-label="View image {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 160 }}" alt="{{ image.alt | escape }}" loading="lazy" width="160" height="160">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---------- BUY BOX ---------- {%- endcomment -%}
+    <div data-buy-box>
+      <p class="pdp__vendor">{{ product.vendor }}</p>
+      <h1 class="pdp__title">{{ product.title }}</h1>
+
+      {%- if section.settings.review_style == 'app' -%}
+        <!-- Start of Judge.me code --> 
+  <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'> 
+ {{ product.metafields.judgeme.badge }} 
+ </div> 
+<!-- End of Judge.me code -->
+
+      {%- elsif section.settings.review_style == 'link' -%}
+        <p class="pdp__reviews">
+          <a href="/pages/reviews">Read customer reviews</a>
+        </p>
+      {%- endif -%}
+
+      <p class="pdp__price" data-price>
+        {{ current_variant.price | money }}
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <s>{{ current_variant.compare_at_price | money }}</s>
+        {%- endif -%}
+      </p>
+
+      <p class="pdp__shipline">
+        <strong>{{ settings.shipping_promise }}.</strong>
+        {%- if same_day_shipping -%}
+          &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
+        {%- elsif section.settings.show_engraving -%}
+          Engraved to order — ships in {{ settings.production_days }} business days,
+        {%- else -%}
+          Ships in {{ settings.production_days }} business days,
+        {%- endif -%}
+        &nbsp;estimated delivery {{ delivery_low | date: '%b %-d' }}–{{ delivery_high | date: '%b %-d' }}.
+      </p>
+
+      {%- if settings.occasion_label != blank and settings.occasion_date != blank -%}
+        {%- liquid
+          assign occasion_ts = settings.occasion_date | date: '%s' | plus: 0
+          assign lead_seconds = prod_seconds | plus: transit_seconds | plus: 259200
+          assign order_by_ts = occasion_ts | minus: lead_seconds
+        -%}
+        {%- if occasion_ts > ships_by and order_by_ts >= ships_by -%}
+          <p class="pdp__occasion">
+            <span class="pdp__occasion-dot" aria-hidden="true">◆</span>
+            Ordering for {{ settings.occasion_label }}? Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to unwrap it in time.
+          </p>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- form 'product', product, data-product-form: '' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <fieldset class="swatches option-group" data-option-index="{{ forloop.index0 }}">
+              <legend class="buy-step">
+                {{ option.name }}
+                {%- assign opt_name_down = option.name | downcase -%}
+                {%- if opt_name_down == 'engrave' or opt_name_down contains 'side' %} <span>— engraving is free on every side</span>{% endif -%}
+              </legend>
+              {%- for value in option.values -%}
+                <input type="radio" id="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
+                       name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}"
+                       {% if option.selected_value == value %}checked{% endif %}>
+                <label for="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}">{{ value }}</label>
+              {%- endfor -%}
+            </fieldset>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {%- if section.settings.show_engraving -%}
+
+          <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="ep-metal-black" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#3a3a42"/><stop offset="0.5" stop-color="#1c1c24"/><stop offset="1" stop-color="#101016"/>
+              </linearGradient>
+              <linearGradient id="ep-metal-gold" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#e7cd8f"/><stop offset="0.45" stop-color="#c4a26d"/><stop offset="1" stop-color="#997a4e"/>
+              </linearGradient>
+              <linearGradient id="ep-metal-rose-gold" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#f0c8b2"/><stop offset="0.45" stop-color="#d49b84"/><stop offset="1" stop-color="#b0765f"/>
+              </linearGradient>
+              <linearGradient id="ep-metal-silver" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#f0f0f4"/><stop offset="0.45" stop-color="#c9c9d1"/><stop offset="1" stop-color="#a2a2ac"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {%- if preview_type == 'padlock' -%}
+            {% render 'pdp-preview-padlock', engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'heart-necklace' -%}
+            {% render 'pdp-preview-heart-necklace', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'matching-necklaces' -%}
+            {% render 'pdp-preview-matching-necklaces', engraving_max: section.settings.engraving_max %}
+          {%- elsif preview_type == 'couple-rings' -%}
+            {% render 'pdp-preview-couple-rings', engraving_max: section.settings.engraving_max, current_variant: current_variant %}
+          {%- elsif preview_type == 'charm-name-necklace' -%}
+            {% render 'pdp-preview-charm-name-necklace', engraving_max: section.settings.engraving_max, current_variant: current_variant %}
+          {%- elsif preview_type == 'birthstone-ring' -%}
+            {% render 'pdp-preview-birthstone-ring', engraving_max: section.settings.engraving_max %}
+          {%- elsif preview_type == 'nameplate' -%}
+            {% render 'pdp-preview-nameplate', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max %}
+          {%- elsif preview_type == 'vertical-name' -%}
+            {% render 'pdp-preview-vertical-name', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max %}
+          {%- elsif preview_type == 'four-sided' -%}
+            {% render 'pdp-preview-four-sided', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required, current_variant: current_variant %}
+          {%- elsif preview_type == 'dog-tag' -%}
+            {% render 'pdp-preview-dog-tag', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'vertical-bar' -%}
+            {% render 'pdp-preview-vertical-bar', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'ring' -%}
+            {% render 'pdp-preview-ring', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'bracelet' -%}
+            {% render 'pdp-preview-bracelet', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'star-map' -%}
+            {% render 'pdp-preview-star-map', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'coordinates-set' -%}
+            {% render 'pdp-preview-set', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required, set_pieces_setting: section.settings.set_pieces, set_necklace_style_setting: section.settings.set_necklace_style, current_variant: current_variant %}
+          {%- else -%}
+            <div class="engrave-field">
+              <label class="option-group buy-step" style="margin-bottom:8px" for="engrave-input">Your engraving</label>
+              <div class="ep ep--horizontal-bar" aria-hidden="true">
+                <svg viewBox="0 0 280 70" class="ep__hbar-svg">
+                  <rect x="0" y="10" width="280" height="50" rx="3" class="ep__metal"/>
+                  <text x="140" y="42" data-engrave-preview
+                        data-fit="250" data-fit-chars="22" lengthAdjust="spacingAndGlyphs"
+                        class="ep__engrave-text"
+                        data-placeholder="{{ section.settings.engraving_placeholder | escape }}">{{ section.settings.engraving_placeholder }}</text>
+                </svg>
+                <p class="ep__hint">Live preview — exactly as we engrave it</p>
+              </div>
+              <input type="text" id="engrave-input" data-engrave-input
+                     name="properties[Engraving]"
+                     maxlength="{{ section.settings.engraving_max }}"
+                     placeholder="{{ section.settings.engraving_placeholder | escape }}"
+                     {% if section.settings.engraving_required %}required{% endif %}
+                     autocomplete="off">
+              <p class="engrave-help">Coordinates, a short message, or a date. Use the map to drop a pin for exact lat/long — we engrave what you type.</p>
+              <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
+              <input type="hidden" data-prop-place name="properties[_Place Searched]">
+              <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
+              <div class="field-row">
+                <button type="button" class="find-coords" data-locator-open>
+                  Find my coordinates →
+                </button>
+                <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+              </div>
+            </div>
+          {%- endif -%}
+
+        {%- endif -%}
+
+        {%- liquid
+          assign gift_wrap = settings.gift_wrap_product
+        -%}
+        {%- if gift_wrap != blank and gift_wrap.available and product.id != gift_wrap.id -%}
+          <label class="gift-wrap-addon" data-gift-wrap-addon hidden>
+            <input type="checkbox" data-gift-wrap value="{{ gift_wrap.selected_or_first_available_variant.id }}">
+            <span class="gift-wrap-addon__text">
+              <strong>Make it gift-ready</strong> (+{{ gift_wrap.price | money }})
+              <em>{{ gift_wrap.title }} — wrapped and ready to hand over</em>
+            </span>
+          </label>
+        {%- endif -%}
+
+        {%- comment -%}
+          Sets upsell on single-piece PDPs. Theme editor picks the matching
+          set product per product template. Hidden when unset or when the
+          current product is already the set (or tagged as a set).
+        {%- endcomment -%}
+        {%- liquid
+          assign set_product = section.settings.set_upsell_product
+          assign is_set = false
+          if product.type == 'Set' or product.tags contains 'set' or product.tags contains 'matching-set' or product.handle contains '-set'
+            assign is_set = true
+          endif
+        -%}
+        {%- if set_product != blank and set_product.available and set_product.id != product.id and is_set == false -%}
+          <a class="set-upsell" href="{{ set_product.url }}">
+            {%- if set_product.featured_image -%}
+              <img src="{{ set_product.featured_image | image_url: width: 112 }}" alt="{{ set_product.featured_image.alt | default: set_product.title | escape }}" width="56" height="56" loading="lazy">
+            {%- endif -%}
+            <span class="set-upsell__text">
+              <strong>{{ section.settings.set_upsell_heading | default: 'Make it a set' }}</strong>
+              <em>{{ set_product.title }} from {{ set_product.price | money }}</em>
+            </span>
+            <span class="set-upsell__cta">View set →</span>
+          </a>
+        {%- endif -%}
+
+        <button type="submit" class="btn btn--full" data-atc
+                data-label-add="{{ section.settings.atc_label | escape }}"
+                data-label-sold-out="Sold out">
+          <span data-atc-label>{{ section.settings.atc_label }}</span>
+        </button>
+
+        <ul class="guarantees">
+          {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
+          {%- if section.settings.show_engraving -%}
+            {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
+            {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
+          {%- endif -%}
+        </ul>
+      {%- endform -%}
+
+      <div class="restock" data-restock-form{% if current_variant.available %} hidden{% endif %}>
+        <p class="restock__title">Want to know when this piece returns?</p>
+        <p class="restock__text">Leave your email and we’ll send a restock update for {{ product.title }}. No unrelated marketing.</p>
+        {%- form 'contact', id: 'RestockForm', class: 'restock__form' -%}
+          <input type="hidden" name="contact[tags]" value="back-in-stock,{{ product.handle }}">
+          <input type="hidden" name="contact[body]" value="Restock request for {{ product.title | escape }} — {{ shop.url }}{{ product.url }}">
+          <label class="visually-hidden" for="RestockEmail-{{ section.id }}">Email address</label>
+          <input id="RestockEmail-{{ section.id }}" type="email" name="contact[email]" autocomplete="email" placeholder="Email address" required>
+          <button type="submit" class="btn">Notify me</button>
+          {%- if form.posted_successfully? -%}<p class="restock__success" role="status">You’re on the list. We’ll email you when it is available.</p>{%- endif -%}
+          {{ form.errors | default_errors }}
+        {%- endform -%}
+      </div>
+
+      <div class="pdp__accordions">
+        <details open>
+          <summary>Description</summary>
+          <div class="accordion-body rte">
+            {%- if product.handle == 'personalized-lock-necklace' -%}
+              {% render 'pdp-description-padlock' %}
+            {%- else -%}
+              {{ product.description }}
+            {%- endif -%}
+          </div>
+        </details>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'accordion' -%}
+            <details {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.title }}</summary>
+              <div class="accordion-body rte">
+                {%- if product.handle == 'personalized-lock-necklace' and block.settings.title == 'Product details' -%}
+                  <ul>
+                    <li>Stainless-steel padlock pendant and chain.</li>
+                    <li>45 cm chain length.</li>
+                    <li>Black, silver, gold, and rose-gold color options.</li>
+                    <li>Custom front engraving arranged over one or two lines, with up to 15 characters per line.</li>
+                  </ul>
+                  <p><strong>Care:</strong> Wipe with a soft, dry cloth after wear. Avoid prolonged contact with water, fragrance, and household cleaners.</p>
+                {%- else -%}
+                  {{ block.settings.content }}
+                {%- endif -%}
+              </div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+        <details>
+          <summary>Shipping & returns</summary>
+          <div class="accordion-body">
+            {%- if same_day_shipping -%}
+              <p>{{ settings.shipping_promise }}. In stock and ships the same day when ordered by 12 PM ET. 30-day happiness guarantee — if it's not right, we'll replace it or refund you.</p>
+            {%- elsif section.settings.show_engraving -%}
+              <p>{{ settings.shipping_promise }}. Each piece is engraved to order and ships within {{ settings.production_days }} business days. 30-day happiness guarantee — if it's not right, we'll remake it or refund you.</p>
+            {%- else -%}
+              <p>{{ settings.shipping_promise }}. Ships within {{ settings.production_days }} business days. 30-day happiness guarantee — if it's not right, we'll replace it or refund you.</p>
+            {%- endif -%}
+          </div>
+        </details>
+      </div>
+
+      <div id="reviews">
+        {%- if section.settings.review_style == 'app' -%}
+          <div class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}"></div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-product-json>
+  {
+    "id": {{ product.id | json }},
+    "handle": {{ product.handle | json }},
+    "title": {{ product.title | json }},
+    "available": {{ product.available | json }},
+    "variants": [
+      {%- for v in product.variants -%}
+      {
+        "id": {{ v.id | json }},
+        "title": {{ v.title | json }},
+        "option1": {{ v.option1 | json }},
+        "option2": {{ v.option2 | json }},
+        "option3": {{ v.option3 | json }},
+        "options": {{ v.options | json }},
+        "price": {{ v.price | json }},
+        "compare_at_price": {{ v.compare_at_price | json }},
+        "available": {{ v.available | json }},
+        "featured_image": {% if v.featured_image %}{"id": {{ v.featured_image.id | json }}}{% else %}null{% endif %}
+      }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+  </script>
+</section>
+
+{%- if section.settings.show_recently_viewed -%}
+<section class="section" data-recently-viewed data-current-handle="{{ product.handle }}" hidden>
+  <div class="page-width">
+    <div class="section-head">
+      <div>
+        <p class="coord-eyebrow">Retrace your steps</p>
+        <h2 style="margin:0">Recently viewed</h2>
+      </div>
+    </div>
+    <div class="product-grid" data-rv-grid></div>
+  </div>
+</section>
+{%- endif -%}
+
+<dialog class="locator" data-locator>
+  <div class="locator__head">
+    <div>
+      <p class="coord-eyebrow" style="margin-bottom:4px">Pin your place</p>
+      <h3 style="margin:0">Find your coordinates</h3>
+    </div>
+    <button type="button" class="locator__close" data-locator-close aria-label="Close">✕</button>
+  </div>
+
+  <div class="locator__search">
+    <input type="search" data-locator-search placeholder="Search a place, address, or city…" aria-label="Search for a place">
+    <button type="button" class="btn" data-locator-go>Search</button>
+  </div>
+  <p class="locator__hint">Search, then drag the map or tap to drop the pin on your exact spot.</p>
+
+  <div class="locator__map" data-locator-map>
+    <p class="locator__loading">Loading map…</p>
+  </div>
+
+  <div class="locator__result">
+    <span class="locator__coords" data-locator-coords>—</span>
+    <button type="button" class="btn" data-locator-use disabled>Use these coordinates</button>
+  </div>
+</dialog>
+
+<div class="sticky-atc" data-sticky-atc>
+  <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
+  <button type="button" class="btn" data-sticky-submit data-atc
+          data-label-add="{{ section.settings.atc_label | escape }}"
+          data-label-sold-out="Sold out">
+    <span data-atc-label>{{ section.settings.atc_label }}</span>
+  </button>
+</div>
+
+  {% render 'pdp-json-ld' %}
+
+{%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' or preview_type == 'charm-name-necklace' -%}
+  <script src="{{ 'personalization-dynamic.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "preview_type",
+      "label": "Engraving preview shape",
+      "options": [
+        { "value": "horizontal-bar", "label": "Horizontal bar (flat bar pendant)" },
+        { "value": "padlock", "label": "Padlock (two-line front engraving)" },
+        { "value": "heart-necklace", "label": "Heart pendant (front engraving)" },
+        { "value": "matching-necklaces", "label": "Matching necklaces (two engravings)" },
+        { "value": "couple-rings", "label": "Couple rings (two-ring preview)" },
+        { "value": "charm-name-necklace", "label": "Charm necklace (variant name count)" },
+        { "value": "birthstone-ring", "label": "Birthstone ring (two required names)" },
+        { "value": "nameplate", "label": "Horizontal nameplate" },
+        { "value": "vertical-name", "label": "Vertical nameplate" },
+        { "value": "vertical-bar", "label": "Vertical bar (tall pendant, text top→bottom)" },
+        { "value": "ring", "label": "Ring band (text along curve)" },
+        { "value": "bracelet", "label": "Bracelet / cuff (text along curve)" },
+        { "value": "four-sided", "label": "4-sided bar (multi-side inputs)" },
+        { "value": "dog-tag", "label": "Dog tag (2–3 lines)" },
+        { "value": "coordinates-set", "label": "Coordinates set (multi-piece preview)" },
+        { "value": "star-map", "label": "Star map disc (real night sky from a date + place)" }
+      ],
+      "default": "horizontal-bar"
+    },
+    {
+      "type": "select",
+      "id": "review_style",
+      "label": "Review summary under title",
+      "options": [
+        { "value": "app", "label": "Judge.me badge (real star rating)" },
+        { "value": "link", "label": "Plain link to reviews page" },
+        { "value": "none", "label": "Hidden" }
+      ],
+      "default": "app",
+      "info": "'Judge.me badge' requires the Judge.me app embed to be enabled — it shows the product's real rating and review count."
+    },
+    { "type": "checkbox", "id": "show_engraving", "label": "Show engraving field + live preview", "default": true },
+    { "type": "checkbox", "id": "engraving_required", "label": "Require engraving before add to cart", "default": true },
+    { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "27.7676° N, 82.6403° W" },
+    { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 10, "max": 60, "step": 5, "default": 30 },
+    { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart — free engraving" },
+    { "type": "checkbox", "id": "show_recently_viewed", "label": "Show 'Recently viewed' strip", "default": true },
+    { "type": "text", "id": "set_pieces", "label": "Set pieces (auto or comma-separated: bracelet,necklace,ring,keychain)", "default": "auto" },
+    {
+      "type": "select",
+      "id": "set_necklace_style",
+      "label": "Set necklace style",
+      "options": [
+        { "value": "bar", "label": "Simple bar (same text on every piece)" },
+        { "value": "four-sided", "label": "4-sided pendant (per-side inputs + previews)" }
+      ],
+      "default": "bar",
+      "info": "For sets whose necklace is the 4-sided bar (e.g. Necklace + Bracelet Set): shows the pendant from every side, splits coordinates across front/back automatically, and gives each piece its own preview."
+    },
+    {
+      "type": "header",
+      "content": "Sets upsell (single-piece PDPs)"
+    },
+    {
+      "type": "product",
+      "id": "set_upsell_product",
+      "label": "Matching set product",
+      "info": "Shown as a 'Make it a set' card on this product page when the shopper is looking at a single piece. Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "set_upsell_heading",
+      "label": "Sets upsell heading",
+      "default": "Make it a set"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Product details" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Material, sizing, and care details.</p>" }
+      ]
+    }
+  ]
+}
+{% endschema %}
