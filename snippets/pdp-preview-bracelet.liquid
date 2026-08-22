@@ -18,6 +18,7 @@
                      placeholder="{{ engraving_placeholder | escape }}"
                      {% if engraving_required %}required{% endif %}
                      autocomplete="off">
+              <p class="engrave-help">Coordinates, a short message, or a date. Use the map to drop a pin for exact lat/long — we engrave what you type.</p>
               <input type="hidden" data-prop-latlng name="properties[_Exact Decimal Coordinates]">
               <input type="hidden" data-prop-place name="properties[_Place Searched]">
               <input type="hidden" data-prop-maplink name="properties[_Verify on Map]">
