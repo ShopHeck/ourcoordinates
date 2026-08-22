@@ -79,7 +79,7 @@ h2{font-size:clamp(1.5rem,3.5vw,2.4rem)}
 .ep svg{max-width:100%;height:auto;display:block;margin:0 auto;overflow:visible}
 .ep__engrave-text{fill:#cdb88a;font-family:var(--f-coord);font-size:12px;letter-spacing:.18em;text-anchor:middle;dominant-baseline:middle}
 .ep__engrave-text--curve{letter-spacing:.12em}
-.ep__engrave-text--vertical{letter-spacing:.08em}
+.ep__engrave-text--vertical{writing-mode:tb;glyph-orientation-vertical:0;text-anchor:middle;letter-spacing:.28em;font-size:11px}
 .ep__metal{fill:#1c1c24}
 .ep svg .ep__metal{fill:url(#ep-metal-black);filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
 [data-metal=gold] .ep svg .ep__metal,[data-metal="Gold"] .ep svg .ep__metal{fill:url(#ep-metal-gold)}
@@ -119,7 +119,7 @@ h2{font-size:clamp(1.5rem,3.5vw,2.4rem)}
 .ep--ring{padding:24px 12px 12px}
 .ep__ring-svg{max-width:260px;width:100%;height:auto;display:block;margin:0 auto}
 
-/* Four-sided necklace — CRITICAL: face SVGs must be 46px wide or they explode */
+/* Four-sided necklace */
 .ep--four-sided{padding:12px}
 .ep__chain{margin-bottom:-5px}
 .ep__chain svg{width:min(300px,92%);height:auto;display:block;margin:0 auto}
