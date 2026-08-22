@@ -45,6 +45,15 @@ test('theme provides a favicon when no merchant favicon is configured', () => {
   assert.match(layout, /if settings\.favicon != blank[\s\S]*else[\s\S]*ourcoordinates-logo-mark\.svg[\s\S]*endif/);
 });
 
+test('mobile header moves its duplicate CTA into the menu without horizontal overflow', () => {
+  const critical = read('snippets/critical-css.liquid');
+  const header = read('sections/header.liquid');
+
+  assert.match(critical, /@media \(max-width:860px\)[\s\S]*\.site-header__cta\{display:none\}/);
+  assert.match(header, /@media \(max-width: 860px\)[\s\S]*\.site-header__cta \{ display: none; \}/);
+  assert.match(header, /site-nav__mobile-cta/);
+});
+
 test('star-map runtime converts local civil time with daylight-saving rules', () => {
   const runtimePath = join(ROOT, 'assets/star-map.js');
   assert.ok(existsSync(runtimePath), 'assets/star-map.js must exist');
