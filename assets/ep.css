@@ -1,0 +1,92 @@
+/* Engraving previews + cart drawer */
+.ep{background:linear-gradient(120deg,#d8d3c9,#efece5 45%,#cfc9bd);border:1px solid var(--c-line);border-radius:3px;padding:24px 16px 12px;text-align:center;margin-bottom:10px}
+.ep__hint{font-family:var(--f-coord);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c-ink-soft);margin-top:10px;margin-bottom:0}
+.ep svg{max-width:100%;height:auto;display:block;margin:0 auto;overflow:visible}
+.ep__engrave-text{fill:#cdb88a;font-family:var(--f-coord);font-size:12px;letter-spacing:.18em;text-anchor:middle;dominant-baseline:middle}
+.ep__engrave-text--curve{letter-spacing:.12em}
+.ep__engrave-text--vertical{letter-spacing:.08em}
+.ep__engrave-text--dim{opacity:.55}
+.ep__metal{fill:#1c1c24}
+.ep svg .ep__metal{fill:url(#ep-metal-black);filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+[data-metal=gold] .ep svg .ep__metal,[data-metal="Gold"] .ep svg .ep__metal{fill:url(#ep-metal-gold)}
+[data-metal="rose-gold"] .ep svg .ep__metal,[data-metal="Rose Gold"] .ep svg .ep__metal{fill:url(#ep-metal-rose-gold)}
+[data-metal=silver] .ep svg .ep__metal,[data-metal=Silver] .ep svg .ep__metal{fill:url(#ep-metal-silver)}
+[data-metal=black] .ep svg .ep__metal,[data-metal=Black] .ep svg .ep__metal{fill:url(#ep-metal-black)}
+.ep__face{filter:drop-shadow(0 2px 6px rgba(0,0,0,.18))}
+.ep__face-label{font-family:var(--f-coord);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;fill:var(--c-ink-soft)}
+.ep__bevel{opacity:.35}
+.ep__chain,.ep__chain-line{stroke:currentColor;stroke-width:1.2;fill:none;opacity:.55}
+.ep--horizontal-bar .ep__hbar-svg{width:min(100%,280px)}
+.ep--vertical-bar svg{width:min(100%,90px)}
+.ep--ring svg{width:min(100%,200px)}
+.ep--bracelet svg,.ep--bracelet .set-piece-svg{width:min(100%,300px)}
+.ep__cuff-rim{opacity:.9}
+.ep__cuff-channel{opacity:.7}
+.ep__cuff-channel--core{opacity:.85}
+.ep__cuff-inner-shadow{opacity:.4}
+.ep__cuff-sheen{opacity:.5}
+.ep__cuff-engrave{fill:#cdb88a;font-family:var(--f-coord);font-size:11px;letter-spacing:.16em;text-anchor:middle}
+.ep--dog-tag .ep__dog-tag-svg{width:min(100%,180px)}
+.ep--four-sided{padding:16px 12px}
+.ep--four-sided .ep__face{margin-bottom:8px}
+.ep--star-map svg{width:min(100%,240px)}
+.ep--set{padding:16px 12px}
+.ep--duo{display:grid;gap:12px}
+.ep--duo .ep__duo-title{font-family:var(--f-coord);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c-ink-soft);margin:0 0 6px}
+.ep--duo .ep__duo-piece{background:rgba(255,255,255,.4);border-radius:2px;padding:10px}
+.ep--duo .ep__duo-extra{margin-top:8px}
+.ep--duo .ep__duo-extra-label{font-size:.72rem;color:var(--c-ink-soft)}
+.set-piece-svg{width:100%;height:auto;overflow:visible}
+.engrave-field{margin-bottom:20px}
+.engrave-field input[type=text]{width:100%;padding:13px 14px;border:1px solid var(--c-line);border-radius:2px;background:#fff}
+.engrave-field input[type=text]:focus{border-color:var(--c-gold);outline:none}
+.engrave-field .field-row{display:flex;justify-content:space-between;font-size:.75rem;color:var(--c-ink-soft);margin-top:6px}
+.engrave-field .find-coords{color:var(--c-gold-text);font-weight:600;text-decoration:underline;cursor:pointer;background:none;border:0;padding:0;font-size:.75rem}
+.engrave-help{margin:6px 0 0;font-size:.78rem;line-height:1.35;color:var(--c-ink-soft)}
+.cart-drawer{position:fixed;inset:0 0 0 auto;margin:0;width:min(430px,100vw);max-width:100vw;height:100vh;max-height:100dvh;border:0;border-left:1px solid var(--c-line);padding:0;background:var(--c-paper);color:var(--c-ink);display:none}
+.cart-drawer[open]{display:block}
+.cart-drawer::backdrop{background:rgba(11,11,13,.62)}
+.cart-drawer__head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--c-line)}
+.cart-drawer__title{margin:0;font-size:1.1rem;display:flex;align-items:center;gap:10px}
+.cart-drawer__count{font-family:var(--f-coord);font-size:.75rem;background:var(--c-gold);color:var(--c-ink);padding:2px 8px;border-radius:999px}
+.cart-drawer__close{background:none;border:0;font-size:1.1rem;padding:4px 8px;color:var(--c-ink-soft);cursor:pointer}
+.cart-drawer__empty{padding:48px 24px;text-align:center;display:grid;gap:12px;justify-items:center}
+.cart-drawer__empty-title{font-family:var(--f-display);font-size:1.4rem;margin:0}
+.cart-drawer__empty-text{color:var(--c-ink-soft);font-size:.9rem;max-width:32ch;margin:0}
+.cart-drawer__empty-alt{font-size:.85rem;color:var(--c-gold-text)}
+.cart-drawer__progress{padding:14px 20px;border-bottom:1px solid var(--c-line)}
+.cart-drawer__lines{padding:0 20px;overflow-y:auto;max-height:calc(100dvh - 320px)}
+.cart-drawer__line{display:grid;grid-template-columns:72px 1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid var(--c-line);align-items:start}
+.cart-drawer__line img{border:1px solid var(--c-line);border-radius:2px}
+.cart-drawer__line-title{font-weight:500;font-size:.9rem;text-decoration:none}
+.cart-drawer__line-props{font-family:var(--f-coord);font-size:.72rem;color:var(--c-ink-soft);margin:2px 0 0}
+.cart-drawer__line-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.cart-drawer__remove{background:none;border:0;font-size:.72rem;color:var(--c-ink-soft);padding:0;cursor:pointer;text-decoration:underline}
+.cart-drawer__line-price{font-family:var(--f-coord);font-size:.9rem;text-align:right}
+.qty--drawer{display:inline-flex;border:1px solid var(--c-line);border-radius:2px}
+.qty--drawer button{width:28px;height:28px;background:none;border:0;cursor:pointer}
+.qty--drawer span{min-width:28px;text-align:center;line-height:28px;font-size:.85rem}
+.cart-drawer__footer{padding:16px 20px 24px;border-top:1px solid var(--c-line);display:grid;gap:10px}
+.cart-drawer__subtotal{display:flex;justify-content:space-between;font-family:var(--f-coord);font-size:1.05rem}
+.cart-drawer__meta{font-size:.75rem;color:var(--c-ink-soft);margin:0}
+.cart-drawer__checkout{width:100%}
+.cart-drawer__viewcart{text-align:center;font-size:.85rem;color:var(--c-ink-soft)}
+.cart-drawer__note{margin-bottom:8px}
+.cart-drawer__note summary{font-size:.85rem;cursor:pointer;color:var(--c-ink-soft)}
+.cart-drawer__note textarea{width:100%;margin-top:8px;padding:10px;border:1px solid var(--c-line);border-radius:2px;font-size:.85rem;min-height:60px}
+.gift-wrap-upsell{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--c-line);background:rgba(182,151,106,.06)}
+.gift-wrap-upsell img{width:56px;height:56px;object-fit:cover;border-radius:2px}
+.gift-wrap-upsell__text{flex:1;min-width:0}
+.gift-wrap-upsell__title{margin:0;font-weight:600;font-size:.9rem}
+.gift-wrap-upsell__sub{margin:2px 0 0;font-size:.78rem;color:var(--c-ink-soft)}
+.gift-wrap-upsell__btn{flex-shrink:0;padding:8px 14px;font-size:.78rem}
+.cart-upsell{padding:14px 20px;border-bottom:1px solid var(--c-line)}
+.cart-upsell__heading{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px;color:var(--c-ink-soft)}
+.cart-upsell__card{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cart-upsell__card img{width:48px;height:48px;object-fit:cover;border-radius:2px;border:1px solid var(--c-line)}
+.cart-upsell__info{flex:1;min-width:0}
+.cart-upsell__title{font-size:.85rem;text-decoration:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-upsell__price{font-family:var(--f-coord);font-size:.8rem;margin:2px 0 0}
+.cart-upsell__btn{font-size:.75rem;padding:6px 12px;border:1px solid var(--c-line);background:#fff;border-radius:2px;text-decoration:none;cursor:pointer;white-space:nowrap}
+.guarantees--drawer{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:4px}
+.guarantees--drawer li{font-size:.75rem;color:var(--c-ink-soft)}
