@@ -22,8 +22,8 @@
         "etch_caption": "Find Your Coordinates Below",
         "cta1_label": "Find Your Coordinates",
         "cta1_link": "shopify://pages/gift-finder",
-        "cta2_label": "Personalized Jewelry Collection →",
-        "cta2_link": "shopify://collections/coordinates-collection",
+        "cta2_label": "Shop Best Sellers →",
+        "cta2_link": "shopify://collections/best-sellers",
         "ship_line": "Order today — ships within 5 business days, photo proof first",
         "height": 92,
         "color_bg": "#fff9ef",
@@ -110,7 +110,7 @@
         "t4": {
           "type": "badge",
           "settings": {
-            "text": "Personalization included"
+            "text": "Free US shipping over $50"
           }
         }
       },
@@ -133,113 +133,6 @@
         "hide_sold_out": true
       }
     },
-    "sets": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Better together",
-        "heading": "Matching sets — one place, worn by both",
-        "subheading": "Enter your coordinates once and the engraving flows across every piece in the set — necklace, bracelet, keychain, or ring.",
-        "collection": "coordinates-sets",
-        "limit": 4,
-        "hide_sold_out": true
-      }
-    },
-    "atelier_story_chapters_RgniKp": {
-      "type": "atelier-story-chapters",
-      "blocks": {
-        "chapter_PaKcMc": {
-          "type": "chapter",
-          "settings": {
-            "label": "CHAPTER I",
-            "heading": "The <em>proposal</em>",
-            "heading_plain": "The proposal",
-            "text": "He got down on one knee between the pigeons and the orchestra. The coordinates fit on 38 millimeters of gold.",
-            "coords": "PONT ALEXANDRE III, PARIS — 48.8634° N, 2.3135° E",
-            "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-2646488.jpg",
-            "cta_label": "Engrave this story →",
-            "cta_link": "shopify://collections/coordinates-sets"
-          }
-        },
-        "chapter_n6DBCQ": {
-          "type": "chapter",
-          "settings": {
-            "label": "CHAPTER II",
-            "heading": "Their <em>birthplace</em>",
-            "heading_plain": "Their birthplace",
-            "text": "The hospital room, the exact minute. A first birthday gift she’ll understand in eighteen years.",
-            "coords": "SAVANNAH, GEORGIA — 32.0809° N, 81.0912° W",
-            "cta_label": "Engrave this story →",
-            "cta_link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "chapter_z88Kmy": {
-          "type": "chapter",
-          "settings": {
-            "label": "CHAPTER III",
-            "heading": "The <em>hometown</em>",
-            "heading_plain": "The hometown",
-            "text": "You can leave. The porch light doesn’t. Carry the zip code that raised you.",
-            "coords": "DES MOINES, IOWA — 41.5868° N, 93.6250° W",
-            "cta_label": "Engrave this story →",
-            "cta_link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "chapter_DHrQEq": {
-          "type": "chapter",
-          "settings": {
-            "label": "CHAPTER IV",
-            "heading": "Where you <em>met</em>",
-            "heading_plain": "Where you met",
-            "text": "A spilled coffee, a shared umbrella, a wrong train. Some coordinates change everything after them.",
-            "coords": "MADISON SQUARE, NYC — 40.7411° N, 73.9897° W",
-            "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-6865525.jpg",
-            "cta_label": "Engrave this story →",
-            "cta_link": "shopify://collections/coordinates-sets"
-          }
-        },
-        "chapter_bDftKa": {
-          "type": "chapter",
-          "settings": {
-            "label": "CHAPTER V",
-            "heading": "In <em>memory</em>",
-            "heading_plain": "In memory",
-            "text": "Her bench, his dock, their overlook. Grief softens when it has somewhere to live.",
-            "coords": "BATTERY SPENCER — 37.8277° N, 122.4819° W",
-            "image": "shopify://shop_images/proof.jpg",
-            "cta_label": "Engrave this story →",
-            "cta_link": "shopify://collections/coordinates-collection"
-          }
-        },
-        "chapter_Rjq7cj": {
-          "type": "chapter",
-          "settings": {
-            "label": "CHAPTER VI",
-            "heading": "The <em>dream</em>",
-            "heading_plain": "The dream",
-            "text": "Not yet — but soon. Wear the place you’re saving for, and let it pull you there.",
-            "coords": "OIA, SANTORINI — 36.4618° N, 25.3760° E",
-            "image": "shopify://shop_images/personalized-horizontal-bar-necklace-custom-engraved-name-pendant-1792919.png",
-            "cta_label": "Engrave this story →",
-            "cta_link": "shopify://collections/coordinates-collection"
-          }
-        }
-      },
-      "block_order": [
-        "chapter_PaKcMc",
-        "chapter_n6DBCQ",
-        "chapter_z88Kmy",
-        "chapter_DHrQEq",
-        "chapter_bDftKa",
-        "chapter_Rjq7cj"
-      ],
-      "name": "Atelier Story Chapters",
-      "settings": {
-        "eyebrow": "Why coordinates",
-        "heading": "Start with the story.<br><em>We’ll find the spot.</em>",
-        "color_bg": "#faf7f2",
-        "color_text": "#795e3f"
-      }
-    },
     "story": {
       "type": "story-cta",
       "settings": {
@@ -252,16 +145,15 @@
         "button_link_2": ""
       }
     },
-    "how": {
-      "type": "image-with-text",
+    "sets": {
+      "type": "featured-collection",
       "settings": {
-        "image": "shopify://shop_images/untitled_ChatGPT_Images_2.0_2026-06-12_15-39-34.png",
-        "flip": false,
-        "eyebrow": "How it works",
-        "heading": "Pick the place. We engrave the rest.",
-        "text": "<p>Tell us your spot — a first date, a hometown, a summit. We convert it to exact coordinates, engrave it by laser, and send you a photo proof before it ships.</p>",
-        "button_label": "Shop coordinates jewelry",
-        "button_link": "shopify://collections/coordinates-collection"
+        "eyebrow": "Better together",
+        "heading": "Matching sets — one place, worn by both",
+        "subheading": "Enter your coordinates once and the engraving flows across every piece in the set — necklace, bracelet, keychain, or ring.",
+        "collection": "coordinates-sets",
+        "limit": 4,
+        "hide_sold_out": true
       }
     },
     "atelier_customer_stories_MeFCbT": {
@@ -272,7 +164,7 @@
           "settings": {
             "photo": "shopify://shop_images/customer-couple.jpg",
             "name": "THE PROPOSAL",
-            "quote": "",
+            "quote": "I engraved the exact spot he proposed. Every time I look down I feel it again.",
             "story": "Engrave the coordinates of where you said yes, then add the date or a short message that only the two of you understand.",
             "coord_label": "A proposal place",
             "coord_value": "27.7676° N, 82.6403° W",
@@ -285,7 +177,7 @@
           "settings": {
             "photo": "shopify://shop_images/customer-mother.jpg",
             "name": "A NEW BEGINNING",
-            "quote": "",
+            "quote": "We marked the hospital where she was born. It’s the first gift that actually means something.",
             "story": "Mark a birthplace, first home, or city that began a new chapter with coordinates chosen by the person giving the gift.",
             "coord_label": "A meaningful beginning",
             "coord_value": "32.7767° N, 96.7970° W",
@@ -298,7 +190,7 @@
           "settings": {
             "photo": "shopify://shop_images/customer-friends.jpg",
             "name": "WHERE YOU MET",
-            "quote": "",
+            "quote": "Matching bracelets with the café where we first met. We still click them when we’re together.",
             "story": "Turn the café, campus, station, or neighborhood where your paths crossed into a matching everyday reminder.",
             "coord_label": "A shared starting point",
             "coord_value": "40.7411° N, 73.9897° W",
@@ -314,23 +206,12 @@
       ],
       "name": "Atelier Story Ideas",
       "settings": {
-        "eyebrow": "Gift inspiration",
-        "heading": "Places worth<br><em>carrying.</em>",
+        "eyebrow": "Real places. Real meaning.",
+        "heading": "Places people<br><em>carry with them.</em>",
         "counter_number": "",
         "counter_caption": "",
         "shop_label": "Explore this idea",
         "color_scheme": "dark"
-      }
-    },
-    "featured2": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "For him",
-        "heading": "Men's coordinates jewelry",
-        "subheading": "",
-        "collection": "mens",
-        "limit": 4,
-        "hide_sold_out": true
       }
     }
   },
@@ -339,11 +220,8 @@
     "marquee",
     "trust",
     "featured",
-    "sets",
-    "atelier_story_chapters_RgniKp",
     "story",
-    "how",
-    "atelier_customer_stories_MeFCbT",
-    "featured2"
+    "sets",
+    "atelier_customer_stories_MeFCbT"
   ]
 }
