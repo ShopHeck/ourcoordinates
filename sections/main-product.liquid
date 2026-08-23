@@ -333,19 +333,29 @@
         </details>
       </div>
 
-      <div id="reviews">
-        {%- if section.settings.review_style == 'app' -%}
-          <div id="judgeme_product_reviews"
-               class="jdgm-widget jdgm-review-widget"
-               data-id="{{ product.id }}"
-               data-product-title="{{ product.title | escape }}"
-               data-auto-install="false">
-            {{ product.metafields.judgeme.widget }}
-          </div>
-        {%- endif -%}
-      </div>
     </div>
   </div>
+
+  {%- if section.settings.review_style == 'app' -%}
+    {%- comment -%} ---------- CUSTOMER REVIEWS ---------- {%- endcomment -%}
+    <section class="page-width pdp-reviews" id="reviews" aria-labelledby="product-reviews-title">
+      <div class="pdp-reviews__header">
+        <div>
+          <p class="coord-eyebrow">From their coordinates</p>
+          <h2 id="product-reviews-title">{{ product.title }} reviews</h2>
+        </div>
+        <p>Real feedback on the engraving, fit, finish, and moments customers chose to keep close.</p>
+      </div>
+      <div id="judgeme_product_reviews"
+           class="jdgm-widget jdgm-review-widget"
+           data-id="{{ product.id }}"
+           data-product-title="{{ product.title | escape }}"
+           data-auto-install="false"
+           aria-labelledby="product-reviews-title">
+        {{ product.metafields.judgeme.widget }}
+      </div>
+    </section>
+  {%- endif -%}
 
   <script type="application/json" data-product-json>
   {
