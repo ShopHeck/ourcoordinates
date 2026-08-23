@@ -13,8 +13,8 @@ const manifest = json('scripts/personalization/product-contracts.json');
 const byHandle = new Map(manifest.products.map((item) => [item.handle, item]));
 
 test('manifest has one unique, versioned contract per approved handle', () => {
-  assert.equal(manifest.release, 'oc-order-safe-2026-07-22-1');
-  assert.equal(manifest.products.length, 10);
+  assert.equal(manifest.release, 'oc-order-safe-2026-08-23-1');
+  assert.equal(manifest.products.length, 11);
   assert.equal(byHandle.size, manifest.products.length);
   for (const item of manifest.products) {
     assert.match(item.handle, /^[a-z0-9-]+$/);
@@ -48,7 +48,7 @@ test('four-sided source remains byte-for-byte unchanged', () => {
 
 test('main product renders the release and effective contract markers', () => {
   const section = read('sections/main-product.liquid');
-  assert.match(section, /oc-order-safe-2026-07-22-1/);
+  assert.match(section, /oc-order-safe-2026-08-23-1/);
   assert.match(section, /data-personalization-release=/);
   assert.match(section, /data-personalization-contract=/);
 });
@@ -106,7 +106,7 @@ test('birthstone ring collects exactly two required names without a preview', ()
   assertTemplateContract('custom-birthstone-rings', 'snippets/pdp-preview-birthstone-ring.liquid');
   const item = byHandle.get('custom-birthstone-rings');
   const snippet = read('snippets/pdp-preview-birthstone-ring.liquid');
-  const inputs = [...snippet.matchAll(/<input\b[^>]*name="properties\[([^\]]+)\]"[^>]*>/g)];
+  const inputs = [...snippet.matchAll(/<input\b[^>]*type="text"[^>]*name="properties\[([^\]]+)\]"[^>]*>/g)];
 
   assert.deepEqual(item.properties, ['Name 1', 'Name 2']);
   assert.deepEqual(inputs.map((match) => match[1]), ['Name 1', 'Name 2']);
@@ -130,6 +130,34 @@ test('vertical nameplate has one required Name property', () => {
   assertTemplateContract('vertical-name-necklace', 'snippets/pdp-preview-vertical-name.liquid');
 });
 
+test('leather bracelet has four horizontal placements capped at six characters', () => {
+  assertTemplateContract(
+    'leather-coordinate-bracelet',
+    'snippets/pdp-preview-leather-bracelet.liquid'
+  );
+  const item = byHandle.get('leather-coordinate-bracelet');
+  const snippet = read('snippets/pdp-preview-leather-bracelet.liquid');
+  const inputs = [...snippet.matchAll(/<input\b[^>]*type="text"[^>]*name="properties\[([^\]]+)\]"[^>]*>/g)];
+
+  assert.deepEqual(item.properties, [
+    'Engraving — Square Line 1',
+    'Engraving — Square Line 2',
+    'Engraving — Middle Bar',
+    'Engraving — Bottom Bar'
+  ]);
+  assert.equal(inputs.length, 4);
+  for (const [tag] of inputs) assert.match(tag, /maxlength="6"/);
+  assert.match(inputs[0][0], /\brequired\b/);
+  for (const [tag] of inputs.slice(1)) assert.doesNotMatch(tag, /\brequired\b/);
+  assert.equal((snippet.match(/<text\b[^>]*data-leather-preview=/g) || []).length, 4);
+  assert.match(snippet, /data-plate="square"[\s\S]*data-leather-preview="1"[\s\S]*data-leather-preview="2"/);
+  assert.match(snippet, /data-plate="middle"[\s\S]*data-leather-preview="3"/);
+  assert.match(snippet, /data-plate="bottom"[\s\S]*data-leather-preview="4"/);
+  assert.match(snippet, /data-engrave-input[\s\S]*data-locator-open/);
+  assert.match(read('assets/global.js'), /previewType === 'leather-bracelet'[\s\S]*compactCoordinate[\s\S]*data-leather-input/);
+  assert.equal(item.javascript, true);
+});
+
 test('every mutable personalized contract has a matching template, snippet, and exact properties', () => {
   const snippetByContract = {
     'heart-necklace': 'snippets/pdp-preview-heart-necklace.liquid',
@@ -138,7 +166,8 @@ test('every mutable personalized contract has a matching template, snippet, and 
     'charm-name-necklace': 'snippets/pdp-preview-charm-name-necklace.liquid',
     'birthstone-ring': 'snippets/pdp-preview-birthstone-ring.liquid',
     'nameplate': 'snippets/pdp-preview-nameplate.liquid',
-    'vertical-name': 'snippets/pdp-preview-vertical-name.liquid'
+    'vertical-name': 'snippets/pdp-preview-vertical-name.liquid',
+    'leather-bracelet': 'snippets/pdp-preview-leather-bracelet.liquid'
   };
   for (const item of manifest.products.filter((entry) => entry.mutable && entry.contract !== 'none')) {
     assertTemplateContract(item.handle, snippetByContract[item.contract]);
@@ -170,7 +199,8 @@ test('new product-scoped CSS remains below the per-page budget', () => {
     'snippets/pdp-preview-charm-name-necklace.liquid',
     'snippets/pdp-preview-birthstone-ring.liquid',
     'snippets/pdp-preview-nameplate.liquid',
-    'snippets/pdp-preview-vertical-name.liquid'
+    'snippets/pdp-preview-vertical-name.liquid',
+    'snippets/pdp-preview-leather-bracelet.liquid'
   ];
   for (const path of snippets) assert.ok(Buffer.byteLength(read(path)) <= 8192, `${path} exceeds 8 KB`);
 });

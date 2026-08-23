@@ -28,7 +28,7 @@
   elsif variant_options_text contains 'black' or variant_options_text contains 'gunmetal' or variant_options_text contains 'graphite' or variant_options_text contains 'onyx'
     assign initial_metal = 'black'
   endif
-  assign personalization_release = 'oc-order-safe-2026-07-22-1'
+  assign personalization_release = 'oc-order-safe-2026-08-23-1'
   assign personalization_contract = preview_type
   unless section.settings.show_engraving
     assign personalization_contract = 'none'
@@ -183,6 +183,8 @@
             {% render 'pdp-preview-ring', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
           {%- elsif preview_type == 'bracelet' -%}
             {% render 'pdp-preview-bracelet', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
+          {%- elsif preview_type == 'leather-bracelet' -%}
+            {% render 'pdp-preview-leather-bracelet', engraving_required: section.settings.engraving_required %}
           {%- elsif preview_type == 'star-map' -%}
             {% render 'pdp-preview-star-map', engraving_placeholder: section.settings.engraving_placeholder, engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}
           {%- elsif preview_type == 'coordinates-set' -%}
@@ -446,6 +448,7 @@
         { "value": "vertical-bar", "label": "Vertical bar (tall pendant, text top→bottom)" },
         { "value": "ring", "label": "Ring band (text along curve)" },
         { "value": "bracelet", "label": "Bracelet / cuff (text along curve)" },
+        { "value": "leather-bracelet", "label": "Leather bracelet (four plate lines)" },
         { "value": "four-sided", "label": "4-sided bar (multi-side inputs)" },
         { "value": "dog-tag", "label": "Dog tag (2–3 lines)" },
         { "value": "coordinates-set", "label": "Coordinates set (multi-piece preview)" },
@@ -469,7 +472,7 @@
     { "type": "checkbox", "id": "show_engraving", "label": "Show engraving field + live preview", "default": true },
     { "type": "checkbox", "id": "engraving_required", "label": "Require engraving before add to cart", "default": true },
     { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "27.7676° N, 82.6403° W" },
-    { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 10, "max": 60, "step": 5, "default": 30 },
+    { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 5, "max": 60, "step": 1, "default": 30 },
     { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart — free engraving" },
     { "type": "checkbox", "id": "show_recently_viewed", "label": "Show 'Recently viewed' strip", "default": true },
     { "type": "text", "id": "set_pieces", "label": "Set pieces (auto or comma-separated: bracelet,necklace,ring,keychain)", "default": "auto" },
