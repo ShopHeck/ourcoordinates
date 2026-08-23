@@ -51,6 +51,19 @@ test('mobile PDP shows the product decision before a compact scrollable gallery'
   assert.match(css, /\.jdgm-prev-badge__text/);
 });
 
+test('PDP renders one Judge.me review widget root', () => {
+  const section = read('sections/main-product.liquid');
+
+  assert.match(
+    section,
+    /<div id="judgeme_product_reviews"\s+class="jdgm-widget jdgm-review-widget"[^>]*data-auto-install="false"[^>]*>/
+  );
+  assert.doesNotMatch(
+    section,
+    /id="judgeme_product_reviews"[^>]*>\s*<div class="jdgm-widget jdgm-review-widget"/
+  );
+});
+
 test('above-fold collection cards receive explicit responsive loading priority', () => {
   const card = read('snippets/product-card.liquid');
   const collection = read('sections/main-collection.liquid');
