@@ -336,13 +336,12 @@
 
       <div id="reviews">
         {%- if section.settings.review_style == 'app' -%}
-          <div id="judgeme_product_reviews" style="clear:both">
-            <div class="jdgm-widget jdgm-review-widget"
-                 data-id="{{ product.id }}"
-                 data-product-title="{{ product.title | escape }}"
-                 data-auto-install="false">
-              {{ product.metafields.judgeme.widget }}
-            </div>
+          <div id="judgeme_product_reviews"
+               class="jdgm-widget jdgm-review-widget"
+               data-id="{{ product.id }}"
+               data-product-title="{{ product.title | escape }}"
+               data-auto-install="false">
+            {{ product.metafields.judgeme.widget }}
           </div>
         {%- endif -%}
       </div>
