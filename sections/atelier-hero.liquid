@@ -6,7 +6,10 @@
     {%- if s.image != blank -%}
       {{ s.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', alt: s.image_alt, widths: '800, 1200, 1600, 2000, 2400' }}
     {%- else -%}
-      <img src="{{ 'hero-necklace.jpg' | asset_url }}" alt="{{ s.image_alt | escape }}" width="2048" height="1088" loading="eager" fetchpriority="high">
+      <picture>
+        <source media="(max-width: 700px)" srcset="{{ 'hero-necklace-mobile.jpg' | asset_url }}">
+        <img src="{{ 'hero-necklace.jpg' | asset_url }}" alt="{{ s.image_alt | escape }}" width="1200" height="638" loading="eager" fetchpriority="high" decoding="async">
+      </picture>
     {%- endif -%}
   </div>
   <div class="ah-veil" aria-hidden="true"></div>
@@ -45,7 +48,9 @@
   }
   #shopify-section-{{ section.id }} .ah-bg{position:absolute;inset:0}
   #shopify-section-{{ section.id }} .ah-bg img,
+  #shopify-section-{{ section.id }} .ah-bg picture,
   #shopify-section-{{ section.id }} .ah-bg svg{width:100%;height:100%;object-fit:cover;object-position:62% 40%;display:block}
+  #shopify-section-{{ section.id }} .ah-bg picture img{width:100%;height:100%;object-fit:cover;object-position:62% 40%}
   #shopify-section-{{ section.id }} .ah-veil{
     position:absolute;inset:0;
     background:linear-gradient(100deg, rgba(255,249,239,.97) 0%, rgba(255,249,239,.88) 30%, rgba(255,249,239,.45) 58%, rgba(255,249,239,0) 78%);

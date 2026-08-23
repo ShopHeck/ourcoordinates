@@ -42,42 +42,17 @@
          data-personalization-contract="{{ personalization_contract }}">
   <div class="page-width pdp">
 
-    {%- comment -%} ---------- GALLERY ---------- {%- endcomment -%}
-    <div class="pdp__gallery">
-      <div class="pdp__main-image">
-        <img data-main-image
-             src="{{ product.featured_image | image_url: width: 1200 }}"
-             srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
-             sizes="(max-width: 880px) 100vw, min(52vw, 640px)"
-             alt="{{ product.featured_image.alt | escape }}" width="1200" height="1200"
-             fetchpriority="high" decoding="async">
-      </div>
-      {%- if product.images.size > 1 -%}
-        <div class="pdp__thumbs">
-          {%- for image in product.images limit: 24 -%}
-            <button type="button" data-thumb data-image-id="{{ image.id }}" data-full="{{ image | image_url: width: 1200 }}"
-                    data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
-                    {% if forloop.first %}aria-current="true"{% endif %}
-                    aria-label="View image {{ forloop.index }}">
-              <img src="{{ image | image_url: width: 160 }}" alt="{{ image.alt | escape }}" loading="lazy" width="160" height="160">
-            </button>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-    </div>
-
-    {%- comment -%} ---------- BUY BOX ---------- {%- endcomment -%}
-    <div data-buy-box>
+    {%- comment -%} ---------- PRODUCT SUMMARY ---------- {%- endcomment -%}
+    <div class="pdp__summary">
       <p class="pdp__vendor">{{ product.vendor }}</p>
       <h1 class="pdp__title">{{ product.title }}</h1>
 
       {%- if section.settings.review_style == 'app' -%}
-        <!-- Start of Judge.me code --> 
-  <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'> 
- {{ product.metafields.judgeme.badge }} 
- </div> 
-<!-- End of Judge.me code -->
-
+        <!-- Start of Judge.me code -->
+        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" data-auto-install="false">
+          {{ product.metafields.judgeme.badge }}
+        </div>
+        <!-- End of Judge.me code -->
       {%- elsif section.settings.review_style == 'link' -%}
         <p class="pdp__reviews">
           <a href="/pages/reviews">Read customer reviews</a>
@@ -116,7 +91,34 @@
           </p>
         {%- endif -%}
       {%- endif -%}
+    </div>
 
+    {%- comment -%} ---------- GALLERY ---------- {%- endcomment -%}
+    <div class="pdp__gallery">
+      <div class="pdp__main-image">
+        <img data-main-image
+             src="{{ product.featured_image | image_url: width: 1200 }}"
+             srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
+             sizes="(max-width: 880px) calc(100vw - 32px), min(52vw, 640px)"
+             alt="{{ product.featured_image.alt | default: product.title | escape }}" width="1200" height="1200"
+             fetchpriority="high" decoding="async">
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="pdp__thumbs">
+          {%- for image in product.images limit: 24 -%}
+            <button type="button" data-thumb data-image-id="{{ image.id }}" data-full="{{ image | image_url: width: 1200 }}"
+                    data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
+                    {% if forloop.first %}aria-current="true"{% endif %}
+                    aria-label="View image {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 160 }}" alt="{{ image.alt | default: product.title | escape }}" loading="lazy" width="160" height="160">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---------- BUY BOX ---------- {%- endcomment -%}
+    <div data-buy-box>
       {%- form 'product', product, data-product-form: '' -%}
         <input type="hidden" name="id" value="{{ current_variant.id }}">
 
@@ -334,7 +336,14 @@
 
       <div id="reviews">
         {%- if section.settings.review_style == 'app' -%}
-          <div class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}"></div>
+          <div id="judgeme_product_reviews" style="clear:both">
+            <div class="jdgm-widget jdgm-review-widget"
+                 data-id="{{ product.id }}"
+                 data-product-title="{{ product.title | escape }}"
+                 data-auto-install="false">
+              {{ product.metafields.judgeme.widget }}
+            </div>
+          </div>
         {%- endif -%}
       </div>
     </div>

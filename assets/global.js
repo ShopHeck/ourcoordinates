@@ -915,6 +915,7 @@
   var urlUpdate = (drawer.dataset.urlUpdate || '/cart/update') + '.js';
   var urlRoot = drawer.dataset.urlRoot || '/';
   var busy = false;
+  var lastDrawerTrigger = null;
 
   /* the gift-wrap add-on only works with this code, so only now reveal it */
   document.querySelectorAll('[data-gift-wrap-addon]').forEach(function (el) {
@@ -934,6 +935,9 @@
     var count = el.dataset.cartItemCount || '0';
     document.querySelectorAll('[data-cart-count]').forEach(function (badge) {
       badge.textContent = count;
+    });
+    document.querySelectorAll('[data-cart-label]').forEach(function (link) {
+      link.setAttribute('aria-label', 'Cart, ' + count + (count === '1' ? ' item' : ' items'));
     });
   }
 
@@ -959,6 +963,9 @@
   }
 
   function openDrawer() {
+    if (document.activeElement && document.activeElement !== document.body) {
+      lastDrawerTrigger = document.activeElement;
+    }
     if (!drawer.open) drawer.showModal();
     var closeBtn = drawer.querySelector('[data-drawer-close]');
     if (closeBtn) closeBtn.focus();
@@ -1115,6 +1122,11 @@
   /* close on backdrop click, mirroring the locator dialog */
   drawer.addEventListener('click', function (e) {
     if (e.target === drawer) drawer.close();
+  });
+
+  drawer.addEventListener('close', function () {
+    if (lastDrawerTrigger && document.contains(lastDrawerTrigger)) lastDrawerTrigger.focus();
+    lastDrawerTrigger = null;
   });
 
   /* persist the gift note as soon as the customer leaves the field */

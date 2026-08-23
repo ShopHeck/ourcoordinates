@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="{{ settings.color_ink }}">
-  <link rel="canonical" href="{{ canonical_url }}">
   {%- if settings.favicon != blank -%}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
   {%- else -%}
@@ -14,19 +13,69 @@
   {%- liquid
     assign seo_title = page_title
     assign seo_description = page_description
-    if request.page_type == 'collection' and collection.handle == 'all'
+    assign seo_canonical = canonical_url
+    assign seo_type = 'website'
+    assign seo_noindex = false
+
+    if request.page_type == 'product'
+      assign seo_type = 'product'
+    elsif request.page_type == 'article'
+      assign seo_type = 'article'
+    endif
+
+    if request.page_type == 'index'
+      assign seo_description = 'Personalize coordinates jewelry with the place that matters most. Preview your engraving, receive a photo proof, and enjoy free US shipping.'
+    elsif request.page_type == 'collection' and collection.handle == 'all'
       assign seo_title = 'Personalized Coordinates Jewelry & Gifts | OurCoordinates'
       if seo_description == blank
         assign seo_description = 'Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes personalized with a place or message that matters.'
       endif
+    elsif request.page_type == 'collection' and collection.handle == 'coordinates-sets' and seo_description == blank
+      assign seo_description = 'Shop matching coordinates jewelry sets engraved with one meaningful place, including necklaces, bracelets, rings, and keepsakes made to share.'
+    elsif request.page_type == 'collection' and collection.handle == 'in-stock' and seo_description == blank
+      assign seo_description = 'Browse personalized coordinates jewelry currently available to order, with engraving, clear delivery estimates, and a photo proof before shipping.'
+    elsif request.page_type == 'blog' and blog.handle == 'ourcoordinates-journal' and seo_description == blank
+      assign seo_description = 'Explore coordinates jewelry gift ideas, meaningful place stories, engraving guidance, and practical inspiration for anniversaries, travel, and milestones.'
     elsif request.page_type == 'page' and page.handle == 'gift-finder'
       assign seo_title = 'Gift Finder | Personalized Coordinates Jewelry'
       assign seo_description = 'Find an in-stock personalized coordinates gift by recipient, story, and budget in about a minute.'
     elsif request.page_type == 'page' and page.handle == 'reviews'
       assign seo_title = 'Customer Reviews | OurCoordinates'
       assign seo_description = 'Read product feedback published through the OurCoordinates review partner and browse reviews by personalized jewelry piece.'
+    elsif request.page_type == 'page' and page.handle == 'build-yours'
+      assign seo_canonical = shop.url | append: '/pages/builder'
+      assign seo_noindex = true
+      assign seo_description = 'Use the OurCoordinates jewelry builder to choose a piece, enter a meaningful place, and prepare a personalized engraving.'
+    elsif request.page_type == 'page' and page.handle == 'builder' and seo_description == blank
+      assign seo_description = 'Build personalized coordinates jewelry step by step: choose a piece, enter a meaningful place, preview the engraving, and make it yours.'
+    elsif request.page_type == 'page' and page.handle == 'christmas' and seo_description == blank
+      assign seo_description = 'Create personalized coordinates jewelry for Christmas with a meaningful place, custom engraving, and a photo proof before your gift ships.'
+    elsif request.page_type == 'page' and page.handle == 'how-it-works' and seo_description == blank
+      assign seo_description = 'See how OurCoordinates turns a meaningful place into personalized jewelry, from finding coordinates and previewing engraving to photo proof and shipping.'
+    elsif request.page_type == 'page' and page.handle == 'memory-map' and seo_description == blank
+      assign seo_description = 'Save meaningful places in a personal memory map, then turn a favorite location into custom coordinates jewelry engraved just for you.'
+    elsif request.page_type == 'page' and page.handle == 'ring-size-chart' and seo_description == blank
+      assign seo_description = 'Use the OurCoordinates ring size chart and measuring guidance to choose a comfortable fit before ordering your personalized ring.'
+    endif
+
+    assign social_image_url = blank
+    assign social_image_alt = page_title
+    if page_image
+      assign social_image_url = page_image | image_url: width: 1200
+      assign social_image_alt = page_image.alt | default: page_title
+    elsif request.page_type == 'index'
+      assign social_image_url = 'hero-necklace.jpg' | asset_url
+      assign social_image_alt = 'Gold bar necklace engraved with coordinates on cream linen'
+    endif
+    if social_image_url != blank
+      unless social_image_url contains 'http'
+        assign social_image_url = social_image_url | prepend: shop.url
+      endunless
     endif
   -%}
+
+  <link rel="canonical" href="{{ seo_canonical }}">
+  {%- if seo_noindex -%}<meta name="robots" content="noindex,follow">{%- endif -%}
 
   <title>
     {{ seo_title }}
@@ -38,6 +87,21 @@
   {% if seo_description %}
     <meta name="description" content="{{ seo_description | escape }}">
   {% endif %}
+
+  <meta property="og:site_name" content="{{ shop.name | escape }}">
+  <meta property="og:title" content="{{ seo_title | escape }}">
+  <meta property="og:url" content="{{ seo_canonical }}">
+  <meta property="og:type" content="{{ seo_type }}">
+  {%- if seo_description -%}<meta property="og:description" content="{{ seo_description | escape }}">{%- endif -%}
+  {%- if social_image_url != blank -%}
+    <meta property="og:image" content="{{ social_image_url }}">
+    <meta property="og:image:alt" content="{{ social_image_alt | escape }}">
+  {%- endif -%}
+
+  <meta name="twitter:card" content="{% if social_image_url != blank %}summary_large_image{% else %}summary{% endif %}">
+  <meta name="twitter:title" content="{{ seo_title | escape }}">
+  {%- if seo_description -%}<meta name="twitter:description" content="{{ seo_description | escape }}">{%- endif -%}
+  {%- if social_image_url != blank -%}<meta name="twitter:image" content="{{ social_image_url }}">{%- endif -%}
 
   {%- comment -%}
     PERFORMANCE STRATEGY (target: 90+ PageSpeed)
@@ -71,6 +135,7 @@
   <noscript>{{ 'base.css' | asset_url | stylesheet_tag }}</noscript>
   <link rel="preload" href="{{ 'ep.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>{{ 'ep.css' | asset_url | stylesheet_tag }}</noscript>
+  {{ 'site-optimizations.css' | asset_url | stylesheet_tag: preload: true }}
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
