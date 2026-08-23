@@ -1,1 +1,34 @@
-{"type":"header","name":"Header group","sections":{"announcement":{"type":"announcement-bar","settings":{"custom_text":""}},"header":{"type":"header","settings":{"menu":"main-menu","cta_label":"Find a gift","cta_link":"/pages/gift-finder"}}},"order":["announcement","header"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": {
+        "custom_text": ""
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu",
+        "enable_mega_menu": true,
+        "cta_label": "",
+        "cta_link": "/pages/gift-finder"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

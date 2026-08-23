@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -24,11 +33,17 @@
       ],
       "settings": {
         "preview_type": "bracelet",
+        "review_style": "app",
         "show_engraving": true,
         "engraving_required": true,
-        "engraving_placeholder": "27.7676\u00b0 N, 82.6403\u00b0 W",
+        "engraving_placeholder": "27.7676° N, 82.6403° W",
         "engraving_max": 30,
-        "atc_label": "Add to cart \u2014 free engraving"
+        "atc_label": "Add to cart — free engraving",
+        "show_recently_viewed": true,
+        "set_pieces": "auto",
+        "set_necklace_style": "bar",
+        "set_upsell_product": "coordinates-necklace",
+        "set_upsell_heading": "Make it a set"
       }
     },
     "cross": {
@@ -36,6 +51,7 @@
       "settings": {
         "eyebrow": "Complete the set",
         "heading": "Pairs well with",
+        "subheading": "",
         "collection": "necklaces",
         "limit": 4,
         "hide_sold_out": true
