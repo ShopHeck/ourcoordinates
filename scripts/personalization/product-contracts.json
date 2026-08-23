@@ -1,5 +1,5 @@
 {
-  "release": "oc-order-safe-2026-07-22-1",
+  "release": "oc-order-safe-2026-08-23-1",
   "products": [
     {
       "handle": "premium-gift-packaging",
@@ -76,6 +76,19 @@
       "contract": "vertical-name",
       "properties": ["Name"],
       "javascript": false,
+      "mutable": true
+    },
+    {
+      "handle": "leather-coordinate-bracelet",
+      "templateSuffix": "leather-bracelet",
+      "contract": "leather-bracelet",
+      "properties": [
+        "Engraving — Square Line 1",
+        "Engraving — Square Line 2",
+        "Engraving — Middle Bar",
+        "Engraving — Bottom Bar"
+      ],
+      "javascript": true,
       "mutable": true
     },
     {

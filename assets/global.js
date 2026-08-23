@@ -380,7 +380,8 @@
 /* ============================================================
    ENGRAVING PREVIEW SYSTEM
    Handles live text updates for all preview types:
-   horizontal-bar, vertical-bar, ring, bracelet, four-sided, dog-tag.
+   horizontal-bar, vertical-bar, ring, bracelet, leather-bracelet,
+   four-sided, dog-tag.
    ============================================================ */
 (function () {
   'use strict';
@@ -441,6 +442,50 @@
         }
       });
     }
+  }
+
+  /* ---- LEATHER BRACELET (four physical plate placements) ---- */
+  if (previewType === 'leather-bracelet') {
+    var leatherInputs = root.querySelectorAll('[data-leather-input]');
+
+    function compactCoordinate(part) {
+      var hemisphere = (part.match(/[NSEW]/i) || [''])[0].toUpperCase();
+      var value = Math.abs(parseFloat(part));
+      if (!hemisphere || !isFinite(value)) return part.trim().slice(0, 6);
+      var integerLength = String(Math.floor(value)).length;
+      var decimalPlaces = Math.max(0, 4 - integerLength);
+      return value.toFixed(decimalPlaces) + hemisphere;
+    }
+
+    function renderLeatherInput(input) {
+      var line = input.dataset.leatherInput;
+      var preview = root.querySelector('[data-leather-preview="' + line + '"]');
+      var count = root.querySelector('[data-leather-count="' + line + '"]');
+      if (!preview) return;
+      var value = input.value.trim();
+      var placeholder = preview.dataset.placeholder || '';
+      preview.textContent = value || placeholder || '—';
+      preview.style.opacity = value ? '1' : '0.4';
+      if (count) count.textContent = input.value.length + ' / 6' + (line === '1' ? '' : ' · optional');
+    }
+
+    leatherInputs.forEach(function (input) {
+      input.addEventListener('input', function () {
+        if (input.dataset.fromLocator && input.dataset.leatherInput === '1') {
+          var coordinateParts = input.value.split(',').map(function (part) { return part.trim(); });
+          if (coordinateParts.length >= 2) {
+            var squareLine2 = root.querySelector('[data-leather-input="2"]');
+            input.value = compactCoordinate(coordinateParts[0]);
+            if (squareLine2) {
+              squareLine2.value = compactCoordinate(coordinateParts.slice(1).join(', '));
+              renderLeatherInput(squareLine2);
+            }
+          }
+        }
+        renderLeatherInput(input);
+      });
+      renderLeatherInput(input);
+    });
   }
 
   /* ---- DOG TAG (multi-line) ---- */
