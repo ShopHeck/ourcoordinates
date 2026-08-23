@@ -48,6 +48,7 @@
           assign pct = 100
         endif
       -%}
+      <div class="cart-drawer__body">
       {%- if threshold > 0 -%}
         <div class="cart-progress cart-drawer__progress" aria-live="polite">
           <p class="cart-progress__label">
@@ -176,6 +177,7 @@
           {%- endif -%}
         {%- endif -%}
       {%- endif -%}
+      </div>
 
       {%- comment -%}
         Footer: note + checkout share one real form so the gift note

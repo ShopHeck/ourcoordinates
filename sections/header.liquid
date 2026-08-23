@@ -104,7 +104,9 @@
         <a class="btn site-header__cta" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
       {%- endif -%}
       <a href="{{ routes.search_url }}" aria-label="Search">Search</a>
-      <a href="{{ routes.cart_url }}" aria-label="Cart" data-cart-open>
+      <a href="{{ routes.cart_url }}"
+         aria-label="Cart, {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}"
+         data-cart-open data-cart-label>
         Cart <span class="cart-count" data-cart-count>{{ cart.item_count }}</span>
       </a>
     </div>

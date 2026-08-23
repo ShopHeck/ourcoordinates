@@ -93,7 +93,15 @@
           {%- for product in collection.products -%}
             {%- if section.settings.hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
             {%- assign rendered_products = rendered_products | plus: 1 -%}
-            {%- render 'product-card', card_product: product -%}
+            {%- liquid
+              assign card_loading = 'lazy'
+              assign card_priority = 'auto'
+              if paginate.current_page == 1 and rendered_products <= 2
+                assign card_loading = 'eager'
+                assign card_priority = 'high'
+              endif
+            -%}
+            {%- render 'product-card', card_product: product, image_loading: card_loading, image_fetchpriority: card_priority -%}
           {%- endfor -%}
         </div>
         {%- if rendered_products == 0 -%}
