@@ -3,8 +3,20 @@
     <h1>Your cart</h1>
 
     {%- if cart.item_count == 0 -%}
-      <p>Your cart is empty — your favorite place is still out there.</p>
-      <a class="btn" href="{{ routes.all_products_collection_url }}">Shop jewelry</a>
+      <div class="cart-empty">
+        <p class="coord-eyebrow">0.0000° N, 0.0000° W</p>
+        <h2>Your favorite place is still out there.</h2>
+        <p>Start with the pieces customers love most, or answer three quick questions and we’ll help you find the right gift.</p>
+        <div class="cart-empty__actions">
+          <a class="btn" href="{{ routes.collections_url }}/best-sellers">Shop best sellers</a>
+          <a class="btn btn--ghost" href="{{ routes.root_url }}pages/gift-finder">Use the gift finder</a>
+        </div>
+        <ul class="cart-empty__reassurance" aria-label="Shopping benefits">
+          <li>Free engraving</li>
+          <li>Made in the USA</li>
+          <li>Free shipping</li>
+        </ul>
+      </div>
     {%- else -%}
 
       {%- liquid

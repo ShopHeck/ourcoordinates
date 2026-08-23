@@ -103,7 +103,13 @@
              fetchpriority="high" decoding="async">
       </div>
       {%- if product.images.size > 1 -%}
-        <div class="pdp__thumbs">
+        {%- liquid
+          assign gallery_count = product.images.size
+          if gallery_count > 24
+            assign gallery_count = 24
+          endif
+        -%}
+        <div class="pdp__thumbs" id="ProductGalleryThumbs-{{ section.id }}" data-gallery-thumbs>
           {%- for image in product.images limit: 24 -%}
             <button type="button" data-thumb data-image-id="{{ image.id }}" data-full="{{ image | image_url: width: 1200 }}"
                     data-full-srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 900 }} 900w, {{ image | image_url: width: 1200 }} 1200w"
@@ -113,6 +119,17 @@
             </button>
           {%- endfor -%}
         </div>
+        {%- if gallery_count > 5 -%}
+          <button type="button"
+                  class="pdp__gallery-toggle"
+                  data-gallery-toggle
+                  data-view-all-label="View all {{ gallery_count }} images"
+                  data-show-fewer-label="Show fewer images"
+                  aria-controls="ProductGalleryThumbs-{{ section.id }}"
+                  aria-expanded="false">
+            View all {{ gallery_count }} images
+          </button>
+        {%- endif -%}
       {%- endif -%}
     </div>
 
