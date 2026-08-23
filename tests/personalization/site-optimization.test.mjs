@@ -53,6 +53,7 @@ test('mobile PDP shows the product decision before a compact scrollable gallery'
 
 test('PDP renders one Judge.me review widget root', () => {
   const section = read('sections/main-product.liquid');
+  const css = read('assets/site-optimizations.css');
 
   assert.match(
     section,
@@ -62,6 +63,15 @@ test('PDP renders one Judge.me review widget root', () => {
     section,
     /id="judgeme_product_reviews"[^>]*>\s*<div class="jdgm-widget jdgm-review-widget"/
   );
+  assert.match(
+    section,
+    /<section class="page-width pdp-reviews" id="reviews" aria-labelledby="product-reviews-title">/
+  );
+  assert.match(section, /class="pdp-reviews__header"/);
+  assert.doesNotMatch(section, /<div id="reviews">/);
+  assert.match(css, /\.pdp-reviews\s*\{[^}]*border-top:[^;}]*var\(--c-line\)/s);
+  assert.match(css, /\.pdp-reviews__header\s*\{[^}]*grid-template-columns:/s);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.pdp-reviews__header/);
 });
 
 test('above-fold collection cards receive explicit responsive loading priority', () => {
