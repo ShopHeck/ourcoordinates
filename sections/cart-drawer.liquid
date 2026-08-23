@@ -25,14 +25,25 @@
 
     {%- if cart.item_count == 0 -%}
 
+      {%- liquid
+        assign empty_primary_link = section.settings.empty_primary_link
+        if empty_primary_link == blank
+          assign empty_primary_link = routes.collections_url | append: '/best-sellers'
+        endif
+        assign empty_secondary_link = section.settings.empty_secondary_link
+        if empty_secondary_link == blank
+          assign empty_secondary_link = routes.root_url | append: 'pages/gift-finder'
+        endif
+      -%}
       <div class="cart-drawer__empty">
         <p class="coord-eyebrow" style="justify-content:center">0.0000° N, 0.0000° W</p>
         <p class="cart-drawer__empty-title">Your cart is empty</p>
         <p class="cart-drawer__empty-text">Your favorite place is still out there — pick a piece and pin it forever.</p>
-        <a class="btn" href="{{ section.settings.empty_primary_link | default: routes.all_products_collection_url }}">{{ section.settings.empty_primary_label }}</a>
-        {%- if section.settings.empty_secondary_label != blank and section.settings.empty_secondary_link != blank -%}
-          <a class="cart-drawer__empty-alt" href="{{ section.settings.empty_secondary_link }}">{{ section.settings.empty_secondary_label }}</a>
+        <a class="btn" href="{{ empty_primary_link }}">{{ section.settings.empty_primary_label }}</a>
+        {%- if section.settings.empty_secondary_label != blank -%}
+          <a class="cart-drawer__empty-alt" href="{{ empty_secondary_link }}">{{ section.settings.empty_secondary_label }}</a>
         {%- endif -%}
+        <p class="cart-drawer__empty-reassurance">Free engraving · Made in the USA · Free shipping</p>
       </div>
 
     {%- else -%}

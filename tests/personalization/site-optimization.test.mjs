@@ -25,6 +25,23 @@ test('cart drawer keeps checkout visible in a styled, accessible panel', () => {
   assert.doesNotMatch(header, /aria-label="Cart"/);
 });
 
+test('empty carts offer direct best-seller and guided gift recovery paths', () => {
+  const drawer = read('sections/cart-drawer.liquid');
+  const cart = read('sections/main-cart.liquid');
+  const css = read('assets/site-optimizations.css');
+
+  for (const section of [drawer, cart]) {
+    assert.match(section, /best-sellers/);
+    assert.match(section, /gift-finder/);
+  }
+  assert.match(drawer, /if empty_primary_link == blank/);
+  assert.match(drawer, /if empty_secondary_link == blank/);
+  assert.match(cart, /class="cart-empty__actions"/);
+  assert.match(cart, /aria-label="Shopping benefits"/);
+  assert.match(css, /\.cart-empty\s*\{/);
+  assert.match(css, /\.cart-drawer__empty-reassurance\s*\{/);
+});
+
 test('gift finder choices and results use the branded responsive card system', () => {
   const section = read('sections/gift-finder.liquid');
   const css = read('assets/site-optimizations.css');
@@ -38,15 +55,16 @@ test('gift finder choices and results use the branded responsive card system', (
   assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.gift-finder__grid/);
 });
 
-test('mobile PDP shows the product decision before a compact scrollable gallery', () => {
+test('mobile PDP shows the product decision before a compact expandable gallery', () => {
   const section = read('sections/main-product.liquid');
   const css = read('assets/site-optimizations.css');
 
   assert.match(section, /class="pdp__summary"/);
   assert.ok(section.indexOf('class="pdp__summary"') < section.indexOf('class="pdp__gallery"'));
   assert.match(css, /\.pdp__summary\s*\{[^}]*grid-column:\s*2/s);
-  assert.match(css, /@media\s*\(max-width:\s*880px\)[\s\S]*\.pdp__thumbs\s*\{[^}]*overflow-x:\s*auto/s);
-  assert.match(css, /scroll-snap-type:\s*x mandatory/);
+  assert.match(css, /@media\s*\(max-width:\s*880px\)[\s\S]*\.pdp__thumbs\s*\{[^}]*repeat\(5/s);
+  assert.match(css, /\.pdp__thumbs:not\(\.is-expanded\)/);
+  assert.match(section, /data-gallery-toggle/);
   assert.match(section, /product\.metafields\.judgeme\.widget/);
   assert.match(css, /\.jdgm-prev-badge__text/);
 });
@@ -99,6 +117,8 @@ test('homepage hero has an accurate responsive mobile fallback', () => {
 
 test('SEO social metadata and duplicate builder signals are complete', () => {
   const layout = read('layout/theme.liquid');
+  const llms = read('templates/llms.txt.liquid');
+  const llmsFull = read('templates/llms-full.txt.liquid');
 
   for (const property of ['og:title', 'og:description', 'og:url', 'og:type', 'og:image']) {
     assert.ok(layout.includes(property), `missing ${property}`);
@@ -109,6 +129,9 @@ test('SEO social metadata and duplicate builder signals are complete', () => {
   assert.match(layout, /page\.handle == 'build-yours'/);
   assert.match(layout, /pages\/builder/);
   assert.match(layout, /noindex,follow/);
+  assert.doesNotMatch(llms, /https:\/\/ourcoordinates\.com\/pages\/build-yours/);
+  assert.doesNotMatch(llmsFull, /https:\/\/ourcoordinates\.com\/pages\/build-yours/);
+  assert.match(llms, /https:\/\/ourcoordinates\.com\/pages\/builder/);
   assert.match(layout, /social_image_url \| prepend: shop\.url/);
   for (const handle of ['coordinates-sets', 'in-stock', 'christmas', 'how-it-works', 'memory-map', 'ring-size-chart']) {
     assert.ok(layout.includes(handle), `missing description fallback for ${handle}`);
