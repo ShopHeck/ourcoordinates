@@ -7,6 +7,10 @@ const BLOG_SITEMAP_URL = `${auditBaseUrl}/sitemap_blogs_1.xml`;
 const DEFAULT_OUTPUT = 'docs/blog-content-quality-audit-2026-08-24.md';
 const outputPath = resolve(process.argv[2] || DEFAULT_OUTPUT);
 const cachePath = resolve('.blog-audit-cache/article-results.json');
+const targetManifestPath = resolve('scripts/blog-content-targets.json');
+const remediatedHandles = existsSync(targetManifestPath)
+  ? new Set(JSON.parse(readFileSync(targetManifestPath, 'utf8')).articles)
+  : new Set();
 const requestDelay = Number.parseInt(process.env.BLOG_AUDIT_DELAY_MS || '500', 10);
 const refreshCache = process.env.BLOG_AUDIT_REFRESH === '1';
 const wait = (milliseconds) => new Promise((resolveWait) => setTimeout(resolveWait, milliseconds));
@@ -54,6 +58,9 @@ async function fetchHtml(url) {
 
 function auditArticle(url, response, html) {
   const mainHtml = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || html;
+  const articleBodyHtml = mainHtml.match(
+    /<!-- article-audit-content:start -->([\s\S]*?)<!-- article-audit-content:end -->/i
+  )?.[1] || mainHtml;
   const title = extract(html, /<title[^>]*>([\s\S]*?)<\/title>/i);
   const description = extract(
     html,
@@ -74,17 +81,17 @@ function auditArticle(url, response, html) {
     /<meta[^>]+property=["']article:published_time["'][^>]+content=["']([^"']+)["'][^>]*>/i
   ) || extract(html, /"datePublished"\s*:\s*"([^"]+)"/i)
     || extract(html, /<time[^>]+datetime=["']([^"']+)["'][^>]*>/i);
-  const bodyText = cleanText(mainHtml);
+  const bodyText = cleanText(articleBodyHtml);
   const wordCount = bodyText ? bodyText.split(/\s+/).length : 0;
   const h1Count = count(mainHtml, /<h1\b/gi);
-  const h2Count = count(mainHtml, /<h2\b/gi);
-  const imageTags = [...mainHtml.matchAll(/<img\b[^>]*>/gi)].map((match) => match[0]);
+  const h2Count = count(articleBodyHtml, /<h2\b/gi);
+  const imageTags = [...articleBodyHtml.matchAll(/<img\b[^>]*>/gi)].map((match) => match[0]);
   const missingAltCount = imageTags.filter((tag) => !/\balt=["'][^"']+["']/i.test(tag)).length;
-  const productLinks = new Set([...mainHtml.matchAll(/href=["']([^"']*\/products\/[^"'#?]+)/gi)]
+  const productLinks = new Set([...articleBodyHtml.matchAll(/href=["']([^"']*\/products\/[^"'#?]+)/gi)]
     .map((match) => normalizeUrl(new URL(match[1], STORE_URL).href)));
-  const collectionLinks = new Set([...mainHtml.matchAll(/href=["']([^"']*\/collections\/[^"'#?]+)/gi)]
+  const collectionLinks = new Set([...articleBodyHtml.matchAll(/href=["']([^"']*\/collections\/[^"'#?]+)/gi)]
     .map((match) => normalizeUrl(new URL(match[1], STORE_URL).href)));
-  const articleLinks = new Set([...mainHtml.matchAll(/href=["']([^"']*\/blogs\/[^"'#?]+)/gi)]
+  const articleLinks = new Set([...articleBodyHtml.matchAll(/href=["']([^"']*\/blogs\/[^"'#?]+)/gi)]
     .map((match) => normalizeUrl(new URL(match[1], STORE_URL).href))
     .filter((link) => link !== normalizeUrl(url)));
   const articleSchema = /"@type"\s*:\s*"(?:Article|BlogPosting)"/i.test(html);
@@ -189,6 +196,8 @@ function buildReport(results, landingPageCount) {
   const averageWords = Math.round(results.reduce((sum, result) => sum + result.wordCount, 0) / results.length);
   const averageScore = Math.round(results.reduce((sum, result) => sum + result.score, 0) / results.length);
   const auditedAt = new Date().toISOString();
+  const remediatedResults = results.filter((result) => remediatedHandles.has(result.slug));
+  const remediatedClean = remediatedResults.filter((result) => result.score === 100 && result.issues.length === 0).length;
 
   const lines = [
     '# OurCoordinates Blog Content Quality Audit',
@@ -203,9 +212,10 @@ function buildReport(results, landingPageCount) {
     `- Articles with a product or collection link: **${results.filter((result) => result.productLinkCount + result.collectionLinkCount > 0).length}/${results.length}**`,
     `- Articles with a related-article link: **${results.filter((result) => result.articleLinkCount > 0).length}/${results.length}**`,
     `- Articles with valid Article structured data: **${results.filter((result) => result.articleSchema).length}/${results.length}**`,
+    `- Priority remediation batch with no automated gaps: **${remediatedClean}/${remediatedResults.length}**`,
     `- Blog landing pages excluded from article scoring: **${landingPageCount}**`,
     '',
-    'This is the first-pass, page-by-page technical and structural audit. It identifies which articles deserve manual editorial review first; it does not claim to judge factual accuracy, originality, search demand, backlinks, or conversion performance from HTML alone.',
+    'This is the first-pass, page-by-page technical and structural audit. Article-body word counts, headings, images, and internal links intentionally exclude reusable template modules such as related reading and shopping paths. It identifies which articles deserve manual editorial review first; it does not claim to judge factual accuracy, originality, search demand, backlinks, or conversion performance from HTML alone.',
     '',
     '## Most common findings',
     '',

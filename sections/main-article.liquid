@@ -1,12 +1,106 @@
-<article class="section">
-  <div class="page-width page-narrow">
-    <p class="coord-eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</p>
-    <h1>{{ article.title }}</h1>
+{%- liquid
+  assign article_body = article.content
+  assign article_had_embedded_h1 = false
+  if article_body contains '<h1' or article_body contains '<H1'
+    assign article_had_embedded_h1 = true
+  endif
+  assign article_body = article_body | replace: '<h1', '<h2' | replace: '</h1>', '</h2>'
+  assign article_body = article_body | replace: '<H1', '<H2' | replace: '</H1>', '</H2>'
+  assign gift_finder_url = pages['gift-finder'].url | default: '/pages/gift-finder'
+-%}
+
+<article class="article-page section">
+  <div class="page-width page-narrow article-page__inner">
+    <header class="article-page__header">
+      <p class="coord-eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</p>
+      <h1>{{ article.title }}</h1>
+    </header>
     {%- if article.image -%}
-      <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.image.alt | escape }}" style="margin-block:24px" width="{{ article.image.width | at_most: 1400 }}" height="{{ article.image.width | at_most: 1400 | divided_by: article.image.aspect_ratio | round }}">
+      <img
+        class="article-page__hero"
+        src="{{ article.image | image_url: width: 1400 }}"
+        srcset="{{ article.image | image_url: width: 720 }} 720w, {{ article.image | image_url: width: 1100 }} 1100w, {{ article.image | image_url: width: 1400 }} 1400w"
+        sizes="(min-width: 840px) 760px, calc(100vw - 32px)"
+        alt="{{ article.image.alt | default: article.title | escape }}"
+        width="{{ article.image.width | at_most: 1400 }}"
+        height="{{ article.image.width | at_most: 1400 | divided_by: article.image.aspect_ratio | round }}"
+        fetchpriority="high"
+      >
     {%- endif -%}
-    <div class="rte">{{ article.content }}</div>
+
+    <!-- article-audit-content:start -->
+    <div class="rte article-page__content{% if article_had_embedded_h1 %} article-page__content--normalized-h1{% endif %}" data-article-content>{{ article_body }}</div>
+    <!-- article-audit-content:end -->
+
+    <aside class="article-shop-path" aria-labelledby="article-shop-path-title">
+      <p class="coord-eyebrow">Keep the place close</p>
+      <h2 id="article-shop-path-title">Turn a meaningful location into something you can wear</h2>
+      <p>Choose the place and the piece. We’ll help translate your story into a personalized engraving.</p>
+      <div class="article-shop-path__actions">
+        <a class="btn" href="{{ routes.all_products_collection_url }}">Shop coordinates jewelry</a>
+        <a class="article-text-link" href="{{ gift_finder_url }}">Find the right gift <span aria-hidden="true">→</span></a>
+      </div>
+    </aside>
   </div>
+
+  {%- liquid
+    assign related_count = 0
+    capture related_handles
+      echo '|' | append: article.handle | append: '|'
+    endcapture
+
+    capture related_cards
+      for candidate in blog.articles
+        if related_count >= 3
+          break
+        endif
+        assign candidate_token = '|' | append: candidate.handle | append: '|'
+        unless related_handles contains candidate_token
+          assign shares_tag = false
+          for article_tag in article.tags
+            if candidate.tags contains article_tag
+              assign shares_tag = true
+              break
+            endif
+          endfor
+          if shares_tag
+            render 'article-related-card', related_article: candidate
+            assign related_handles = related_handles | append: candidate.handle | append: '|'
+            assign related_count = related_count | plus: 1
+          endif
+        endunless
+      endfor
+
+      if related_count < 3
+        for candidate in blog.articles
+          if related_count >= 3
+            break
+          endif
+          assign candidate_token = '|' | append: candidate.handle | append: '|'
+          unless related_handles contains candidate_token
+            render 'article-related-card', related_article: candidate
+            assign related_handles = related_handles | append: candidate.handle | append: '|'
+            assign related_count = related_count | plus: 1
+          endunless
+        endfor
+      endif
+    endcapture
+  -%}
+
+  {%- if related_count > 0 -%}
+    <section class="article-related" aria-labelledby="article-next-title">
+      <div class="page-width">
+        <div class="article-related__head">
+          <div>
+            <p class="coord-eyebrow">Continue exploring</p>
+            <h2 id="article-next-title">More stories and practical guides</h2>
+          </div>
+          <a class="article-text-link" href="{{ blog.url }}">View all articles <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="article-related__grid">{{ related_cards }}</div>
+      </div>
+    </section>
+  {%- endif -%}
 </article>
 {%- comment -%} ── BlogPosting JSON-LD Schema ── {%- endcomment -%}
 <script type="application/ld+json">

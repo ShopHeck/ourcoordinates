@@ -25,6 +25,19 @@
 
     if request.page_type == 'index'
       assign seo_description = 'Personalize coordinates jewelry with the place that matters most. Preview your engraving, receive a photo proof, and enjoy free US shipping.'
+    elsif request.page_type == 'article'
+      if seo_title == blank
+        assign seo_title = article.title
+      endif
+      if seo_description == blank
+        assign seo_description = article.excerpt_or_content | strip_html | strip_newlines
+      else
+        assign seo_description = seo_description | strip_html | strip_newlines
+      endif
+      assign seo_description_length = seo_description | size
+      if seo_description_length > 165
+        assign seo_description = seo_description | truncate: 155
+      endif
     elsif request.page_type == 'collection' and collection.handle == 'all'
       assign seo_title = 'Personalized Coordinates Jewelry & Gifts | OurCoordinates'
       if seo_description == blank
@@ -128,7 +141,7 @@
     {{ seo_title }}
     {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
     {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless request.page_type == 'product' -%}
+    {%- unless request.page_type == 'product' or request.page_type == 'article' -%}
       {%- unless seo_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     {%- endunless -%}
   </title>
@@ -185,6 +198,9 @@
   <link rel="preload" href="{{ 'ep.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>{{ 'ep.css' | asset_url | stylesheet_tag }}</noscript>
   {{ 'site-optimizations.css' | asset_url | stylesheet_tag: preload: true }}
+  {%- if request.page_type == 'article' -%}
+    {{ 'article.css' | asset_url | stylesheet_tag: preload: true }}
+  {%- endif -%}
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">

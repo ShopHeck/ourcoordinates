@@ -1,33 +1,30 @@
 # OurCoordinates Blog Content Quality Audit
 
-Audited 95 storefront-rendered article pages on 2026-08-24T15:49:24.551Z.
+Audited 95 storefront-rendered article pages on 2026-08-24T17:10:29.342Z.
 
 ## Executive summary
 
-- Average automated quality score: **85/100**
-- Average article length: **1050 words**
-- Priority mix: **0 critical**, **16 high**, **73 medium**, **6 low**
-- Articles with a product or collection link: **82/95**
-- Articles with a related-article link: **23/95**
+- Average automated quality score: **92/100**
+- Average article length: **1052 words**
+- Priority mix: **0 critical**, **0 high**, **73 medium**, **22 low**
+- Articles with a product or collection link: **95/95**
+- Articles with a related-article link: **38/95**
 - Articles with valid Article structured data: **95/95**
+- Priority remediation batch with no automated gaps: **16/16**
 - Blog landing pages excluded from article scoring: **2**
 
-This is the first-pass, page-by-page technical and structural audit. It identifies which articles deserve manual editorial review first; it does not claim to judge factual accuracy, originality, search demand, backlinks, or conversion performance from HTML alone.
+This is the first-pass, page-by-page technical and structural audit. Article-body word counts, headings, images, and internal links intentionally exclude reusable template modules such as related reading and shopping paths. It identifies which articles deserve manual editorial review first; it does not claim to judge factual accuracy, originality, search demand, backlinks, or conversion performance from HTML alone.
 
 ## Most common findings
 
 | Finding | Articles |
 |---|---:|
-| no related-article link | 72 |
-| long title | 71 |
-| no commercial internal link | 13 |
-| only one H2 | 10 |
-| light content | 8 |
-| thin content | 5 |
-| long meta | 4 |
-| no H2 structure | 4 |
+| long title | 59 |
+| no related-article link | 57 |
+| only one H2 | 7 |
+| light content | 5 |
 | image alt gaps | 4 |
-| 2 H1 elements | 3 |
+| long meta | 1 |
 
 ## Recommended review order
 
@@ -41,22 +38,6 @@ This is the first-pass, page-by-page technical and structural audit. It identifi
 
 | Priority | Score | Article | Words | H2 | Product / collection links | Related article links | Metadata | Issues |
 |---|---:|---|---:|---:|---:|---:|---|---|
-| High | 27 | [Best Long-Distance Relationship Gifts for Summer 2026 – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/best-long-distance-relationship-gifts-summer-2026) | 236 | 5 | 0 | 0 | 70 title / 320 description | 2 H1 elements; long meta (320); long title (70); thin content (236 words); no commercial internal link; no related-article link |
-| High | 27 | [Summer Travel Coordinates Jewelry 2026: Turn Your Trips Into Wearable – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/summer-travel-coordinates-jewelry-2026) | 353 | 5 | 0 | 0 | 86 title / 320 description | 2 H1 elements; long meta (320); long title (86); thin content (353 words); no commercial internal link; no related-article link |
-| High | 27 | [Wedding Season 2026 Gift Guide: Coordinates Jewelry That Actually Feel – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/wedding-season-2026-coordinates-jewelry-gift-guide) | 254 | 5 | 0 | 0 | 87 title / 320 description | 2 H1 elements; long meta (320); long title (87); thin content (254 words); no commercial internal link; no related-article link |
-| High | 50 | [5 Best Family Travel Destinations for Your Next Vacation – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/5-family-travel-spots) | 693 | 0 | 0 | 0 | 73 title / 153 description | long title (73); light content (693 words); no H2 structure; no commercial internal link; no related-article link |
-| High | 55 | [7 Breathtaking Places to Visit Before You Die – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/7-places-you-must-travel-before-you-die) | 462 | 0 | 0 | 0 | 62 title / 152 description | light content (462 words); no H2 structure; no commercial internal link; no related-article link |
-| High | 58 | [How to Order Custom Coordinates Jewelry \| OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/how-to-order) | 224 | 0 | 3 | 0 | 56 title / 158 description | thin content (224 words); no H2 structure; no related-article link |
-| High | 65 | [Solo Travel Tips for First-Time Young Adventurers – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/tips-young-solo-travel) | 656 | 5 | 0 | 0 | 66 title / 147 description | long title (66); light content (656 words); no commercial internal link; no related-article link |
-| High | 68 | [5 Budget Travel Tips to Save Money on Your Next Trip – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/5-tips-for-travel-on-budget) | 1111 | 1 | 0 | 0 | 69 title / 149 description | long title (69); only one H2; no commercial internal link; no related-article link |
-| High | 68 | [How to Start a Travel Blog: Complete Beginner's Guide – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/everything-you-need-to-start-your-travel-blog) | 1098 | 1 | 0 | 0 | 70 title / 153 description | long title (70); only one H2; no commercial internal link; no related-article link |
-| High | 68 | [Wander Jewelry: The Art of Travel-Inspired Accessories – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/art-of-wandering-wander-jewelry) | 364 | 6 | 1 | 0 | 71 title / 152 description | long title (71); thin content (364 words); no related-article link |
-| High | 73 | [10 Hidden Travel Destinations You Haven't Heard Of – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/10-unpopular-destinations-you-need-to-visit) | 2179 | 12 | 0 | 0 | 67 title / 152 description | long title (67); no commercial internal link; no related-article link |
-| High | 73 | [6 Essential Safety Tips for Traveling Abroad – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/6-tips-safe-travel-abroad) | 1074 | 1 | 0 | 0 | 61 title / 155 description | only one H2; no commercial internal link; no related-article link |
-| High | 73 | [How to Find GPS Coordinates: 4 Easy Methods (2026) – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/how-to-find-coordinates-in-2026-the-complete-guide-to-latitude-and-longitude) | 1232 | 15 | 0 | 0 | 67 title / 154 description | long title (67); no commercial internal link; no related-article link |
-| High | 73 | [How to Fix an Unhappy Relationship: 7 Expert Tips – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/how-to-fix-an-unhappy-relationship) | 772 | 0 | 1 | 0 | 66 title / 147 description | long title (66); no H2 structure; no related-article link |
-| High | 73 | [Ultimate Tulum Travel Guide 2026: Eat, Stay & Explore – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/ultimate-tulum-travel-guide-eat-sleep-shop-party) | 2564 | 7 | 0 | 0 | 70 title / 148 description | long title (70); no commercial internal link; no related-article link |
-| High | 85 | [Elopement Checklist: 8 Things You Must Pack – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/ultimate-elopement-checklist) | 1074 | 3 | 0 | 2 | 60 title / 154 description | no commercial internal link |
 | Medium | 75 | [Sweden Travel Guide: Visiting the Famous Ice Hotel – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/travel-sweden) | 428 | 1 | 2 | 0 | 67 title / 152 description | long title (67); light content (428 words); only one H2; no related-article link |
 | Medium | 80 | [Coordinates Bracelets: Commemorate Your Favorite Travel Spots – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/coordinates-bracelets-a-fun-way-to-commemorate-your-travels-in-2026) | 470 | 3 | 1 | 0 | 78 title / 147 description | long title (78); light content (470 words); no related-article link |
 | Medium | 80 | [How to Take the Perfect Paw Print for Custom Jewelry – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/how-to-take-the-perfect-paw-print-for-custom-jewelry) | 671 | 7 | 1 | 0 | 69 title / 153 description | long title (69); light content (671 words); no related-article link |
@@ -130,11 +111,27 @@ This is the first-pass, page-by-page technical and structural audit. It identifi
 | Medium | 95 | [Unique Birthday Gift Ideas 2026 \| Personalized Jewelry – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/unique-birthday-gift-ideas-personalized-jewelry-that-tells-a-story) | 1048 | 6 | 12 | 5 | 71 title / 160 description | long title (71) |
 | Medium | 95 | [Unique Engagement Gift Ideas 2026 \| Personalized Jewelry – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/unique-engagement-gift-ideas-with-personalized-jewelry) | 1039 | 8 | 15 | 7 | 73 title / 165 description | long title (73) |
 | Medium | 95 | [Why Coordinates Jewelry Is the Most Meaningful Gift – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/why-coordinates-jewelry-is-the-most-meaningful-gift-you-can-give) | 1236 | 7 | 15 | 15 | 68 title / 153 description | long title (68) |
+| Low | 100 | [10 Overlooked Travel Ideas Worth Planning – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/10-unpopular-destinations-you-need-to-visit) | 891 | 11 | 1 | 1 | 58 title / 144 description | No automated gaps |
+| Low | 100 | [5 Meaningful Family Travel Ideas for Every Age – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/5-family-travel-spots) | 798 | 6 | 1 | 1 | 63 title / 134 description | No automated gaps |
+| Low | 100 | [6 Practical Ways to Travel Abroad More Safely – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/6-tips-safe-travel-abroad) | 1150 | 9 | 1 | 1 | 62 title / 138 description | No automated gaps |
+| Low | 100 | [7 Meaningful Trips to Add to Your Travel List – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/7-places-you-must-travel-before-you-die) | 725 | 8 | 1 | 1 | 62 title / 143 description | No automated gaps |
 | Low | 100 | [Best New Home & Housewarming Gift Ideas 2026 \| OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/new-home-gifts-why-coordinates-jewelry-makes-the-perfect-housewarming-present) | 993 | 6 | 10 | 7 | 61 title / 159 description | No automated gaps |
 | Low | 100 | [Best Personalized Christmas Gifts 2026 \| OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/best-personalized-christmas-gifts-for-everyone-on-your-list) | 1054 | 8 | 20 | 5 | 55 title / 153 description | No automated gaps |
 | Low | 100 | [Best Personalized Father's Day Gifts 2026 \| OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/best-personalized-fathers-day-gifts-that-arent-boring) | 1131 | 7 | 11 | 6 | 58 title / 160 description | No automated gaps |
 | Low | 100 | [Best Personalized Gifts for Boyfriend 2026 \| OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/best-personalized-gifts-for-boyfriend-that-hell-actually-wear) | 1029 | 6 | 9 | 7 | 59 title / 146 description | No automated gaps |
+| Low | 100 | [Coordinates Jewelry Gifts for Weddings – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/wedding-season-2026-coordinates-jewelry-gift-guide) | 714 | 6 | 1 | 2 | 55 title / 148 description | No automated gaps |
+| Low | 100 | [How to Find GPS Coordinates: A Complete Guide – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/how-to-find-coordinates-in-2026-the-complete-guide-to-latitude-and-longitude) | 1310 | 16 | 1 | 1 | 62 title / 134 description | No automated gaps |
+| Low | 100 | [How to Order Personalized Coordinates Jewelry – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/how-to-order) | 716 | 8 | 1 | 1 | 62 title / 140 description | No automated gaps |
+| Low | 100 | [How to Repair an Unhappy Relationship Together – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/how-to-fix-an-unhappy-relationship) | 754 | 8 | 1 | 1 | 63 title / 136 description | No automated gaps |
+| Low | 100 | [How to Start a Travel Journal That Lasts – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/everything-you-need-to-start-your-travel-blog) | 1185 | 9 | 1 | 1 | 57 title / 137 description | No automated gaps |
+| Low | 100 | [How to Travel on a Realistic Budget – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/5-tips-for-travel-on-budget) | 1197 | 8 | 1 | 1 | 52 title / 138 description | No automated gaps |
+| Low | 100 | [Meaningful Long-Distance Relationship Gifts – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/best-long-distance-relationship-gifts-summer-2026) | 708 | 6 | 1 | 2 | 60 title / 138 description | No automated gaps |
+| Low | 100 | [Solo Travel Tips for First-Time Travelers – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/tips-young-solo-travel) | 817 | 7 | 1 | 1 | 58 title / 137 description | No automated gaps |
+| Low | 100 | [Summer Travel Jewelry: A Meaningful Keepsake – OurCoordinates](https://ourcoordinates.com/blogs/ourcoordinates-journal/summer-travel-coordinates-jewelry-2026) | 729 | 6 | 1 | 2 | 61 title / 136 description | No automated gaps |
+| Low | 100 | [The Complete Elopement Planning Checklist – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/ultimate-elopement-checklist) | 1141 | 4 | 1 | 3 | 58 title / 136 description | No automated gaps |
 | Low | 100 | [Top 10 Most Meaningful Personalized Gifts 2026 – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/top-10-most-meaningful-personalized-gifts-in-2026) | 1121 | 13 | 17 | 6 | 63 title / 151 description | No automated gaps |
+| Low | 100 | [Travel-Inspired Jewelry and the Art of Wandering – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/art-of-wandering-wander-jewelry) | 719 | 7 | 1 | 2 | 65 title / 137 description | No automated gaps |
+| Low | 100 | [Tulum Travel Guide: Plan a Flexible Trip – OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/ultimate-tulum-travel-guide-eat-sleep-shop-party) | 965 | 11 | 1 | 1 | 57 title / 143 description | No automated gaps |
 | Low | 100 | [Ultimate Guide to Personalized Jewelry 2026 \| OurCoordinates](https://ourcoordinates.com/blogs/travel-tips/the-ultimate-guide-to-personalized-jewelry-materials-styles-how-to-choose) | 1267 | 7 | 24 | 16 | 60 title / 157 description | No automated gaps |
 
 ## Audit rules
