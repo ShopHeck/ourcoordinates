@@ -176,15 +176,43 @@ test('secondary page and collection SEO cleanup is handle-scoped', () => {
   );
 });
 
-test('product SEO titles render without an automatically appended store name', () => {
+test('product and article SEO titles render without an automatically appended store name', () => {
   const layout = read('layout/theme.liquid');
   const titleMarkup = layout.match(/<title>([\s\S]*?)<\/title>/)?.[1] || '';
 
   assert.match(
     titleMarkup,
-    /unless request\.page_type == 'product'[\s\S]*unless seo_title contains shop\.name[\s\S]*endunless[\s\S]*endunless/
+    /unless request\.page_type == 'product' or request\.page_type == 'article'[\s\S]*unless seo_title contains shop\.name[\s\S]*endunless[\s\S]*endunless/
   );
   assert.ok(titleMarkup.indexOf("request.page_type == 'product'") < titleMarkup.indexOf('seo_title contains shop.name'));
+  assert.match(layout, /request\.page_type == 'article'[\s\S]*seo_description_length > 165[\s\S]*article\.excerpt_or_content[\s\S]*truncate: 155/);
+});
+
+test('articles keep one H1 and provide accessible shopping and related-reading paths', () => {
+  const section = read('sections/main-article.liquid');
+  const card = read('snippets/article-related-card.liquid');
+  const css = read('assets/article.css');
+  const layout = read('layout/theme.liquid');
+  const audit = read('scripts/audit-blog-content.mjs');
+
+  assert.match(section, /article\.content[\s\S]*replace: '<h1', '<h2'[\s\S]*replace: '<H1', '<H2'/);
+  assert.equal((section.match(/<h1>/g) || []).length, 1);
+  assert.match(section, /article_had_embedded_h1[\s\S]*article-page__content--normalized-h1/);
+  assert.match(section, /article-audit-content:start[\s\S]*data-article-content[\s\S]*article-audit-content:end/);
+  assert.match(section, /aria-labelledby="article-shop-path-title"/);
+  assert.match(section, /routes\.all_products_collection_url/);
+  assert.match(section, /pages\['gift-finder'\]/);
+  assert.match(section, /for candidate in blog\.articles[\s\S]*candidate\.tags contains article_tag/);
+  assert.match(section, /aria-labelledby="article-next-title"/);
+  assert.match(card, /loading="lazy"/);
+  assert.match(card, /related_article\.image\.alt \| default: related_article\.title/);
+  assert.match(layout, /request\.page_type == 'article'[\s\S]*'article\.css' \| asset_url \| stylesheet_tag: preload: true/);
+  assert.match(css, /\.article-related__grid\s*\{[^}]*grid-template-columns:\s*repeat\(3/s);
+  assert.match(css, /\.article-page__content--normalized-h1 h2:first-of-type[\s\S]*display:\s*none/);
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.article-related__grid\s*\{[^}]*grid-template-columns:\s*1fr/s);
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.article-related-card__media\s*\{[^}]*aspect-ratio:\s*auto/s);
+  assert.match(audit, /article-audit-content:start/);
+  assert.match(audit, /cleanText\(articleBodyHtml\)/);
 });
 
 test('About Us tells the family origin story without promising a photo proof', () => {

@@ -1,0 +1,20 @@
+<a class="article-related-card" href="{{ related_article.url }}">
+  <div class="article-related-card__media">
+    {%- if related_article.image -%}
+      <img
+        src="{{ related_article.image | image_url: width: 720 }}"
+        alt="{{ related_article.image.alt | default: related_article.title | escape }}"
+        width="{{ related_article.image.width | at_most: 720 }}"
+        height="{{ related_article.image.width | at_most: 720 | divided_by: related_article.image.aspect_ratio | round }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      <span class="article-related-card__placeholder" aria-hidden="true">{{ related_article.title | slice: 0 }}</span>
+    {%- endif -%}
+  </div>
+  <div class="article-related-card__body">
+    <p>{{ related_article.published_at | date: '%B %Y' }}</p>
+    <h3>{{ related_article.title }}</h3>
+    <span>Read article <span aria-hidden="true">→</span></span>
+  </div>
+</a>
