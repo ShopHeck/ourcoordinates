@@ -42,6 +42,9 @@
     elsif request.page_type == 'page' and page.handle == 'reviews'
       assign seo_title = 'Customer Reviews | OurCoordinates'
       assign seo_description = 'Read product feedback published through the OurCoordinates review partner and browse reviews by personalized jewelry piece.'
+    elsif request.page_type == 'page' and page.handle == 'about-us'
+      assign seo_title = 'About OurCoordinates | Family-Owned Coordinates Jewelry'
+      assign seo_description = 'Meet the family behind OurCoordinates, an online jewelry business inspired by Santorini and built during COVID to turn meaningful places into personal keepsakes.'
     elsif request.page_type == 'page' and page.handle == 'build-yours'
       assign seo_canonical = shop.url | append: '/pages/builder'
       assign seo_noindex = true
