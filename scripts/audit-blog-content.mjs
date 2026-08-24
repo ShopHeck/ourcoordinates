@@ -7,19 +7,23 @@ const BLOG_SITEMAP_URL = `${auditBaseUrl}/sitemap_blogs_1.xml`;
 const DEFAULT_OUTPUT = 'docs/blog-content-quality-audit-2026-08-24.md';
 const outputPath = resolve(process.argv[2] || DEFAULT_OUTPUT);
 const cachePath = resolve('.blog-audit-cache/article-results.json');
-const targetManifestPath = resolve('scripts/blog-content-targets.json');
-const remediatedHandles = existsSync(targetManifestPath)
-  ? new Set(JSON.parse(readFileSync(targetManifestPath, 'utf8')).articles)
-  : new Set();
+const targetManifestPaths = [
+  resolve('scripts/blog-content-targets.json'),
+  resolve('scripts/blog-content-wave-two-targets.json')
+];
+const remediatedHandles = new Set(targetManifestPaths
+  .filter((path) => existsSync(path))
+  .flatMap((path) => JSON.parse(readFileSync(path, 'utf8')).articles));
 const requestDelay = Number.parseInt(process.env.BLOG_AUDIT_DELAY_MS || '500', 10);
 const refreshCache = process.env.BLOG_AUDIT_REFRESH === '1';
 const wait = (milliseconds) => new Promise((resolveWait) => setTimeout(resolveWait, milliseconds));
 
 const decodeHtml = (value = '') => value
+  .replace(/&amp;/gi, '&')
+  .replace(/&amp;/gi, '&')
   .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
   .replace(/&#x([\da-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
   .replace(/&nbsp;/gi, ' ')
-  .replace(/&amp;/gi, '&')
   .replace(/&quot;/gi, '"')
   .replace(/&#39;|&apos;/gi, "'")
   .replace(/&ndash;/gi, '–')
@@ -69,6 +73,9 @@ function auditArticle(url, response, html) {
     html,
     /<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["'][^>]*>/i
   );
+  const descriptionTag = html.match(/<meta[^>]+name=["']description["'][^>]*>/i)?.[0]
+    || html.match(/<meta[^>]+content=["'][^"']*["'][^>]+name=["']description["'][^>]*>/i)?.[0]
+    || '';
   const canonical = extract(
     html,
     /<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["'][^>]*>/i
@@ -106,6 +113,9 @@ function auditArticle(url, response, html) {
   if (h1Count !== 1) addIssue('high', `${h1Count} H1 elements`, 20);
   if (!articleSchema) addIssue('high', 'missing Article schema', 15);
   if (!description) addIssue('high', 'missing meta description', 20);
+  else if (/&amp;(?:#\d+|#x[\da-f]+|quot|apos|amp);/i.test(descriptionTag)) {
+    addIssue('medium', 'double-encoded meta description', 6);
+  }
   else if (description.length < 110) addIssue('medium', `short meta (${description.length})`, 6);
   else if (description.length > 165) addIssue('medium', `long meta (${description.length})`, 6);
   if (!title) addIssue('high', 'missing title', 20);
@@ -198,6 +208,22 @@ function buildReport(results, landingPageCount) {
   const auditedAt = new Date().toISOString();
   const remediatedResults = results.filter((result) => remediatedHandles.has(result.slug));
   const remediatedClean = remediatedResults.filter((result) => result.score === 100 && result.issues.length === 0).length;
+  const onlyEncodingIssues = results.some((result) => result.issues.length > 0)
+    && results.every((result) => result.issues.every((issue) => issue.label === 'double-encoded meta description'));
+  const reviewOrder = onlyEncodingIssues
+    ? [
+      '1. Deploy the theme metadata normalization and refresh the public audit to confirm the encoded descriptions are gone.',
+      '2. Verify a representative article in rendered HTML and a browser, including its title, description, canonical, headings, links, and mobile layout.',
+      '3. Continue the manual editorial phase by business priority: search intent, factual freshness, first-hand usefulness, unsupported claims, and conversion alignment.',
+      '4. Revisit search performance after the revised pages have had time to be crawled; use impressions, click-through rate, and conversions to prioritize later rewrites.'
+    ]
+    : [
+      '1. Fix critical indexing, canonical, heading, or schema failures.',
+      '2. Rewrite high-priority thin articles and add a relevant product or collection path.',
+      '3. Build topic clusters by linking each article to at least one related article and one commercial destination.',
+      '4. Tighten titles and descriptions after content intent is confirmed; do not optimize snippets before weak content is rewritten.',
+      '5. Manually review the highest-priority group for accuracy, first-hand usefulness, unsupported claims, dated information, and alignment with the OurCoordinates brand story.'
+    ];
 
   const lines = [
     '# OurCoordinates Blog Content Quality Audit',
@@ -225,11 +251,7 @@ function buildReport(results, landingPageCount) {
     '',
     '## Recommended review order',
     '',
-    '1. Fix critical indexing, canonical, heading, or schema failures.',
-    '2. Rewrite high-priority thin articles and add a relevant product or collection path.',
-    '3. Build topic clusters by linking each article to at least one related article and one commercial destination.',
-    '4. Tighten titles and descriptions after content intent is confirmed; do not optimize snippets before weak content is rewritten.',
-    '5. Manually review the highest-priority group for accuracy, first-hand usefulness, unsupported claims, dated information, and alignment with the OurCoordinates brand story.',
+    ...reviewOrder,
     '',
     '## Page-by-page inventory',
     '',
@@ -251,7 +273,9 @@ function buildReport(results, landingPageCount) {
     '',
     '## Next manual phase',
     '',
-    'Begin with the first 15 High-priority articles in this report. For each one, confirm search intent, update or remove unsupported claims, add first-hand OurCoordinates expertise, improve the opening answer, strengthen headings, and connect the article to the most relevant product, collection, and related guide.'
+    onlyEncodingIssues
+      ? 'Once the metadata normalization is live and verified, the automated structural backlog is clear. The next phase is a manual content-quality review ordered by commercial opportunity and search performance, with special attention to dated travel guidance and unsupported superlatives.'
+      : 'Begin with the first 15 High-priority articles in this report. For each one, confirm search intent, update or remove unsupported claims, add first-hand OurCoordinates expertise, improve the opening answer, strengthen headings, and connect the article to the most relevant product, collection, and related guide.'
   ];
 
   return `${lines.join('\n')}\n`;

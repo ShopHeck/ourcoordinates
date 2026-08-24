@@ -148,7 +148,7 @@ const selected = updates.map((update) => {
     throw new Error(`Article content drift detected for ${update.handle}; no SEO mutation was attempted.`);
   }
   const seoTitle = update.seoTitle || update.title;
-  if (seoTitle.length < 30 || seoTitle.length > 48 || update.summary.length < 110 || update.summary.length > 165) {
+  if (seoTitle.length < 30 || seoTitle.length > 65 || update.summary.length < 110 || update.summary.length > 165) {
     throw new Error(`Invalid SEO length for ${update.handle}; no mutation was attempted.`);
   }
   return current;
