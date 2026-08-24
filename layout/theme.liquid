@@ -37,7 +37,7 @@
     elsif request.page_type == 'blog' and blog.handle == 'ourcoordinates-journal' and seo_description == blank
       assign seo_description = 'Explore coordinates jewelry gift ideas, meaningful place stories, engraving guidance, and practical inspiration for anniversaries, travel, and milestones.'
     elsif request.page_type == 'page' and page.handle == 'gift-finder'
-      assign seo_title = 'Gift Finder | Personalized Coordinates Jewelry'
+      assign seo_title = 'Coordinates Jewelry Gift Finder | OurCoordinates'
       assign seo_description = 'Find an in-stock personalized coordinates gift by recipient, story, and budget in about a minute.'
     elsif request.page_type == 'page' and page.handle == 'reviews'
       assign seo_title = 'Customer Reviews | OurCoordinates'
@@ -45,6 +45,31 @@
     elsif request.page_type == 'page' and page.handle == 'about-us'
       assign seo_title = 'About OurCoordinates | Family-Owned Coordinates Jewelry'
       assign seo_description = 'Meet the family behind OurCoordinates, an online jewelry business inspired by Santorini and built during COVID to turn meaningful places into personal keepsakes.'
+    elsif request.page_type == 'page' and page.handle == 'shipping'
+      assign seo_title = 'Shipping & Delivery | OurCoordinates'
+      assign seo_description = 'Review OurCoordinates shipping options, production timing, delivery estimates, tracking details, and costs for personalized jewelry orders.'
+    elsif request.page_type == 'page' and page.handle == 'jewelry-cleaning-care-guide'
+      assign seo_title = 'Jewelry Cleaning & Care Guide | OurCoordinates'
+      assign seo_description = 'Learn how to clean, store, and care for personalized jewelry so necklaces, bracelets, and rings stay bright and ready to wear.'
+    elsif request.page_type == 'page' and page.handle == 'about-michael-heckert-founder-creator'
+      assign seo_title = 'Michael Heckert, Founder of OurCoordinates'
+      assign seo_description = 'Meet Michael Heckert, founder of OurCoordinates, and learn how meaningful places inspired a personalized coordinates jewelry business.'
+    elsif request.page_type == 'page' and page.handle == 'gdpr-compliance'
+      assign seo_title = 'GDPR Privacy Rights | OurCoordinates'
+      assign seo_description = 'Manage GDPR privacy rights and request access, correction, deletion, or restriction of personal data processed by OurCoordinates.'
+      assign seo_noindex = true
+    elsif request.page_type == 'page' and page.handle == 'appi-compliance'
+      assign seo_title = 'APPI Privacy Rights | OurCoordinates'
+      assign seo_description = 'Manage APPI privacy rights and request access, correction, deletion, or other handling of personal data processed by OurCoordinates.'
+      assign seo_noindex = true
+    elsif request.page_type == 'page' and page.handle == 'ccpa-compliance'
+      assign seo_title = 'California Privacy Rights | OurCoordinates'
+      assign seo_description = 'Manage California privacy rights and request access, correction, deletion, or information about personal data handled by OurCoordinates.'
+      assign seo_noindex = true
+    elsif request.page_type == 'page' and page.handle == 'ccpa-opt-out'
+      assign seo_title = 'Opt Out of Data Sale or Sharing | OurCoordinates'
+      assign seo_description = 'Submit a request to opt out of the sale or sharing of personal information associated with your OurCoordinates activity.'
+      assign seo_noindex = true
     elsif request.page_type == 'page' and page.handle == 'build-yours'
       assign seo_canonical = shop.url | append: '/pages/builder'
       assign seo_noindex = true
@@ -59,6 +84,20 @@
       assign seo_description = 'Save meaningful places in a personal memory map, then turn a favorite location into custom coordinates jewelry engraved just for you.'
     elsif request.page_type == 'page' and page.handle == 'ring-size-chart' and seo_description == blank
       assign seo_description = 'Use the OurCoordinates ring size chart and measuring guidance to choose a comfortable fit before ordering your personalized ring.'
+    elsif request.page_type == 'collection' and collection.handle == 'forever-bracelets'
+      assign seo_description = 'Shop forever bracelets that celebrate lasting love and friendship, including personalized and symbolic styles made for meaningful everyday wear.'
+    elsif request.page_type == 'collection' and collection.handle == 'mens'
+      assign seo_description = "Shop men's rings, bracelets, necklaces, and personalized jewelry in durable styles designed for meaningful gifts and everyday wear."
+    elsif request.page_type == 'collection' and collection.handle == 'gold-jewelry'
+      assign seo_description = 'Shop gold-plated necklaces, bracelets, rings, and personalized jewelry designed to add meaningful detail to everyday and occasion looks.'
+    elsif request.page_type == 'collection' and collection.handle == 'shop-couples-necklaces'
+      assign seo_description = 'Shop couples necklaces, matching pendants, and personalized designs made to celebrate shared stories, meaningful places, and lasting connection.'
+    elsif request.page_type == 'collection' and collection.handle == 'mens-rings'
+      assign seo_description = "Shop men's rings in stainless steel, silver, gold-tone, and statement styles, with personalized options for meaningful gifts."
+    elsif request.page_type == 'collection' and collection.handle == 'fathers-day-gifts'
+      assign seo_description = "Shop Father's Day jewelry for Dad, including personalized coordinates pieces, engraved keepsakes, bracelets, rings, and necklaces."
+    elsif request.page_type == 'collection' and collection.handle == 'coordinates-bracelets'
+      assign seo_description = 'Shop personalized coordinates bracelets engraved with a meaningful location, from classic cuffs to leather and chain-link styles.'
     endif
 
     assign social_image_url = blank
@@ -71,9 +110,14 @@
       assign social_image_alt = 'Gold bar necklace engraved with coordinates on cream linen'
     endif
     if social_image_url != blank
-      unless social_image_url contains 'http'
-        assign social_image_url = social_image_url | prepend: shop.url
-      endunless
+      assign social_image_prefix = social_image_url | slice: 0, 2
+      if social_image_prefix == '//'
+        assign social_image_url = social_image_url | prepend: 'https:'
+      else
+        unless social_image_url contains 'http'
+          assign social_image_url = shop.url | append: social_image_url
+        endunless
+      endif
     endif
   -%}
 

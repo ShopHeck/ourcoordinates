@@ -132,10 +132,48 @@ test('SEO social metadata and duplicate builder signals are complete', () => {
   assert.doesNotMatch(llms, /https:\/\/ourcoordinates\.com\/pages\/build-yours/);
   assert.doesNotMatch(llmsFull, /https:\/\/ourcoordinates\.com\/pages\/build-yours/);
   assert.match(llms, /https:\/\/ourcoordinates\.com\/pages\/builder/);
-  assert.match(layout, /social_image_url \| prepend: shop\.url/);
+  assert.match(layout, /social_image_prefix = social_image_url \| slice: 0, 2/);
+  assert.match(layout, /social_image_prefix == '\/\/'/);
+  assert.match(layout, /social_image_url \| prepend: 'https:'/);
+  assert.match(layout, /social_image_url = shop\.url \| append: social_image_url/);
   for (const handle of ['coordinates-sets', 'in-stock', 'christmas', 'how-it-works', 'memory-map', 'ring-size-chart']) {
     assert.ok(layout.includes(handle), `missing description fallback for ${handle}`);
   }
+});
+
+test('secondary page and collection SEO cleanup is handle-scoped', () => {
+  const layout = read('layout/theme.liquid');
+  const page = read('sections/main-page.liquid');
+
+  for (const handle of [
+    'shipping',
+    'jewelry-cleaning-care-guide',
+    'about-michael-heckert-founder-creator',
+    'gdpr-compliance',
+    'appi-compliance',
+    'ccpa-compliance',
+    'ccpa-opt-out',
+    'gift-finder',
+    'forever-bracelets',
+    'mens',
+    'gold-jewelry',
+    'shop-couples-necklaces',
+    'mens-rings',
+    'fathers-day-gifts',
+    'coordinates-bracelets'
+  ]) {
+    assert.ok(layout.includes(handle), `missing SEO cleanup for ${handle}`);
+  }
+
+  for (const privacyHandle of ['gdpr-compliance', 'appi-compliance', 'ccpa-compliance', 'ccpa-opt-out']) {
+    const branch = layout.slice(layout.indexOf(`page.handle == '${privacyHandle}'`));
+    assert.match(branch.slice(0, 700), /assign seo_noindex = true/);
+  }
+
+  assert.match(
+    page,
+    /unless page\.handle == 'about-michael-heckert-founder-creator'[\s\S]*<h1>\{\{ page\.title \}\}<\/h1>/
+  );
 });
 
 test('product SEO titles render without an automatically appended store name', () => {
