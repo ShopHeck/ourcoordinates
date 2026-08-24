@@ -19,7 +19,8 @@ const valueAfter = (flag) => {
 const updatesPath = valueAfter('--updates');
 const rollbackPath = valueAfter('--rollback');
 const targetsPath = valueAfter('--targets');
-const store = (process.env.SHOPIFY_STORE || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
+const normalizeStore = (value = '') => value.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/$/, '');
+const store = normalizeStore(process.env.SHOPIFY_STORE);
 const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 const version = process.env.SHOPIFY_API_VERSION || '2026-07';
 
@@ -68,6 +69,15 @@ const UPDATE_MUTATION = `
   }
 `;
 
+const PRODUCT_VERSION_QUERY = `
+  query ProductDescriptionVersion($id: ID!) {
+    product(id: $id) {
+      id handle status updatedAt descriptionHtml
+      seo { title description }
+    }
+  }
+`;
+
 async function fetchCatalog() {
   const products = [];
   let after = null;
@@ -80,6 +90,24 @@ async function fetchCatalog() {
     after = data.products.pageInfo.hasNextPage ? data.products.pageInfo.endCursor : null;
   } while (after);
   return products;
+}
+
+async function fetchProductVersion(id) {
+  const data = await graphql(PRODUCT_VERSION_QUERY, { id });
+  if (!data.product) throw new Error(`Product disappeared before mutation: ${id}`);
+  return data.product;
+}
+
+function assertProductUnchanged(current, expected, handle) {
+  if (current.id !== expected.id || current.handle !== expected.handle || current.status !== expected.status) {
+    throw new Error(`Product identity or status changed for ${handle}; no mutation was attempted.`);
+  }
+  if (current.updatedAt !== expected.updatedAt) {
+    throw new Error(`Concurrent edit detected for ${handle}: expected ${expected.updatedAt}, found ${current.updatedAt}`);
+  }
+  if (productContentFingerprint(current) !== productContentFingerprint(expected)) {
+    throw new Error(`Product content drift detected for ${handle}; no mutation was attempted.`);
+  }
 }
 
 async function updateContent(id, update) {
@@ -103,6 +131,9 @@ const byHandle = new Map(catalog.map((product) => [product.handle, product]));
 
 if (rollbackPath) {
   const snapshot = JSON.parse(await readFile(resolve(rollbackPath), 'utf8'));
+  if (normalizeStore(snapshot.store) !== store) {
+    throw new Error(`Rollback snapshot belongs to ${snapshot.store || 'an unknown store'}, not ${store}; no mutation was attempted.`);
+  }
   const missing = snapshot.products.filter((product) => !byHandle.has(product.handle));
   if (missing.length) throw new Error(`Rollback targets are missing: ${missing.map((product) => product.handle).join(', ')}`);
   console.log(JSON.stringify({ apply, rollback: snapshot.products.map((product) => product.handle) }, null, 2));
@@ -182,6 +213,8 @@ if (!apply) {
 }
 
 for (const item of plan) {
+  const current = await fetchProductVersion(item.before.id);
+  assertProductUnchanged(current, item.before, item.update.handle);
   const updated = await updateContent(item.before.id, item.update);
   if (updated.status !== 'ACTIVE') throw new Error(`Update changed product status for ${item.update.handle}; stopped.`);
   if (productContentFingerprint(updated) !== productContentFingerprint(item.update)) {

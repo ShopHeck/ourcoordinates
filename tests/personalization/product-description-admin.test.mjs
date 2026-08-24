@@ -87,6 +87,9 @@ test('wave-one manifest and preparation copy stay scoped and original', () => {
   assert.match(manager, /Concurrent edit detected/);
   assert.match(manager, /Product content drift detected/);
   assert.match(manager, /Post-update product content mismatch/);
+  assert.match(manager, /normalizeStore\(snapshot\.store\) !== store/);
+  const applyLoop = manager.slice(manager.indexOf('for (const item of plan)'));
+  assert.ok(applyLoop.indexOf('fetchProductVersion') < applyLoop.indexOf('updateContent'));
 });
 
 test('storefront copy does not promise photo proofs or expose editor placeholders', () => {
@@ -96,6 +99,10 @@ test('storefront copy does not promise photo proofs or expose editor placeholder
     .map((path) => readFileSync(path, 'utf8'))
     .join('\n');
 
-  assert.doesNotMatch(storefrontCopy, /photo proof/i);
+  assert.doesNotMatch(
+    storefrontCopy,
+    /\b(?:photo[-\s]?proof|proof[-\s]?photo|proof works|proof promise|proof first|proofed, and delivered)\b/i
+  );
+  assert.doesNotMatch(storefrontCopy, /photograph[^.]{0,100}(?:before shipping|approve)|nothing ships until you approve/i);
   assert.doesNotMatch(storefrontCopy, /(?:details|instructions|sizing|care)[^.]{0,40}go here/i);
 });

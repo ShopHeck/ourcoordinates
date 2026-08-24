@@ -17,6 +17,10 @@
   if product.handle == 'interlocking-circle-necklace' or product.handle contains 'interlocking-circle'
     assign preview_type = 'interlocking-circles'
   endif
+  assign has_live_preview = section.settings.show_engraving
+  if preview_type == 'birthstone-ring'
+    assign has_live_preview = false
+  endif
   assign variant_options_text = current_variant.options | join: ' ' | downcase
   assign initial_metal = ''
   if variant_options_text contains 'rose'
@@ -285,7 +289,7 @@
         <ul class="guarantees">
           {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
           {%- if section.settings.show_engraving -%}
-            {%- if settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
+            {%- if has_live_preview and settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
             {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
           {%- endif -%}
         </ul>

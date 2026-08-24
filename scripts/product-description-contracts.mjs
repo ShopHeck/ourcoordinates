@@ -41,7 +41,7 @@ const forbiddenCopy = [
   /whether you(?:'re| are) (?:looking|shopping|heading|dressing)/i,
   /having problems with our interactive map/i,
   /latlong\.net/i,
-  /guaranteed photo proof|photo proof[^.]{0,60}before (?:your )?(?:order|gift|piece) ships?/i
+  /\b(?:photo[-\s]?proof|proof[-\s]?photo)\b/i
 ];
 
 export function validateProductDescriptionUpdate(update) {

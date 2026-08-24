@@ -119,6 +119,9 @@ test('birthstone ring collects exactly two required names without a preview', ()
     snippet,
     /<svg|Birth Month|properties\[Engraving\]|type="radio"|data-engrave-preview|data-engrave-input|data-engrave-count/
   );
+  const section = read('sections/main-product.liquid');
+  assert.match(section, /if preview_type == 'birthstone-ring'[\s\S]*assign has_live_preview = false/);
+  assert.match(section, /if has_live_preview and settings\.guarantee_2 != blank/);
   assert.equal(item.javascript, false);
 });
 

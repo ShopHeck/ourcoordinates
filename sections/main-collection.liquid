@@ -28,7 +28,7 @@
         {%- if occasion_ts > now_ts and order_by_ts >= now_ts -%}
           <p class="pdp__occasion collection-occasion">
             <span class="pdp__occasion-dot" aria-hidden="true">◆</span>
-            Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to have it engraved, proofed, and delivered for {{ section.settings.occasion_label }}.
+            Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to have it engraved, checked, and delivered for {{ section.settings.occasion_label }}.
           </p>
         {%- endif -%}
       {%- endif -%}
