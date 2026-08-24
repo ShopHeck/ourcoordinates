@@ -2,3 +2,5 @@
 *.log
 .personalization-snapshots/
 .blog-audit-cache/
+.blog-admin-backups/
+.blog-admin-work/

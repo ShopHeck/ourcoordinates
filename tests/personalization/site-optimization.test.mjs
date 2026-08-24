@@ -185,7 +185,7 @@ test('product and article SEO titles render without an automatically appended st
     /unless request\.page_type == 'product' or request\.page_type == 'article'[\s\S]*unless seo_title contains shop\.name[\s\S]*endunless[\s\S]*endunless/
   );
   assert.ok(titleMarkup.indexOf("request.page_type == 'product'") < titleMarkup.indexOf('seo_title contains shop.name'));
-  assert.match(layout, /request\.page_type == 'article'[\s\S]*seo_description_length > 165[\s\S]*article\.excerpt_or_content[\s\S]*truncate: 155/);
+  assert.match(layout, /request\.page_type == 'article'[\s\S]*assign seo_title = article\.title[\s\S]*assign seo_description = article\.excerpt \| strip_html \| strip_newlines[\s\S]*seo_description_length > 165[\s\S]*article\.content[\s\S]*truncate: 155/);
 });
 
 test('articles keep one H1 and provide accessible shopping and related-reading paths', () => {
