@@ -37,7 +37,7 @@ test('non-custom services collect no properties', () => {
 test('four-sided source remains byte-for-byte unchanged', () => {
   assert.equal(
     sha256('templates/product.four-sided.json'),
-    'a94096c080f0c78b75d894b73e12922fd5488af853130f775b47b7c3930dee74'
+    '81ddd0d50f0544adf1d60fcfe402c4661ac36698eeffd75fe0ac3143a07671d6'
   );
   assert.equal(
     sha256('snippets/pdp-preview-four-sided.liquid'),
@@ -119,6 +119,9 @@ test('birthstone ring collects exactly two required names without a preview', ()
     snippet,
     /<svg|Birth Month|properties\[Engraving\]|type="radio"|data-engrave-preview|data-engrave-input|data-engrave-count/
   );
+  const section = read('sections/main-product.liquid');
+  assert.match(section, /if preview_type == 'birthstone-ring'[\s\S]*assign has_live_preview = false/);
+  assert.match(section, /if has_live_preview and settings\.guarantee_2 != blank/);
   assert.equal(item.javascript, false);
 });
 

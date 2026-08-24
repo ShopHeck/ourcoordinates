@@ -7,14 +7,14 @@
           "type": "accordion",
           "settings": {
             "title": "Product details",
-            "content": "<p>Material, pendant size, chain length, and care instructions go here.</p>"
+            "content": "<p>A circular star-map pendant in silver, gold, or rose gold. Its face carries the calculated sky chart, with an optional short caption and date beneath it.</p>"
           }
         },
         "how": {
           "type": "accordion",
           "settings": {
             "title": "How your star map is made",
-            "content": "<p>1. Tell us the date, time, and place of your moment — tap “Find my coordinates” to drop a pin on the exact spot. 2. We chart the real night sky above it: every star position is calculated for your moment, nothing is decorative. 3. We laser-engrave the map with your caption and date, send you a photo proof, and ship once you approve.</p>"
+            "content": "<p>1. Enter the date, local time, and exact map location. 2. We calculate the real star positions for that moment and show the resulting chart in the preview. 3. Check the map, caption, and date before ordering; we engrave the submitted design.</p>"
           }
         }
       },

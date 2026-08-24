@@ -24,7 +24,7 @@
         "cta1_link": "shopify://pages/gift-finder",
         "cta2_label": "Shop Best Sellers →",
         "cta2_link": "shopify://collections/best-sellers",
-        "ship_line": "Order today — ships within 5 business days, photo proof first",
+        "ship_line": "Order today — ships within 5 business days",
         "height": 92,
         "color_bg": "#fff9ef",
         "color_text": "#795e3f"
@@ -98,7 +98,7 @@
         "t2": {
           "type": "badge",
           "settings": {
-            "text": "Photo proof before shipping"
+            "text": "Live engraving preview"
           }
         },
         "t3": {

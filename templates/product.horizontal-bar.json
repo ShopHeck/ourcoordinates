@@ -7,14 +7,14 @@
           "type": "accordion",
           "settings": {
             "title": "Product details",
-            "content": "<p>Material, pendant size, chain length, and care instructions go here.</p>"
+            "content": "<p>A horizontal-bar layout with one front-facing engraving line. Select the available finish and enter up to 30 characters, including spaces and symbols.</p>"
           }
         },
         "how": {
           "type": "accordion",
           "settings": {
             "title": "How engraving works",
-            "content": "<p>1. Enter your location or coordinates above. 2. We laser-engrave it and send you a photo proof. 3. Approve it, and it ships.</p>"
+            "content": "<p>1. Enter a verified coordinate pair or short message. 2. Check every character in the live preview. 3. We engrave the exact line submitted with your order.</p>"
           }
         }
       },

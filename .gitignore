@@ -4,3 +4,5 @@
 .blog-audit-cache/
 .blog-admin-backups/
 .blog-admin-work/
+.product-admin-backups/
+.product-admin-work/
