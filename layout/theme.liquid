@@ -26,11 +26,17 @@
     if request.page_type == 'index'
       assign seo_description = 'Personalize coordinates jewelry with the place that matters most. Preview your engraving, receive a photo proof, and enjoy free US shipping.'
     elsif request.page_type == 'article'
-      assign seo_title = article.title
-      assign seo_description = article.excerpt | strip_html | strip_newlines
+      if seo_title == blank
+        assign seo_title = article.title
+      endif
+      if seo_description == blank
+        assign seo_description = article.excerpt_or_content | strip_html | strip_newlines
+      else
+        assign seo_description = seo_description | strip_html | strip_newlines
+      endif
       assign seo_description_length = seo_description | size
-      if seo_description == blank or seo_description_length > 165
-        assign seo_description = article.content | strip_html | strip_newlines | truncate: 155
+      if seo_description_length > 165
+        assign seo_description = seo_description | truncate: 155
       endif
     elsif request.page_type == 'collection' and collection.handle == 'all'
       assign seo_title = 'Personalized Coordinates Jewelry & Gifts | OurCoordinates'
