@@ -81,7 +81,9 @@
     {{ seo_title }}
     {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
     {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless seo_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    {%- unless request.page_type == 'product' -%}
+      {%- unless seo_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    {%- endunless -%}
   </title>
 
   {% if seo_description %}

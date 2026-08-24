@@ -138,6 +138,17 @@ test('SEO social metadata and duplicate builder signals are complete', () => {
   }
 });
 
+test('product SEO titles render without an automatically appended store name', () => {
+  const layout = read('layout/theme.liquid');
+  const titleMarkup = layout.match(/<title>([\s\S]*?)<\/title>/)?.[1] || '';
+
+  assert.match(
+    titleMarkup,
+    /unless request\.page_type == 'product'[\s\S]*unless seo_title contains shop\.name[\s\S]*endunless[\s\S]*endunless/
+  );
+  assert.ok(titleMarkup.indexOf("request.page_type == 'product'") < titleMarkup.indexOf('seo_title contains shop.name'));
+});
+
 test('confirmed global contrast overrides meet the audited targets', () => {
   const css = read('assets/site-optimizations.css');
   const stories = read('sections/atelier-customer-stories.liquid');
