@@ -186,8 +186,11 @@ test('product and article SEO titles render without an automatically appended st
   );
   assert.ok(titleMarkup.indexOf("request.page_type == 'product'") < titleMarkup.indexOf('seo_title contains shop.name'));
   assert.match(layout, /request\.page_type == 'article'[\s\S]*if seo_title == blank[\s\S]*assign seo_title = article\.title[\s\S]*if seo_description == blank[\s\S]*article\.excerpt_or_content[\s\S]*seo_description_length > 165[\s\S]*seo_description \| truncate: 155/);
-  assert.match(layout, /assign seo_title = page_title \| replace: '&amp;', '&' \| replace: '&amp;', '&' \| replace: '&#39;', "'"/);
-  assert.match(layout, /assign seo_description = page_description \| replace: '&amp;', '&' \| replace: '&amp;', '&' \| replace: '&#39;', "'"/);
+  assert.match(layout, /assign seo_title = page_title \| replace: '&amp;', '&'/);
+  assert.match(layout, /assign seo_description = page_description \| replace: '&amp;', '&'/);
+  assert.equal((layout.match(/seo_title \| escape_once/g) || []).length, 3);
+  assert.equal((layout.match(/seo_description \| escape_once/g) || []).length, 3);
+  assert.doesNotMatch(layout, /seo_(?:title|description) \| escape(?!_once)/);
   const llmsFull = read('templates/llms-full.txt.liquid');
   assert.match(llmsFull, /Why Coordinates Jewelry Makes a Meaningful Gift/);
   assert.doesNotMatch(llmsFull, /fastest-growing personalized gift category|millions of people are choosing/i);

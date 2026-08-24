@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
@@ -7,7 +8,10 @@ if (!snapshotArgument) throw new Error('Usage: node scripts/prepare-blog-wave-tw
 const snapshotPath = resolve(snapshotArgument);
 const outputPath = resolve(outputArgument);
 const snapshot = JSON.parse(await readFile(snapshotPath, 'utf8'));
-const auditCache = JSON.parse(await readFile(resolve('.blog-audit-cache/article-results.json'), 'utf8'));
+const auditCachePath = resolve('.blog-audit-cache/article-results.json');
+const auditCache = existsSync(auditCachePath)
+  ? JSON.parse(await readFile(auditCachePath, 'utf8'))
+  : {};
 const auditByHandle = new Map(Object.values(auditCache).map((result) => [result.slug, result]));
 
 const titleOverrides = {
