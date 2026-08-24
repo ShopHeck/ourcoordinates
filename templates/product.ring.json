@@ -7,14 +7,14 @@
           "type": "accordion",
           "settings": {
             "title": "Product details",
-            "content": "<p>Material, pendant size, chain length, and care instructions go here.</p>"
+            "content": "<p>A flat outer band in 4 mm or 6 mm widths, with silver, gold, and rose-gold finishes and whole sizes 5 through 10.</p>"
           }
         },
         "how": {
           "type": "accordion",
           "settings": {
             "title": "How engraving works",
-            "content": "<p>1. Enter your location or coordinates above. 2. We laser-engrave it and send you a photo proof. 3. Approve it, and it ships.</p>"
+            "content": "<p>1. Select the band width, finish, and measured ring size. 2. Enter up to 30 characters and inspect the preview. 3. We engrave the exact line submitted with your order.</p>"
           }
         }
       },

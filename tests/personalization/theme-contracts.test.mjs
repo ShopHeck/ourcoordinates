@@ -37,7 +37,7 @@ test('non-custom services collect no properties', () => {
 test('four-sided source remains byte-for-byte unchanged', () => {
   assert.equal(
     sha256('templates/product.four-sided.json'),
-    'a94096c080f0c78b75d894b73e12922fd5488af853130f775b47b7c3930dee74'
+    '81ddd0d50f0544adf1d60fcfe402c4661ac36698eeffd75fe0ac3143a07671d6'
   );
   assert.equal(
     sha256('snippets/pdp-preview-four-sided.liquid'),

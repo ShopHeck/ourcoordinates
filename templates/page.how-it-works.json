@@ -21,7 +21,7 @@
           "type": "step",
           "settings": {
             "title": "Crafted & engraved",
-            "text": "Each piece is individually engraved with laser precision at our workbench. We send you a photo proof of the actual engraving to approve before shipping."
+            "text": "Each piece is individually engraved with laser precision at our workbench. We review the submitted customization before shipping."
           }
         },
         "step_4": {
@@ -41,8 +41,8 @@
         "p2": {
           "type": "promise",
           "settings": {
-            "title": "Photo proof first",
-            "text": "You approve the real engraving before it ships."
+            "title": "Engraving details reviewed",
+            "text": "We check the personalization submitted with your order before it leaves."
           }
         },
         "p3": {
@@ -70,7 +70,7 @@
           "type": "faq",
           "settings": {
             "question": "How long until it arrives?",
-            "answer": "<p>Each piece is engraved to order. You'll see estimated delivery dates right on the product page, and we send a photo proof before shipping.<\/p>"
+            "answer": "<p>Each piece is engraved to order. You'll see current production and estimated delivery dates on the product page.<\/p>"
           }
         },
         "f4": {

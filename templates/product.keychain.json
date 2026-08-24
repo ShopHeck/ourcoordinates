@@ -7,14 +7,14 @@
           "type": "accordion",
           "settings": {
             "title": "Product details",
-            "content": "<p>Material, pendant size, chain length, and care instructions go here.</p>"
+            "content": "<p>A rectangular tag with a split-ring attachment, offered in silver, gold, and rose gold. The front holds one engraving line up to 30 characters.</p>"
           }
         },
         "how": {
           "type": "accordion",
           "settings": {
             "title": "How engraving works",
-            "content": "<p>1. Enter your location or coordinates above. 2. We laser-engrave it and send you a photo proof. 3. Approve it, and it ships.</p>"
+            "content": "<p>1. Enter a verified coordinate pair or short message. 2. Review the finish and every character in the preview. 3. We engrave the line submitted with your order.</p>"
           }
         }
       },
