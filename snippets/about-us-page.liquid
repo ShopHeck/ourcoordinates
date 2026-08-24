@@ -1,0 +1,185 @@
+{{ 'about-us.css' | asset_url | stylesheet_tag: preload: true }}
+
+<article class="about-page">
+  <section class="about-hero" aria-labelledby="about-hero-title">
+    <div class="about-hero__copy">
+      <p class="about-hero__origin">Our story · Santorini, Greece</p>
+      <h1 id="about-hero-title">A place can change everything.</h1>
+      <p class="about-hero__lead">
+        OurCoordinates is a family-owned, online-only business born during COVID, when we needed a way to make
+        ends meet. The idea came from a family trip to Santorini—and one place we never wanted to forget.
+      </p>
+      <div class="about-hero__actions">
+        <a class="btn about-hero__primary" href="{{ routes.all_products_collection_url }}">Shop meaningful jewelry</a>
+        <a class="about-link about-link--light" href="{{ pages['how-it-works'].url | default: '/pages/how-it-works' }}">
+          See how it works <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="about-hero__place">Santorini was the beginning. Your place is the next chapter.</p>
+    </div>
+
+    <figure class="about-hero__media">
+      <img
+        src="{{ 'lifestyle-necklace.jpg' | asset_url }}"
+        alt="Woman holding a personalized gold bar necklace in warm evening light"
+        width="831"
+        height="1200"
+        loading="eager"
+        fetchpriority="high"
+      >
+    </figure>
+  </section>
+
+  <section class="about-origin page-width" aria-labelledby="about-origin-title">
+    <div class="about-origin__story">
+      <h2 id="about-origin-title">It started with a memory we could locate on a map.</h2>
+      <div class="about-origin__prose">
+        <p>
+          Before OurCoordinates was a business, Santorini was simply a family memory: white villages above the
+          Aegean, long evenings together, and the feeling that a place can hold an entire season of your life.
+        </p>
+        <p>
+          Then COVID changed the world—and our plans with it. We started an online shop from home to help make
+          ends meet while staying close as a family. We kept returning to that trip and to a simple idea: what if
+          the places that shape us could become something we carry every day?
+        </p>
+        <p>
+          That idea became OurCoordinates. Today, we help people turn first homes, proposals, hometowns, faraway
+          adventures, and quiet everyday memories into jewelry engraved with a place that belongs to them.
+        </p>
+      </div>
+    </div>
+
+    <div class="about-origin__visual">
+      <figure class="about-origin__image">
+        <img
+          src="{{ 'macro-engraving.jpg' | asset_url }}"
+          alt="Close view of latitude and longitude engraved into a gold pendant"
+          width="1200"
+          height="753"
+          loading="lazy"
+        >
+      </figure>
+      <div class="about-origin__marker" aria-label="Santorini, Greece—the place that inspired OurCoordinates">
+        <span class="about-origin__pin" aria-hidden="true"></span>
+        <span>Santorini, Greece</span>
+        <strong>The place that inspired ours</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-family" aria-labelledby="about-family-title">
+    <div class="page-width">
+      <div class="about-family__intro">
+        <h2 id="about-family-title">Small by design. Personal on purpose.</h2>
+        <p>
+          Being family-owned and online-only keeps us close to the work and focused on what matters: the meaning
+          behind each order, not mass production for its own sake.
+        </p>
+      </div>
+
+      <dl class="about-family__principles">
+        <div>
+          <dt>Family-owned</dt>
+          <dd>The same family story that started the business still guides how we care for every order.</dd>
+        </div>
+        <div>
+          <dt>Online-only</dt>
+          <dd>We meet customers wherever they are and keep the experience direct, clear, and personal.</dd>
+        </div>
+        <div>
+          <dt>Engraved to order</dt>
+          <dd>Your piece begins with your place and is individually engraved in the USA.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="about-process page-width" aria-labelledby="about-process-title">
+    <header class="about-process__head">
+      <h2 id="about-process-title">From a location to something you can carry.</h2>
+      <p>No complicated design language. Just your place, translated carefully into a personal piece.</p>
+    </header>
+
+    <ol class="about-process__steps">
+      <li>
+        <span class="about-process__number" aria-hidden="true">01</span>
+        <div>
+          <h3>Choose the piece</h3>
+          <p>Start with the bracelet, necklace, ring, or keepsake that fits the person and the story.</p>
+        </div>
+      </li>
+      <li>
+        <span class="about-process__number" aria-hidden="true">02</span>
+        <div>
+          <h3>Share the place</h3>
+          <p>Enter an address or your coordinates. Our preview helps you check the placement before ordering.</p>
+        </div>
+      </li>
+      <li>
+        <span class="about-process__number" aria-hidden="true">03</span>
+        <div>
+          <h3>We engrave it</h3>
+          <p>Your design is engraved to order, turning a location on a map into a reminder made to be worn.</p>
+        </div>
+      </li>
+    </ol>
+
+    <a class="about-link" href="{{ pages['how-it-works'].url | default: '/pages/how-it-works' }}">
+      Explore the full process <span aria-hidden="true">→</span>
+    </a>
+  </section>
+
+  <section class="about-meaning" aria-labelledby="about-meaning-title">
+    <figure class="about-meaning__media">
+      <img
+        src="{{ 'customer-couple.jpg' | asset_url }}"
+        alt="Couple sharing a happy moment beside the coast, with a personalized necklace visible"
+        width="1024"
+        height="966"
+        loading="lazy"
+      >
+    </figure>
+    <div class="about-meaning__copy">
+      <p class="about-meaning__statement">The jewelry is not the whole story. The place is.</p>
+      <h2 id="about-meaning-title">Made for the moments people share.</h2>
+      <p>
+        Where you met. Where you said yes. The house that became home. The city you left, or the one you found.
+        Coordinates give those memories a quiet language—and make them easy to keep close.
+      </p>
+      <a class="about-link" href="{{ routes.all_products_collection_url }}">
+        Find the piece for your place <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="about-cta" aria-labelledby="about-cta-title">
+    <div class="about-cta__rings" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="page-width about-cta__inner">
+      <p>Every meaningful story has a location.</p>
+      <h2 id="about-cta-title">What place would you carry?</h2>
+      <div class="about-cta__actions">
+        <a class="btn" href="{{ routes.all_products_collection_url }}">Shop coordinates jewelry</a>
+        <a class="about-link about-link--light" href="{{ pages['gift-finder'].url | default: '/pages/gift-finder' }}">
+          Find a gift <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</article>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": {{ 'About OurCoordinates' | json }},
+    "url": {{ canonical_url | json }},
+    "description": {{ 'The story of OurCoordinates, a family-owned online jewelry business inspired by Santorini and started during COVID.' | json }},
+    "mainEntity": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }},
+      "description": {{ 'A family-owned online business that turns meaningful places into personalized coordinates jewelry.' | json }}
+    }
+  }
+</script>

@@ -149,6 +149,29 @@ test('product SEO titles render without an automatically appended store name', (
   assert.ok(titleMarkup.indexOf("request.page_type == 'product'") < titleMarkup.indexOf('seo_title contains shop.name'));
 });
 
+test('About Us tells the family origin story without promising a photo proof', () => {
+  const page = read('sections/main-page.liquid');
+  const about = read('snippets/about-us-page.liquid');
+  const css = read('assets/about-us.css');
+  const layout = read('layout/theme.liquid');
+
+  assert.match(page, /page\.handle == 'about-us'/);
+  assert.match(page, /render 'about-us-page'/);
+  for (const phrase of ['family-owned', 'online-only', 'COVID', 'Santorini']) {
+    assert.ok(about.includes(phrase), `missing About Us story detail: ${phrase}`);
+  }
+  assert.doesNotMatch(about, /photo proof/i);
+  assert.match(about, /"@type": "AboutPage"/);
+  assert.match(about, /loading="eager"[\s\S]*fetchpriority="high"/);
+  assert.match(css, /@media \(max-width: 680px\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(layout, /page\.handle == 'about-us'/);
+  assert.match(layout, /About OurCoordinates \| Family-Owned Coordinates Jewelry/);
+  for (const llms of [read('templates/llms.txt.liquid'), read('templates/llms-full.txt.liquid')]) {
+    assert.match(llms, /online jewelry business inspired by Santorini and started during COVID/);
+  }
+});
+
 test('confirmed global contrast overrides meet the audited targets', () => {
   const css = read('assets/site-optimizations.css');
   const stories = read('sections/atelier-customer-stories.liquid');
