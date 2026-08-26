@@ -25,6 +25,20 @@ test('cart drawer keeps checkout visible in a styled, accessible panel', () => {
   assert.doesNotMatch(header, /aria-label="Cart"/);
 });
 
+test('AJAX product forms emit one Shopify add-to-cart event per click', () => {
+  const js = read('assets/global.js');
+  const section = read('sections/main-product.liquid');
+
+  assert.match(section, /<button type="submit" class="btn btn--full" data-atc/);
+  assert.match(js, /var PRODUCT_FORM_SUBMIT_EVENT = 'theme:product-form-submit'/);
+  assert.match(js, /form\.addEventListener\('submit', listener\)/);
+  assert.match(js, /form\.addEventListener\(PRODUCT_FORM_SUBMIT_EVENT, listener\)/);
+  assert.match(js, /button\.type = 'button'/);
+  assert.match(js, /button\.addEventListener\('click', function \(\) \{ submitProductForm\(form\); \}\)/);
+  assert.match(js, /document\.addEventListener\(PRODUCT_FORM_SUBMIT_EVENT, function \(e\)/);
+  assert.doesNotMatch(js, /document\.addEventListener\('submit', function \(e\) \{\s*var form = e\.target;\s*if \(!form\.matches \|\| !form\.matches\('form\[data-product-form\]'\)\)/);
+});
+
 test('empty carts offer direct best-seller and guided gift recovery paths', () => {
   const drawer = read('sections/cart-drawer.liquid');
   const cart = read('sections/main-cart.liquid');
