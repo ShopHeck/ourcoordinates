@@ -1,4 +1,27 @@
 /* Meridian theme JS — no dependencies */
+var PRODUCT_FORM_SUBMIT_EVENT = 'theme:product-form-submit';
+
+function addProductFormSubmitListener(form, listener) {
+  form.addEventListener('submit', listener);
+  form.addEventListener(PRODUCT_FORM_SUBMIT_EVENT, listener);
+}
+
+function submitProductForm(form) {
+  if (!form) return;
+  if (!form.noValidate && !form.reportValidity()) return;
+
+  if (document.querySelector('[data-cart-drawer]')) {
+    form.dispatchEvent(new CustomEvent(PRODUCT_FORM_SUBMIT_EVENT, {
+      bubbles: true,
+      cancelable: true
+    }));
+    return;
+  }
+
+  if (form.requestSubmit) form.requestSubmit();
+  else form.submit();
+}
+
 (function () {
   'use strict';
 
@@ -221,7 +244,7 @@
 
     /* require engraving before add-to-cart when marked required */
     if (form) {
-      form.addEventListener('submit', function (e) {
+      addProductFormSubmitListener(form, function (e) {
         if (engraveInput && engraveInput.required && !engraveInput.value.trim()) {
           e.preventDefault();
           engraveInput.focus();
@@ -252,7 +275,7 @@
         sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
       }, { rootMargin: '-80px 0px 0px 0px' }).observe(buyBox);
       sticky.querySelector('[data-sticky-submit]').addEventListener('click', function () {
-        form.requestSubmit ? form.requestSubmit() : form.submit();
+        submitProductForm(form);
       });
     }
   }
@@ -451,7 +474,7 @@
     /* require engraving before ATC */
     var form = root.querySelector('form[data-product-form]');
     if (form && input.required) {
-      form.addEventListener('submit', function (e) {
+      addProductFormSubmitListener(form, function (e) {
         if (!input.value.trim()) {
           e.preventDefault();
           input.focus();
@@ -559,7 +582,7 @@
     var form = root.querySelector('form[data-product-form]');
     var line1 = root.querySelector('[data-dt-input="1"]');
     if (form && line1 && line1.required) {
-      form.addEventListener('submit', function (e) {
+      addProductFormSubmitListener(form, function (e) {
         if (!line1.value.trim()) {
           e.preventDefault();
           line1.focus();
@@ -741,7 +764,7 @@
     /* require side 1 before ATC */
     var form = root.querySelector('form[data-product-form]');
     if (form && side1Input) {
-      form.addEventListener('submit', function (e) {
+      addProductFormSubmitListener(form, function (e) {
         if (side1Input.required && !side1Input.value.trim()) {
           e.preventDefault();
           side1Input.focus();
@@ -888,7 +911,7 @@
   /* ---- FORM VALIDATION ---- */
   var form = root.querySelector('form[data-product-form]');
   if (form) {
-    form.addEventListener('submit', function (e) {
+    addProductFormSubmitListener(form, function (e) {
       if (isCustomMode) {
         /* require all visible per-piece inputs */
         var missing = false;
@@ -935,6 +958,19 @@
   var urlRoot = drawer.dataset.urlRoot || '/';
   var busy = false;
   var lastDrawerTrigger = null;
+
+  /* Shopify's storefront event listener tracks native product-form submits.
+     The drawer also adds through fetch(), so allowing both creates two
+     product_added_to_cart events for one click. While the drawer is active,
+     route the primary button through a theme-only event; the validators above
+     listen to both paths and the no-JS/classic-cart submit remains unchanged. */
+  document.querySelectorAll('form[data-product-form]').forEach(function (form) {
+    form.querySelectorAll('button[data-atc]').forEach(function (button) {
+      if (button.type !== 'submit') return;
+      button.type = 'button';
+      button.addEventListener('click', function () { submitProductForm(form); });
+    });
+  });
 
   /* the gift-wrap add-on only works with this code, so only now reveal it */
   document.querySelectorAll('[data-gift-wrap-addon]').forEach(function (el) {
@@ -1051,7 +1087,7 @@
     setTimeout(function () { err.hidden = true; }, 6000);
   }
 
-  document.addEventListener('submit', function (e) {
+  document.addEventListener(PRODUCT_FORM_SUBMIT_EVENT, function (e) {
     var form = e.target;
     if (!form.matches || !form.matches('form[data-product-form]')) return;
     if (e.defaultPrevented) return; /* engraving validation already blocked it */
@@ -1403,7 +1439,7 @@
   /* require the shared coordinates before add to cart */
   var form = root.querySelector('form[data-product-form]');
   if (form && shared.required) {
-    form.addEventListener('submit', function (e) {
+    addProductFormSubmitListener(form, function (e) {
       if (!shared.value.trim()) {
         e.preventDefault();
         shared.focus();
