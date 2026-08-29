@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -49,7 +58,7 @@
       "settings": {
         "eyebrow": "Don't know their coordinates?",
         "heading": "The gift that says you remember.",
-        "text": "Their hometown, your first date, the porch where everything happened — engraved on jewelry made for them alone. Tell us the story and the 60-second gift finder does the rest.",
+        "text": "Their hometown, your first date, the porch where everything happened \u2014 engraved on jewelry made for them alone. Tell us the story and the 60-second gift finder does the rest.",
         "button_label": "Find their place",
         "button_link": "/pages/gift-finder",
         "button_label_2": "See how it works",
@@ -62,16 +71,21 @@
       "settings": {
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",
-        "attribution": "Lucy — United States",
+        "attribution": "Lucy \u2014 United States",
         "button_label": "Shop matching sets",
         "button_link": "shopify://products/matching-coordinates-necklaces"
       }
+    },
+    "oc-copy": {
+      "type": "oc-collection-copy",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "trust",
     "story",
-    "quote"
+    "quote",
+    "oc-copy"
   ]
 }

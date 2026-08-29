@@ -1,9 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-collection",
       "settings": {
-        "eyebrow": "Grandparents Day · Sep 13",
+        "eyebrow": "Grandparents Day \u00b7 Sep 13",
         "occasion_label": "Grandparents Day",
         "occasion_date": "2026-09-13"
       }
@@ -49,7 +58,7 @@
       "settings": {
         "eyebrow": "Where the family story started",
         "heading": "Grandma's front porch has coordinates.",
-        "text": "The farmhouse, the old street, the town they built a life in — two little numbers only your family understands, engraved to order.",
+        "text": "The farmhouse, the old street, the town they built a life in \u2014 two little numbers only your family understands, engraved to order.",
         "button_label": "Find their place",
         "button_link": "/pages/gift-finder",
         "button_label_2": "See how it works",
@@ -62,16 +71,21 @@
       "settings": {
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",
-        "attribution": "Lucy — United States",
+        "attribution": "Lucy \u2014 United States",
         "button_label": "Shop matching sets",
         "button_link": "shopify://products/matching-coordinates-necklaces"
       }
+    },
+    "oc-copy": {
+      "type": "oc-collection-copy",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "trust",
     "story",
-    "quote"
+    "quote",
+    "oc-copy"
   ]
 }

@@ -97,11 +97,16 @@
         "judge_me_reviews_testimonials_carousel_E3cPgD"
       ],
       "settings": {}
+    },
+    "oc-copy": {
+      "type": "oc-collection-copy",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "trust_strip_LAnWnr",
-    "17875878061160196e"
+    "17875878061160196e",
+    "oc-copy"
   ]
 }

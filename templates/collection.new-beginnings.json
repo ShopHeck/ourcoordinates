@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -49,7 +58,7 @@
       "settings": {
         "eyebrow": "For what comes next",
         "heading": "New year. New coordinates.",
-        "text": "The city you're moving to, the summit on this year's list, the place you promised you'd finally go — wear it until you get there.",
+        "text": "The city you're moving to, the summit on this year's list, the place you promised you'd finally go \u2014 wear it until you get there.",
         "button_label": "Find your place",
         "button_link": "/pages/gift-finder",
         "button_label_2": "See how it works",
@@ -62,16 +71,21 @@
       "settings": {
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",
-        "attribution": "Lucy — United States",
+        "attribution": "Lucy \u2014 United States",
         "button_label": "Shop matching sets",
         "button_link": "shopify://products/matching-coordinates-necklaces"
       }
+    },
+    "oc-copy": {
+      "type": "oc-collection-copy",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "trust",
     "story",
-    "quote"
+    "quote",
+    "oc-copy"
   ]
 }
