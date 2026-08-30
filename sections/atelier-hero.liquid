@@ -7,6 +7,8 @@
       {{ s.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', alt: s.image_alt, widths: '800, 1200, 1600, 2000, 2400' }}
     {%- else -%}
       <picture>
+        <source media="(max-width: 700px)" type="image/webp" srcset="{{ 'hero-necklace-mobile-v2.webp' | asset_url }}" width="862" height="1825">
+        <source type="image/webp" srcset="{{ 'hero-necklace-v2.webp' | asset_url }}" width="1720" height="914">
         <source media="(max-width: 700px)" srcset="{{ 'hero-necklace-mobile.jpg' | asset_url }}">
         <img src="{{ 'hero-necklace.jpg' | asset_url }}" alt="{{ s.image_alt | escape }}" width="1200" height="638" loading="eager" fetchpriority="high" decoding="async">
       </picture>
@@ -139,7 +141,7 @@
   "name": "Atelier Hero",
   "tag": "section",
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Use images/hero-necklace.jpg from the Atelier image set." },
+    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Leave blank to use the optimized, art-directed desktop and mobile hero assets." },
     { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Gold bar necklace engraved with coordinates, resting on cream linen" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Custom coordinates jewelry · engraved to order in the USA" },
     { "type": "textarea", "id": "headline", "label": "Headline (HTML allowed)", "default": "Some <em>places</em><br>deserve to<br>be <em>worn.</em>" },
