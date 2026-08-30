@@ -119,12 +119,18 @@ test('above-fold collection cards receive explicit responsive loading priority',
   assert.match(collection, /image_fetchpriority: card_priority/);
 });
 
-test('homepage hero has an accurate responsive mobile fallback', () => {
+test('homepage hero serves optimized art-directed WebP assets with JPEG fallbacks', () => {
   const hero = read('sections/atelier-hero.liquid');
 
   assert.equal(existsSync(join(ROOT, 'assets/hero-necklace-mobile.jpg')), true);
+  assert.equal(existsSync(join(ROOT, 'assets/hero-necklace-v2.webp')), true);
+  assert.equal(existsSync(join(ROOT, 'assets/hero-necklace-mobile-v2.webp')), true);
   assert.match(hero, /<picture>/);
+  assert.match(hero, /type="image\/webp"/);
+  assert.match(hero, /hero-necklace-mobile-v2\.webp/);
+  assert.match(hero, /hero-necklace-v2\.webp/);
   assert.match(hero, /hero-necklace-mobile\.jpg/);
+  assert.match(hero, /hero-necklace\.jpg/);
   assert.match(hero, /width="1200" height="638"/);
   assert.doesNotMatch(hero, /width="2048" height="1088"/);
 });

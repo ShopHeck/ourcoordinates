@@ -1,0 +1,65 @@
+{
+  "release": "storefront-image-improvements-2026-08-30",
+  "mode": "append-only",
+  "assetRoot": "admin-assets/storefront-image-improvements-2026-08-30",
+  "products": [
+    {
+      "handle": "custom-birthstone-rings",
+      "expectedProductId": "gid://shopify/Product/5728721895581",
+      "expectedStatus": "ACTIVE",
+      "media": [
+        {
+          "filename": "custom-birthstone-ring-hero-v2.webp",
+          "role": "candidate-primary",
+          "alt": "Silver two-name birthstone ring with green and blue stones"
+        },
+        {
+          "filename": "custom-birthstone-ring-lifestyle-v2.webp",
+          "role": "lifestyle",
+          "alt": "Two-name birthstone ring worn on a hand in warm natural light"
+        }
+      ]
+    },
+    {
+      "handle": "initial-necklace-for-men",
+      "expectedProductId": "gid://shopify/Product/7898560758018",
+      "expectedStatus": "ACTIVE",
+      "media": [
+        {
+          "filename": "initial-necklace-men-hero-v2.webp",
+          "role": "candidate-primary",
+          "alt": "Black initial bar necklace with engraved letter A"
+        },
+        {
+          "filename": "initial-necklace-men-lifestyle-v2.webp",
+          "role": "lifestyle",
+          "alt": "Man wearing a black initial bar necklace with letter A"
+        }
+      ]
+    },
+    {
+      "handle": "matching-coordinates-necklaces",
+      "expectedProductId": "gid://shopify/Product/5894923747485",
+      "expectedStatus": "ACTIVE",
+      "media": [
+        {
+          "filename": "matching-coordinates-necklaces-set-hero-v2.webp",
+          "role": "candidate-primary",
+          "alt": "Two matching silver coordinates bar necklaces"
+        }
+      ]
+    },
+    {
+      "handle": "personalized-lock-necklace",
+      "expectedProductId": "gid://shopify/Product/5927067484317",
+      "expectedStatus": "ACTIVE",
+      "media": [
+        {
+          "filename": "personalized-lock-necklace-hero-v2.webp",
+          "role": "candidate-primary",
+          "alt": "Silver personalized padlock necklace engraved Unlock My Heart"
+        }
+      ]
+    }
+  ]
+}
