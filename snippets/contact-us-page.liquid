@@ -1,0 +1,212 @@
+{{ 'contact-page.css' | asset_url | stylesheet_tag: preload: true }}
+
+{%- liquid
+  assign support_email = shop.email | default: 'info@ourcoordinates.com'
+  assign faq_url = pages['faqs'].url | default: '/pages/faqs'
+  assign shipping_url = pages['shipping'].url | default: '/pages/shipping'
+  assign refund_url = shop.refund_policy.url | default: '/policies/refund-policy'
+-%}
+
+<div class="contact-page">
+  <section class="contact-hero" aria-labelledby="contact-page-title">
+    <div class="contact-hero__grid" aria-hidden="true"></div>
+    <div class="page-width contact-hero__inner">
+      <div class="contact-hero__content">
+        <p class="contact-hero__eyebrow">Customer care · Tampa Bay, Florida</p>
+        <h1 id="contact-page-title">We’re here to help.</h1>
+        <p class="contact-hero__lead">Questions about an order, an engraving, or the right piece? Tell us what you need and our team will help you find the clearest next step.</p>
+        <div class="contact-hero__actions">
+          <a class="btn contact-hero__button" href="#contact-form">Send us a message</a>
+          <a class="contact-hero__email" href="mailto:{{ support_email | escape }}">{{ support_email | escape }}</a>
+        </div>
+        <p class="contact-hero__response"><span aria-hidden="true"></span> We typically reply within 24 hours.</p>
+      </div>
+
+      <div class="contact-hero__visual">
+        <img
+          src="{{ 'macro-engraving.jpg' | asset_url }}"
+          alt="Close-up of coordinates engraved into a gold bar pendant"
+          width="1200"
+          height="753"
+          loading="eager"
+          fetchpriority="high"
+        >
+        <div class="contact-hero__signal" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p class="contact-hero__coordinates">27.7676° N / 82.6403° W</p>
+      </div>
+    </div>
+  </section>
+
+  <nav class="contact-routes" aria-label="Quick help">
+    <div class="page-width contact-routes__grid">
+      <a class="contact-route" href="{{ faq_url }}">
+        <span class="contact-route__label">Before you order</span>
+        <strong>Personalization &amp; product questions</strong>
+        <span class="contact-route__link">Browse FAQs <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="contact-route" href="{{ shipping_url }}">
+        <span class="contact-route__label">Already ordered</span>
+        <strong>Production, shipping &amp; tracking</strong>
+        <span class="contact-route__link">View shipping help <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="contact-route" href="{{ refund_url }}">
+        <span class="contact-route__label">Something isn’t right</span>
+        <strong>Returns, damage &amp; order issues</strong>
+        <span class="contact-route__link">Read our return policy <span aria-hidden="true">→</span></span>
+      </a>
+    </div>
+  </nav>
+
+  <section class="contact-main" aria-labelledby="contact-form-title">
+    <div class="page-width contact-main__grid">
+      <div class="contact-form-panel" id="contact-form">
+        <header class="contact-form-panel__head">
+          <p class="coord-eyebrow">Send a message</p>
+          <h2 id="contact-form-title">How can we help?</h2>
+          <p>Share the details below. If your question is about an existing order, include the order number from your confirmation email.</p>
+        </header>
+
+        {%- form 'contact', id: 'ContactForm', class: 'contact-page__form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="contact-form__notice contact-form__notice--success" role="status" tabindex="-1" autofocus>
+              <span class="contact-form__notice-mark" aria-hidden="true">✓</span>
+              <div>
+                <strong>Your message is on its way.</strong>
+                <p>We’ll reply to the email address you provided, typically within 24 hours.</p>
+              </div>
+            </div>
+          {%- elsif form.errors -%}
+            <div class="contact-form__notice contact-form__notice--error" role="alert" tabindex="-1" autofocus>
+              <strong>Please check the highlighted information.</strong>
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="contact-form__row">
+            <div class="contact-field">
+              <label for="ContactName-{{ section.id }}">Name</label>
+              <input
+                id="ContactName-{{ section.id }}"
+                type="text"
+                name="contact[name]"
+                autocomplete="name"
+                value="{% if form.name %}{{ form.name | escape }}{% elsif customer %}{{ customer.name | escape }}{% endif %}"
+                required
+              >
+            </div>
+            <div class="contact-field{% if form.errors contains 'email' %} contact-field--error{% endif %}">
+              <label for="ContactEmail-{{ section.id }}">Email</label>
+              <input
+                id="ContactEmail-{{ section.id }}"
+                type="email"
+                name="contact[email]"
+                autocomplete="email"
+                autocapitalize="off"
+                spellcheck="false"
+                value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}"
+                aria-required="true"
+                {% if form.errors contains 'email' %}aria-invalid="true" aria-describedby="ContactEmailError-{{ section.id }}"{% endif %}
+                required
+              >
+              {%- if form.errors contains 'email' -%}
+                <small id="ContactEmailError-{{ section.id }}">Enter a valid email address.</small>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="contact-form__row">
+            <div class="contact-field">
+              <label for="ContactOrder-{{ section.id }}">Order number <span>Optional</span></label>
+              <input
+                id="ContactOrder-{{ section.id }}"
+                type="text"
+                name="contact[order_number]"
+                autocomplete="off"
+                inputmode="text"
+                placeholder="#1234"
+                aria-describedby="ContactOrderHelp-{{ section.id }}"
+              >
+              <small id="ContactOrderHelp-{{ section.id }}">You’ll find this in your confirmation email.</small>
+            </div>
+            <div class="contact-field">
+              <label for="ContactTopic-{{ section.id }}">What do you need help with?</label>
+              <select id="ContactTopic-{{ section.id }}" name="contact[topic]" required>
+                <option value="" selected disabled>Choose a topic</option>
+                <option value="Order status or shipping">Order status or shipping</option>
+                <option value="Change or cancel an order">Change or cancel an order</option>
+                <option value="Personalization or engraving">Personalization or engraving</option>
+                <option value="Damaged or incorrect item">Damaged or incorrect item</option>
+                <option value="Return or exchange">Return or exchange</option>
+                <option value="Product question">Product question</option>
+                <option value="Something else">Something else</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="contact-field">
+            <label for="ContactMessage-{{ section.id }}">Message</label>
+            <textarea
+              id="ContactMessage-{{ section.id }}"
+              name="contact[body]"
+              rows="7"
+              placeholder="Tell us what happened and what outcome would help."
+              required
+            >{{ form.body | escape }}</textarea>
+          </div>
+
+          <div class="contact-form__footer">
+            <button class="btn contact-form__submit" type="submit">
+              Send message
+              <span aria-hidden="true">→</span>
+            </button>
+            <p>Your details are used only to respond to this request. See our <a href="{{ shop.privacy_policy.url | default: '/policies/privacy-policy' }}">privacy policy</a>.</p>
+          </div>
+        {%- endform -%}
+      </div>
+
+      <aside class="contact-aside" aria-label="Before you send your message">
+        <div class="contact-aside__intro">
+          <p class="contact-aside__coordinates">27.7676° N / 82.6403° W</p>
+          <h2>A little detail helps us help faster.</h2>
+        </div>
+        <ol class="contact-aside__steps">
+          <li>
+            <span>01</span>
+            <div>
+              <strong>Include your order number</strong>
+              <p>It lets us find your piece and its personalization details quickly.</p>
+            </div>
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <strong>Check the email address</strong>
+              <p>We’ll send the reply there, so use an inbox you can access.</p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <strong>Tell us if it’s time-sensitive</strong>
+              <p>Address changes and cancellations have a short window once engraving begins.</p>
+            </div>
+          </li>
+        </ol>
+        <div class="contact-aside__direct">
+          <span>Prefer email?</span>
+          <a href="mailto:{{ support_email | escape }}">{{ support_email | escape }}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="contact-reassurance" aria-labelledby="contact-reassurance-title">
+    <div class="page-width contact-reassurance__inner">
+      <p class="coord-eyebrow">Real people, thoughtful help</p>
+      <h2 id="contact-reassurance-title">Your piece carries a place that matters. We treat the details that way.</h2>
+      <p>Our family-run team reviews each request and helps with the practical next step—whether that means checking an engraving, finding an order, or making something right.</p>
+    </div>
+  </section>
+</div>

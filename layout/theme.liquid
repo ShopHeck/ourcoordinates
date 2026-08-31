@@ -58,6 +58,9 @@
     elsif request.page_type == 'page' and page.handle == 'about-us'
       assign seo_title = 'About OurCoordinates | Family-Owned Coordinates Jewelry'
       assign seo_description = 'Meet the family behind OurCoordinates, an online jewelry business inspired by Santorini and built during COVID to turn meaningful places into personal keepsakes.'
+    elsif request.page_type == 'page' and page.handle == 'contact'
+      assign seo_title = 'Contact OurCoordinates | Order & Personalization Help'
+      assign seo_description = 'Contact OurCoordinates for help with an order, engraving, personalization, shipping, returns, or choosing the right coordinates jewelry gift.'
     elsif request.page_type == 'page' and page.handle == 'shipping'
       assign seo_title = 'Shipping & Delivery | OurCoordinates'
       assign seo_description = 'Review OurCoordinates shipping options, production timing, delivery estimates, tracking details, and costs for personalized jewelry orders.'
@@ -97,6 +100,20 @@
       assign seo_description = 'Save meaningful places in a personal memory map, then turn a favorite location into custom coordinates jewelry engraved just for you.'
     elsif request.page_type == 'page' and page.handle == 'ring-size-chart' and seo_description == blank
       assign seo_description = 'Use the OurCoordinates ring size chart and measuring guidance to choose a comfortable fit before ordering your personalized ring.'
+    elsif request.page_type == 'collection' and collection.handle == 'forever-bracelets'
+      assign seo_description = 'Shop forever bracelets that celebrate lasting love and friendship, including personalized and symbolic styles made for meaningful everyday wear.'
+    elsif request.page_type == 'collection' and collection.handle == 'mens'
+      assign seo_description = "Shop men's rings, bracelets, necklaces, and personalized jewelry in durable styles designed for meaningful gifts and everyday wear."
+    elsif request.page_type == 'collection' and collection.handle == 'gold-jewelry'
+      assign seo_description = 'Shop gold-plated necklaces, bracelets, rings, and personalized jewelry designed to add meaningful detail to everyday and occasion looks.'
+    elsif request.page_type == 'collection' and collection.handle == 'shop-couples-necklaces'
+      assign seo_description = 'Shop couples necklaces, matching pendants, and personalized designs made to celebrate shared stories, meaningful places, and lasting connection.'
+    elsif request.page_type == 'collection' and collection.handle == 'mens-rings'
+      assign seo_description = "Shop men's rings in stainless steel, silver, gold-tone, and statement styles, with personalized options for meaningful gifts."
+    elsif request.page_type == 'collection' and collection.handle == 'fathers-day-gifts'
+      assign seo_description = "Shop Father's Day jewelry for Dad, including personalized coordinates pieces, engraved keepsakes, bracelets, rings, and necklaces."
+    elsif request.page_type == 'collection' and collection.handle == 'coordinates-bracelets'
+      assign seo_description = 'Shop personalized coordinates bracelets engraved with a meaningful location, from classic cuffs to leather and chain-link styles.'
     endif
 
     assign social_image_url = blank

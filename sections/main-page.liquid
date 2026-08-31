@@ -1,5 +1,7 @@
 {%- if page.handle == 'about-us' -%}
   {% render 'about-us-page' %}
+{%- elsif page.handle == 'contact' -%}
+  {% render 'contact-us-page' %}
 {%- else -%}
   <section class="section">
     <div class="page-width page-narrow">
