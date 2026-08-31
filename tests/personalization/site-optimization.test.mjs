@@ -122,6 +122,7 @@ test('reviews page leads with customer trust while preserving live Judge.me cont
   assert.match(section, /customer-couple\.jpg/);
   assert.match(section, /customer-mother\.jpg/);
   assert.match(section, /customer-friends\.jpg/);
+  assert.match(section, /#ReviewsPage-\{\{ section\.id \}\}\s*\{[\s\S]*overflow:\s*clip/);
   assert.match(section, /@media \(max-width: 700px\)/);
   assert.match(section, /@media \(prefers-reduced-motion: reduce\)/);
   assert.ok(schemaSource, 'reviews section schema is missing');
