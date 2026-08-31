@@ -106,6 +106,32 @@ test('PDP renders one Judge.me review widget root', () => {
   assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.pdp-reviews__header/);
 });
 
+test('reviews page leads with customer trust while preserving live Judge.me content', () => {
+  const section = read('sections/main-reviews.liquid');
+  const template = JSON.parse(read('templates/page.reviews.json'));
+  const schemaSource = section.match(/{% schema %}([\s\S]*?){% endschema %}/)?.[1];
+
+  assert.equal(template.sections.main.type, 'main-reviews');
+  assert.equal((section.match(/<div class="jdgm-widget jdgm-all-reviews-widget"/g) || []).length, 1);
+  assert.equal((section.match(/<h1>/g) || []).length, 1);
+  assert.match(section, /data-review-wall/);
+  assert.match(section, /data-live-summary/);
+  assert.match(section, /MutationObserver/);
+  assert.match(section, /ratingValue\.textContent = rating \+ ' \/ 5'/);
+  assert.match(section, /data-reviews-fallback[\s\S]*\/pages\/contact/);
+  assert.match(section, /customer-couple\.jpg/);
+  assert.match(section, /customer-mother\.jpg/);
+  assert.match(section, /customer-friends\.jpg/);
+  assert.match(section, /#ReviewsPage-\{\{ section\.id \}\}\s*\{[\s\S]*overflow:\s*clip/);
+  assert.match(section, /@media \(max-width: 700px\)/);
+  assert.match(section, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.ok(schemaSource, 'reviews section schema is missing');
+  assert.doesNotThrow(() => JSON.parse(schemaSource));
+  for (const image of ['customer-couple.jpg', 'customer-mother.jpg', 'customer-friends.jpg']) {
+    assert.ok(existsSync(join(ROOT, 'assets', image)), `missing reviews asset: ${image}`);
+  }
+});
+
 test('above-fold collection cards receive explicit responsive loading priority', () => {
   const card = read('snippets/product-card.liquid');
   const collection = read('sections/main-collection.liquid');

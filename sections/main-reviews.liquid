@@ -1,37 +1,1049 @@
-<section class="section reviews-page">
-  <div class="page-width">
-    <header class="reviews-page__head">
-      <p class="coord-eyebrow">Customer feedback</p>
-      <h1>Customer Reviews</h1>
-      <p>Read product reviews submitted through our review partner. Product-specific ratings also appear on the corresponding product page.</p>
-    </header>
+<section id="ReviewsPage-{{ section.id }}" class="reviews-page" data-reviews-page>
+  <div class="reviews-hero">
+    <div class="page-width reviews-hero__grid">
+      <div class="reviews-hero__copy">
+        <p class="coord-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h1>{{ section.settings.heading | escape }}</h1>
+        <p class="reviews-hero__intro">{{ section.settings.intro | escape }}</p>
 
-    <div class="reviews-page__widget" data-all-reviews>
-      <div class="jdgm-widget jdgm-all-reviews-widget" data-from-snippet="true"></div>
-      <p class="reviews-page__fallback" data-reviews-fallback>Customer reviews will appear here as they are published. Have feedback about an order? <a href="/pages/contact">Contact us</a>.</p>
+        <div class="reviews-hero__actions">
+          <a class="btn" href="#customer-review-wall">{{ section.settings.review_button_label | escape }}</a>
+          <a class="reviews-text-link" href="{{ section.settings.shop_link | default: '/collections/all' }}">
+            {{ section.settings.shop_button_label | escape }}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="reviews-hero__verification" aria-label="Review verification">
+          <span class="reviews-hero__seal" aria-hidden="true">✓</span>
+          <p><strong>Verified review platform</strong><span>Feedback published through Judge.me</span></p>
+        </div>
+      </div>
+
+      <div class="reviews-hero__media">
+        {%- if section.settings.hero_image != blank -%}
+          {{ section.settings.hero_image | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 720, 960, 1200, 1400', sizes: '(max-width: 760px) 100vw, 45vw', alt: section.settings.hero_image_alt }}
+        {%- else -%}
+          <img
+            src="{{ 'customer-couple.jpg' | asset_url }}"
+            alt="{{ section.settings.hero_image_alt | escape }}"
+            width="1200"
+            height="1500"
+            loading="eager"
+            fetchpriority="high"
+          >
+        {%- endif -%}
+        <div class="reviews-hero__coordinates" aria-hidden="true">
+          <span>27.7676° N</span>
+          <span>82.6403° W</span>
+        </div>
+        <div class="reviews-hero__caption">
+          <span>Every place holds a story.</span>
+          <strong>Wear yours.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-assurances" aria-label="Our ordering promises">
+    <div class="page-width reviews-assurances__grid">
+      <div class="reviews-assurances__item">
+        <span aria-hidden="true">01</span>
+        <p><strong>Made personal</strong>Engraved with the place or words that matter to you.</p>
+      </div>
+      <div class="reviews-assurances__item">
+        <span aria-hidden="true">02</span>
+        <p><strong>Preview with confidence</strong>See your personalization before adding it to your cart.</p>
+      </div>
+      <div class="reviews-assurances__item">
+        <span aria-hidden="true">03</span>
+        <p><strong>{{ settings.guarantee_1 | default: '30-day happiness guarantee' | escape }}</strong>Real help from a family-owned business.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="customer-review-wall" class="reviews-wall section" data-review-wall>
+    <div class="page-width reviews-wall__layout">
+      <aside class="reviews-wall__summary" aria-labelledby="review-wall-heading">
+        <p class="coord-eyebrow">The review wall</p>
+        <h2 id="review-wall-heading">{{ section.settings.wall_heading | escape }}</h2>
+        <p>{{ section.settings.wall_intro | escape }}</p>
+
+        <div class="reviews-wall__live-summary" data-live-summary hidden>
+          <div data-rating-metric hidden>
+            <strong data-rating-value>—</strong>
+            <span>Average rating</span>
+          </div>
+          <div data-count-metric hidden>
+            <strong data-review-count>—</strong>
+            <span>Published reviews</span>
+          </div>
+        </div>
+
+        <div class="reviews-wall__note">
+          <span aria-hidden="true">◆</span>
+          <p><strong>Looking for a specific piece?</strong> Product-specific ratings also appear directly on each product page.</p>
+        </div>
+      </aside>
+
+      <div class="reviews-wall__content">
+        <div class="reviews-page__widget" data-all-reviews aria-live="polite">
+          <div class="jdgm-widget jdgm-all-reviews-widget" data-from-snippet="true"></div>
+          <div class="reviews-page__fallback" data-reviews-fallback>
+            <span class="reviews-page__fallback-mark" aria-hidden="true">◇</span>
+            <h3>Customer stories are loading</h3>
+            <p>Reviews will appear here as soon as the review platform finishes loading.</p>
+            <a href="/pages/contact">Need help with an order? Contact us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-stories section">
+    <div class="page-width">
+      <div class="reviews-stories__head">
+        <div>
+          <p class="coord-eyebrow">Made from memory</p>
+          <h2>{{ section.settings.stories_heading | escape }}</h2>
+        </div>
+        <p>{{ section.settings.stories_intro | escape }}</p>
+      </div>
+
+      <div class="reviews-stories__grid">
+        <article class="reviews-story reviews-story--large">
+          <div class="reviews-story__media">
+            {%- if section.settings.story_image_one != blank -%}
+              {{ section.settings.story_image_one | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200', sizes: '(max-width: 760px) 100vw, 55vw', alt: section.settings.story_image_one_alt }}
+            {%- else -%}
+              <img src="{{ 'customer-mother.jpg' | asset_url }}" alt="{{ section.settings.story_image_one_alt | escape }}" width="1000" height="1250" loading="lazy">
+            {%- endif -%}
+          </div>
+          <div class="reviews-story__body">
+            <span>01 / Family</span>
+            <h3>Where home will always be</h3>
+            <p>A birthplace, childhood home, or place that still feels like yours.</p>
+          </div>
+        </article>
+
+        <article class="reviews-story">
+          <div class="reviews-story__media">
+            {%- if section.settings.story_image_two != blank -%}
+              {{ section.settings.story_image_two | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000', sizes: '(max-width: 760px) 100vw, 38vw', alt: section.settings.story_image_two_alt }}
+            {%- else -%}
+              <img src="{{ 'customer-friends.jpg' | asset_url }}" alt="{{ section.settings.story_image_two_alt | escape }}" width="900" height="1100" loading="lazy">
+            {%- endif -%}
+          </div>
+          <div class="reviews-story__body">
+            <span>02 / Friendship</span>
+            <h3>Where you found your people</h3>
+            <p>The city, campus, or corner that made a friendship.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-cta">
+    <div class="page-width reviews-cta__inner">
+      <div>
+        <p class="coord-eyebrow">Your story, precisely placed</p>
+        <h2>{{ section.settings.cta_heading | escape }}</h2>
+      </div>
+      <div class="reviews-cta__action">
+        <p>{{ section.settings.cta_intro | escape }}</p>
+        <a class="btn" href="{{ section.settings.shop_link | default: '/collections/all' }}">{{ section.settings.cta_button_label | escape }}</a>
+      </div>
     </div>
   </div>
 </section>
 
+<style>
+  #ReviewsPage-{{ section.id }} {
+    --reviews-white: #fff;
+    overflow: clip;
+    background: var(--c-paper);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero {
+    padding: clamp(34px, 6vw, 82px) 0 clamp(48px, 7vw, 94px);
+    background:
+      linear-gradient(rgba(11, 11, 13, .028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11, 11, 13, .028) 1px, transparent 1px),
+      var(--c-paper);
+    background-size: 32px 32px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, .8fr);
+    gap: clamp(38px, 7vw, 96px);
+    align-items: center;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__copy {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero h1 {
+    max-width: 10ch;
+    margin-bottom: 20px;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: .92;
+    letter-spacing: -.045em;
+    text-wrap: balance;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__intro {
+    max-width: 55ch;
+    margin: 0;
+    color: var(--c-ink-soft);
+    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    line-height: 1.75;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-text-link {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 48px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--c-ink);
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-text-link span {
+    color: var(--c-gold-text);
+    transition: transform .2s ease;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-text-link:hover span {
+    transform: translateX(4px);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__verification {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: clamp(34px, 6vw, 62px);
+    padding-top: 20px;
+    border-top: 1px solid var(--c-line);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__seal {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--c-gold);
+    border-radius: 50%;
+    color: var(--c-gold-text);
+    font-size: .78rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__verification p,
+  #ReviewsPage-{{ section.id }} .reviews-hero__verification strong,
+  #ReviewsPage-{{ section.id }} .reviews-hero__verification span {
+    display: block;
+    margin: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__verification strong {
+    font-size: .78rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__verification p > span {
+    color: var(--c-ink-soft);
+    font-size: .72rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__media {
+    position: relative;
+    min-height: 610px;
+    overflow: hidden;
+    border: 1px solid var(--c-line);
+    background: var(--c-graphite);
+    box-shadow: 22px 22px 0 rgba(182, 151, 106, .16);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 48%, rgba(11, 11, 13, .82));
+    pointer-events: none;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__media img {
+    width: 100%;
+    height: 100%;
+    min-height: 610px;
+    object-fit: cover;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__coordinates {
+    position: absolute;
+    z-index: 1;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    gap: 2px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(11,11,13,.54);
+    color: rgba(255,255,255,.85);
+    font-family: var(--f-coord);
+    font-size: .62rem;
+    letter-spacing: .12em;
+    backdrop-filter: blur(8px);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__caption {
+    position: absolute;
+    z-index: 1;
+    right: 24px;
+    bottom: 24px;
+    left: 24px;
+    color: #fff;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__caption span,
+  #ReviewsPage-{{ section.id }} .reviews-hero__caption strong {
+    display: block;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__caption span {
+    color: rgba(255,255,255,.7);
+    font-family: var(--f-coord);
+    font-size: .66rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-hero__caption strong {
+    margin-top: 3px;
+    font-family: var(--f-display);
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    font-weight: 500;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances {
+    border-block: 1px solid var(--c-line);
+    background: var(--reviews-white);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 12px;
+    padding: 24px clamp(16px, 3vw, 34px);
+    border-right: 1px solid var(--c-line);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item:first-child {
+    padding-left: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item > span {
+    padding-top: 2px;
+    color: var(--c-gold-text);
+    font-family: var(--f-coord);
+    font-size: .66rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item p,
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item strong {
+    display: block;
+    margin: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item p {
+    color: var(--c-ink-soft);
+    font-size: .77rem;
+    line-height: 1.55;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-assurances__item strong {
+    margin-bottom: 2px;
+    color: var(--c-ink);
+    font-size: .83rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall {
+    scroll-margin-top: 100px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__layout {
+    display: grid;
+    grid-template-columns: minmax(230px, .68fr) minmax(0, 1.75fr);
+    gap: clamp(34px, 6vw, 84px);
+    align-items: start;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__summary {
+    position: sticky;
+    top: 118px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__summary h2 {
+    max-width: 10ch;
+    margin-bottom: 16px;
+    font-size: clamp(2.3rem, 4vw, 4.2rem);
+    line-height: .98;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__summary > p:not(.coord-eyebrow) {
+    max-width: 36ch;
+    margin: 0;
+    color: var(--c-ink-soft);
+    font-size: .9rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: 26px;
+    border: 1px solid var(--c-line);
+    background: var(--c-line);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary[hidden] {
+    display: none;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary > div {
+    min-width: 0;
+    padding: 14px;
+    background: var(--reviews-white);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary strong,
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary span {
+    display: block;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary strong {
+    color: var(--c-gold-text);
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__live-summary span {
+    color: var(--c-ink-soft);
+    font-size: .62rem;
+    line-height: 1.3;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__note {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 9px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--c-line);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__note > span {
+    color: var(--c-gold-text);
+    font-size: .58rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__note p {
+    margin: 0;
+    color: var(--c-ink-soft);
+    font-size: .74rem;
+    line-height: 1.55;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__note strong {
+    display: block;
+    color: var(--c-ink);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-wall__content {
+    min-width: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__widget {
+    min-height: 280px;
+    padding: clamp(20px, 3vw, 36px);
+    border: 1px solid var(--c-line);
+    background: var(--reviews-white);
+    box-shadow: 0 24px 54px rgba(11, 11, 13, .07);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__fallback {
+    display: grid;
+    place-items: center;
+    min-height: 260px;
+    padding: 30px;
+    text-align: center;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__fallback[hidden] {
+    display: none;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__fallback-mark {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 14px;
+    border: 1px solid var(--c-gold);
+    border-radius: 50%;
+    color: var(--c-gold-text);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__fallback h3 {
+    margin-bottom: 4px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__fallback p {
+    max-width: 44ch;
+    margin: 0 0 12px;
+    color: var(--c-ink-soft);
+    font-size: .88rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-page__fallback a {
+    color: var(--c-gold-text);
+    font-size: .76rem;
+    font-weight: 600;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget,
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget * {
+    font-family: var(--f-body) !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget .jdgm-star {
+    color: var(--c-gold-text) !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget .jdgm-rev {
+    padding: 24px 0 !important;
+    border-top-color: var(--c-line) !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget .jdgm-rev__title {
+    font-family: var(--f-display) !important;
+    font-size: 1.18rem !important;
+    font-weight: 500 !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget .jdgm-rev__body > p {
+    color: var(--c-ink-soft) !important;
+    line-height: 1.65 !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget .jdgm-write-rev-link,
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget .jdgm-btn {
+    min-height: 44px !important;
+    padding: 11px 18px !important;
+    border: 1px solid var(--c-ink) !important;
+    border-radius: 2px !important;
+    background: var(--c-ink) !important;
+    color: var(--c-paper) !important;
+    font-size: .72rem !important;
+    font-weight: 600 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget select,
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget input,
+  #ReviewsPage-{{ section.id }} .jdgm-all-reviews-widget textarea {
+    min-height: 44px !important;
+    border-color: var(--c-line) !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-stories {
+    border-top: 1px solid var(--c-line);
+    background: #f3eee6;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-stories__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .72fr);
+    gap: 28px;
+    align-items: end;
+    margin-bottom: clamp(28px, 5vw, 54px);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-stories__head h2 {
+    max-width: 13ch;
+    margin: 0;
+    font-size: clamp(2.2rem, 4.5vw, 4.4rem);
+    line-height: 1;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-stories__head > p {
+    max-width: 48ch;
+    margin: 0;
+    color: var(--c-ink-soft);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-stories__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+    gap: clamp(18px, 3vw, 34px);
+    align-items: end;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story {
+    min-width: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid var(--c-line);
+    background: var(--reviews-white);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story--large .reviews-story__media {
+    aspect-ratio: 16 / 10;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s cubic-bezier(.16,1,.3,1);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story:hover .reviews-story__media img {
+    transform: scale(1.025);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__body {
+    display: grid;
+    grid-template-columns: minmax(90px, .35fr) minmax(0, 1fr);
+    gap: 6px 18px;
+    padding-top: 16px;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__body > span {
+    grid-row: 1 / span 2;
+    padding-top: 5px;
+    color: var(--c-gold-text);
+    font-family: var(--f-coord);
+    font-size: .65rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__body h3,
+  #ReviewsPage-{{ section.id }} .reviews-story__body p {
+    margin: 0;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__body h3 {
+    font-size: clamp(1.25rem, 2.3vw, 1.8rem);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-story__body p {
+    color: var(--c-ink-soft);
+    font-size: .8rem;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(58px, 9vw, 112px) 0;
+    background:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+      var(--c-graphite);
+    background-size: 34px 34px;
+    color: var(--c-paper);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta::after {
+    content: '';
+    position: absolute;
+    right: max(-18vw, -260px);
+    bottom: -55%;
+    width: min(52vw, 680px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(182,151,106,.35);
+    border-radius: 50%;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, .75fr);
+    gap: clamp(34px, 7vw, 96px);
+    align-items: end;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta .coord-eyebrow {
+    color: var(--c-gold);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta h2 {
+    max-width: 13ch;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2.5rem, 5.5vw, 5.4rem);
+    line-height: .98;
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta__action p {
+    max-width: 44ch;
+    margin: 0 0 22px;
+    color: rgba(255,255,255,.68);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta .btn {
+    background: var(--c-gold);
+    border-color: var(--c-gold);
+    color: var(--c-ink);
+  }
+
+  #ReviewsPage-{{ section.id }} .reviews-cta .btn:hover {
+    background: #fff;
+    border-color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    #ReviewsPage-{{ section.id }} .reviews-hero__grid,
+    #ReviewsPage-{{ section.id }} .reviews-wall__layout,
+    #ReviewsPage-{{ section.id }} .reviews-stories__head,
+    #ReviewsPage-{{ section.id }} .reviews-cta__inner {
+      grid-template-columns: 1fr;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-hero__copy {
+      max-width: 760px;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-hero h1 {
+      max-width: 11ch;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-hero__media {
+      min-height: min(115vw, 680px);
+      box-shadow: 14px 14px 0 rgba(182, 151, 106, .16);
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-hero__media img {
+      min-height: min(115vw, 680px);
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__summary {
+      position: static;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, .65fr);
+      gap: 18px 28px;
+      align-items: end;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__summary .coord-eyebrow,
+    #ReviewsPage-{{ section.id }} .reviews-wall__summary h2 {
+      grid-column: 1;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__summary > p:not(.coord-eyebrow) {
+      grid-column: 1;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__live-summary {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: stretch;
+      margin: 0;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__note {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 700px) {
+    #ReviewsPage-{{ section.id }} .reviews-hero {
+      padding-top: 28px;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-hero h1 {
+      font-size: clamp(3rem, 15vw, 4.7rem);
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-hero__actions,
+    #ReviewsPage-{{ section.id }} .reviews-hero__actions .btn {
+      width: 100%;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-assurances__grid {
+      grid-template-columns: 1fr;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-assurances__item,
+    #ReviewsPage-{{ section.id }} .reviews-assurances__item:first-child,
+    #ReviewsPage-{{ section.id }} .reviews-assurances__item:last-child {
+      padding: 17px 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--c-line);
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-assurances__item:last-child {
+      border-bottom: 0;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__summary {
+      display: block;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-wall__live-summary {
+      margin-top: 22px;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-page__widget {
+      margin-inline: calc(var(--gutter) * -.5);
+      padding: 18px;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-stories__grid {
+      grid-template-columns: 1fr;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-story--large .reviews-story__media,
+    #ReviewsPage-{{ section.id }} .reviews-story__media {
+      aspect-ratio: 4 / 5;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-story__body {
+      grid-template-columns: 82px 1fr;
+    }
+
+    #ReviewsPage-{{ section.id }} .reviews-cta .btn {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #ReviewsPage-{{ section.id }} .reviews-text-link span,
+    #ReviewsPage-{{ section.id }} .reviews-story__media img {
+      transition: none;
+    }
+  }
+</style>
+
 <script>
   (function () {
-    var root = document.querySelector('[data-all-reviews]');
+    var root = document.getElementById('ReviewsPage-{{ section.id }}');
     if (!root) return;
+
     var widget = root.querySelector('.jdgm-all-reviews-widget');
     var fallback = root.querySelector('[data-reviews-fallback]');
-    if (!widget || !fallback || !('MutationObserver' in window)) return;
-    function sync() {
-      var hasReviews = widget.querySelector('.jdgm-rev, .jdgm-all-reviews-page__wrapper, [data-review-id]');
-      fallback.hidden = Boolean(hasReviews);
+    var summary = root.querySelector('[data-live-summary]');
+    var ratingMetric = root.querySelector('[data-rating-metric]');
+    var ratingValue = root.querySelector('[data-rating-value]');
+    var countMetric = root.querySelector('[data-count-metric]');
+    var reviewCount = root.querySelector('[data-review-count]');
+    if (!widget || !fallback) return;
+
+    function firstNumber(elements, max) {
+      for (var i = 0; i < elements.length; i += 1) {
+        var match = (elements[i].textContent || '').match(/\d+(?:\.\d+)?/);
+        if (!match) continue;
+        var value = Number(match[0]);
+        if (Number.isFinite(value) && (!max || value <= max)) return match[0];
+      }
+      return '';
     }
-    new MutationObserver(sync).observe(widget, { childList: true, subtree: true });
-    sync();
+
+    function syncReviews() {
+      var hasReviews = Boolean(widget.querySelector('.jdgm-rev, .jdgm-all-reviews-page__wrapper, [data-review-id]'));
+      fallback.hidden = hasReviews;
+
+      var rating = firstNumber(widget.querySelectorAll('.jdgm-all-reviews-rating, .jdgm-rev-widg__summary-average, [data-average-rating]'), 5);
+      var count = firstNumber(widget.querySelectorAll('.jdgm-all-reviews-count, .jdgm-rev-widg__summary-text, [data-number-of-reviews]'));
+
+      if (rating && ratingValue && ratingMetric) {
+        ratingValue.textContent = rating + ' / 5';
+        ratingMetric.hidden = false;
+      }
+
+      if (count && reviewCount && countMetric) {
+        reviewCount.textContent = count;
+        countMetric.hidden = false;
+      }
+
+      if (summary && ((ratingMetric && !ratingMetric.hidden) || (countMetric && !countMetric.hidden))) {
+        summary.hidden = false;
+      }
+    }
+
+    if ('MutationObserver' in window) {
+      new MutationObserver(syncReviews).observe(widget, { childList: true, subtree: true, characterData: true });
+    }
+    syncReviews();
   })();
 </script>
 
 {% schema %}
 {
   "name": "Customer reviews",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Customer stories"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The places they carry with them."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "Read honest feedback from people who turned an address, milestone, or memory into something they can wear every day."
+    },
+    {
+      "type": "text",
+      "id": "review_button_label",
+      "label": "Review button label",
+      "default": "Read customer reviews"
+    },
+    {
+      "type": "text",
+      "id": "shop_button_label",
+      "label": "Shop link label",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop link"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "hero_image_alt",
+      "label": "Hero image alt text",
+      "default": "A couple sharing a meaningful moment"
+    },
+    {
+      "type": "header",
+      "content": "Review wall"
+    },
+    {
+      "type": "text",
+      "id": "wall_heading",
+      "label": "Heading",
+      "default": "In their own words."
+    },
+    {
+      "type": "textarea",
+      "id": "wall_intro",
+      "label": "Introduction",
+      "default": "Unedited product feedback published through our independent review partner."
+    },
+    {
+      "type": "header",
+      "content": "Story gallery"
+    },
+    {
+      "type": "text",
+      "id": "stories_heading",
+      "label": "Heading",
+      "default": "A place can hold an entire chapter."
+    },
+    {
+      "type": "textarea",
+      "id": "stories_intro",
+      "label": "Introduction",
+      "default": "Coordinates make a memory precise: the exact place a family began, a friendship formed, or life changed direction."
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_one",
+      "label": "Family story image"
+    },
+    {
+      "type": "text",
+      "id": "story_image_one_alt",
+      "label": "Family image alt text",
+      "default": "A mother holding her child"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_two",
+      "label": "Friendship story image"
+    },
+    {
+      "type": "text",
+      "id": "story_image_two_alt",
+      "label": "Friendship image alt text",
+      "default": "Friends spending time together"
+    },
+    {
+      "type": "header",
+      "content": "Final call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Which place would you keep close?"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_intro",
+      "label": "Introduction",
+      "default": "Choose your piece, find the coordinates, and preview a personal engraving made around your story."
+    },
+    {
+      "type": "text",
+      "id": "cta_button_label",
+      "label": "Button label",
+      "default": "Create your piece"
+    }
+  ]
 }
 {% endschema %}
