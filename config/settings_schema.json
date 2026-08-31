@@ -33,7 +33,7 @@
   {
     "name": "Guarantees (under Add to cart)",
     "settings": [
-      { "type": "text", "id": "guarantee_1", "label": "Guarantee 1", "default": "30-day happiness guarantee" },
+      { "type": "text", "id": "guarantee_1", "label": "Guarantee 1", "default": "Free remake if we get it wrong" },
       { "type": "text", "id": "guarantee_2", "label": "Guarantee 2", "default": "Live engraving preview" },
       { "type": "text", "id": "guarantee_3", "label": "Guarantee 3", "default": "Engraved to order in the USA" }
     ]

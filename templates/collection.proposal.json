@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -26,7 +35,7 @@
         "t3": {
           "type": "badge",
           "settings": {
-            "text": "30-day happiness guarantee"
+            "text": "Free remake if we get it wrong"
           }
         },
         "t4": {
@@ -48,7 +57,7 @@
       "type": "story-cta",
       "settings": {
         "eyebrow": "X marks the moment",
-        "heading": "The spot you'll kneel — engraved before you do.",
+        "heading": "The spot you'll kneel \u2014 engraved before you do.",
         "text": "Half of all proposals happen between Thanksgiving and New Year's. Pin the exact place you'll ask (or the place you already did) and give it to them while the yes still echoes.",
         "button_label": "Plan the piece",
         "button_link": "/pages/gift-finder",
@@ -62,16 +71,21 @@
       "settings": {
         "eyebrow": "Verified customer review",
         "quote": "My husband and I love them. They have the coordinates of our first trip together.",
-        "attribution": "Lucy — United States",
+        "attribution": "Lucy \u2014 United States",
         "button_label": "Shop matching sets",
         "button_link": "shopify://products/matching-coordinates-necklaces"
       }
+    },
+    "oc-copy": {
+      "type": "oc-collection-copy",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "trust",
     "story",
-    "quote"
+    "quote",
+    "oc-copy"
   ]
 }
