@@ -1,0 +1,64 @@
+{%- comment -%}
+  viktor-seo-schema — BreadcrumbList on every template, ItemList on collections,
+  and FAQPage built from the product's viktor.faq_json metafield.
+  Added 2026-08-31. Purely additive: emits JSON-LD only, renders no visible markup.
+{%- endcomment -%}
+
+{%- capture breadcrumb_items -%}
+  {%- if template.name == 'product' -%}
+    {"@type":"ListItem","position":1,"name":"Home","item":"{{ shop.url }}/"}
+    {%- if collection -%}
+      ,{"@type":"ListItem","position":2,"name":{{ collection.title | json }},"item":"{{ shop.url }}{{ collection.url }}"}
+      ,{"@type":"ListItem","position":3,"name":{{ product.title | json }},"item":"{{ shop.url }}{{ product.url }}"}
+    {%- else -%}
+      ,{"@type":"ListItem","position":2,"name":{{ product.title | json }},"item":"{{ shop.url }}{{ product.url }}"}
+    {%- endif -%}
+  {%- elsif template.name == 'collection' and collection -%}
+    {"@type":"ListItem","position":1,"name":"Home","item":"{{ shop.url }}/"}
+    ,{"@type":"ListItem","position":2,"name":{{ collection.title | json }},"item":"{{ shop.url }}{{ collection.url }}"}
+  {%- elsif template.name == 'article' and article -%}
+    {"@type":"ListItem","position":1,"name":"Home","item":"{{ shop.url }}/"}
+    ,{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":"{{ shop.url }}{{ blog.url }}"}
+    ,{"@type":"ListItem","position":3,"name":{{ article.title | json }},"item":"{{ shop.url }}{{ article.url }}"}
+  {%- elsif template.name == 'blog' and blog -%}
+    {"@type":"ListItem","position":1,"name":"Home","item":"{{ shop.url }}/"}
+    ,{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":"{{ shop.url }}{{ blog.url }}"}
+  {%- elsif template.name == 'page' and page -%}
+    {"@type":"ListItem","position":1,"name":"Home","item":"{{ shop.url }}/"}
+    ,{"@type":"ListItem","position":2,"name":{{ page.title | json }},"item":"{{ shop.url }}{{ page.url }}"}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign breadcrumb_items = breadcrumb_items | strip -%}
+{%- if breadcrumb_items != blank -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ breadcrumb_items }}]}
+</script>
+{%- endif -%}
+
+{%- if template.name == 'collection' and collection and collection.products.size > 0 -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList",
+ "name":{{ collection.title | json }},
+ "url":"{{ shop.url }}{{ collection.url }}",
+ "numberOfItems":{{ collection.products_count }},
+ "itemListElement":[
+ {%- for p in collection.products limit: 24 -%}
+   {"@type":"ListItem","position":{{ forloop.index }},"url":"{{ shop.url }}{{ p.url }}","name":{{ p.title | json }}}{% unless forloop.last %},{% endunless %}
+ {%- endfor -%}
+ ]}
+</script>
+{%- endif -%}
+
+{%- if template.name == 'product' and product.metafields.viktor.faq_json -%}
+  {%- assign oc_faqs = product.metafields.viktor.faq_json.value -%}
+  {%- if oc_faqs.size > 0 -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","url":"{{ shop.url }}{{ product.url }}","mainEntity":[
+{%- for f in oc_faqs -%}
+{"@type":"Question","name":{{ f.q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ f.a | json }}}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]}
+</script>
+  {%- endif -%}
+{%- endif -%}
