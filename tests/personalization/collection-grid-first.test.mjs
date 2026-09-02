@@ -17,7 +17,9 @@ test('collection pages lead with products and keep one canonical editorial block
   assert.doesNotMatch(main.slice(0, main.indexOf('class="collection-controls"')), /collection\.description/);
   assert.match(main, /unless collection_has_seo_copy/);
   assert.match(main, /paginate\.current_page == 1 and active_filter_count == 0 and collection\.sort_by == blank and current_tags == blank/);
-  assert.match(editorial, /if oc_seo != blank and current_page == 1 and oc_active_filter_count == 0 and collection\.sort_by == blank and current_tags == blank/);
+  assert.match(editorial, /if current_page == 1 and oc_active_filter_count == 0 and collection\.sort_by == blank and current_tags == blank/);
+  assert.match(editorial, /if oc_is_canonical_view and collection\.products_count > 0/);
+  assert.match(editorial, /if oc_seo != blank[\s\S]*oc_seo \| strip_html \| json[\s\S]*elsif collection\.description != blank/);
   assert.equal((editorial.match(/"@type": "CollectionPage"/g) || []).length, 1);
   assert.doesNotMatch(schema, /"@type":"ItemList"/);
 });

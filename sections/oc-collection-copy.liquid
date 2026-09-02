@@ -15,9 +15,17 @@
       assign oc_active_filter_count = oc_active_filter_count | plus: 1
     endif
   endfor
+  assign oc_is_canonical_view = false
+  if current_page == 1 and oc_active_filter_count == 0 and collection.sort_by == blank and current_tags == blank
+    assign oc_is_canonical_view = true
+  endif
   assign oc_show_editorial = false
-  if oc_seo != blank and current_page == 1 and oc_active_filter_count == 0 and collection.sort_by == blank and current_tags == blank
+  if oc_seo != blank and oc_is_canonical_view
     assign oc_show_editorial = true
+  endif
+  assign oc_show_collection_schema = false
+  if oc_is_canonical_view and collection.products_count > 0
+    assign oc_show_collection_schema = true
   endif
 -%}
 {%- if oc_show_editorial -%}
@@ -36,13 +44,16 @@
   </section>
 {%- endif -%}
 
-{%- capture oc_collection_schema -%}
+{%- if oc_show_collection_schema -%}
+  {%- capture oc_collection_schema -%}
 {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": {{ collection.title | json }},
   "url": "{{ shop.url }}{{ collection.url }}",
-  {%- if collection.description != blank -%}
+  {%- if oc_seo != blank -%}
+  "description": {{ oc_seo | strip_html | json }},
+  {%- elsif collection.description != blank -%}
   "description": {{ collection.description | strip_html | json }},
   {%- endif -%}
   {%- if collection.image -%}
@@ -63,8 +74,9 @@
     ]
   }
 }
-{%- endcapture -%}
-<script type="application/ld+json">{{ oc_collection_schema | strip_newlines | remove: '  ' }}</script>
+  {%- endcapture -%}
+  <script type="application/ld+json">{{ oc_collection_schema | strip_newlines | remove: '  ' }}</script>
+{%- endif -%}
 
 {% schema %}
 {
