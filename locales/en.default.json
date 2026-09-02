@@ -8,6 +8,12 @@
       "title": "Page not found"
     }
   },
+  "collections": {
+    "general": {
+      "about_collection": "About {{ title }}",
+      "all_products_intro": "Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes made to hold a place or message that matters."
+    }
+  },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",

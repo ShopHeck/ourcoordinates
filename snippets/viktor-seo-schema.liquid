@@ -1,6 +1,7 @@
 {%- comment -%}
-  viktor-seo-schema — BreadcrumbList on every template, ItemList on collections,
-  and FAQPage built from the product's viktor.faq_json metafield.
+  viktor-seo-schema — BreadcrumbList on every template and FAQPage built from
+  the product's viktor.faq_json metafield. CollectionPage + ItemList schema is
+  emitted once by oc-collection-copy.liquid.
   Added 2026-08-31. Purely additive: emits JSON-LD only, renders no visible markup.
 {%- endcomment -%}
 
@@ -33,20 +34,6 @@
 {%- if breadcrumb_items != blank -%}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ breadcrumb_items }}]}
-</script>
-{%- endif -%}
-
-{%- if template.name == 'collection' and collection and collection.products.size > 0 -%}
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ItemList",
- "name":{{ collection.title | json }},
- "url":"{{ shop.url }}{{ collection.url }}",
- "numberOfItems":{{ collection.products_count }},
- "itemListElement":[
- {%- for p in collection.products limit: 24 -%}
-   {"@type":"ListItem","position":{{ forloop.index }},"url":"{{ shop.url }}{{ p.url }}","name":{{ p.title | json }}}{% unless forloop.last %},{% endunless %}
- {%- endfor -%}
- ]}
 </script>
 {%- endif -%}
 

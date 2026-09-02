@@ -1,12 +1,26 @@
 {%- comment -%}
   oc-collection-copy.liquid
-  Below-grid SEO editorial (collection.metafields.custom.seo_copy) +
-  CollectionPage + ItemList JSON-LD for SERP / AI-agent visibility.
-  Renders nothing when the metafield is empty, so it's safe fleet-wide.
+  Below-grid SEO editorial (collection.metafields.custom.seo_copy) plus one
+  CollectionPage JSON-LD graph for SERP / AI-agent visibility.
+  Editorial renders only on the canonical, unfiltered first page. The schema
+  remains available when the metafield is empty, so this is safe fleet-wide.
 {%- endcomment -%}
 
-{%- assign oc_seo = collection.metafields.custom.seo_copy.value -%}
-{%- if oc_seo != blank -%}
+{%- liquid
+  assign oc_seo = collection.metafields.custom.seo_copy.value
+  assign oc_active_filter_count = 0
+  for filter in collection.filters
+    assign oc_active_filter_count = oc_active_filter_count | plus: filter.active_values.size
+    if filter.min_value.value != nil or filter.max_value.value != nil
+      assign oc_active_filter_count = oc_active_filter_count | plus: 1
+    endif
+  endfor
+  assign oc_show_editorial = false
+  if oc_seo != blank and current_page == 1 and oc_active_filter_count == 0 and collection.sort_by == blank and current_tags == blank
+    assign oc_show_editorial = true
+  endif
+-%}
+{%- if oc_show_editorial -%}
   <section class="section oc-collection-copy">
     <div class="page-width">
       <style>

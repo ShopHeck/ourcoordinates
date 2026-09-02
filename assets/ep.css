@@ -108,7 +108,10 @@
 .engrave-field .find-coords { color: var(--c-gold-text); font-weight: 600; text-decoration: underline; cursor: pointer; background: none; border: 0; padding: 0; font-size: 0.75rem; }
 .engrave-help { margin: 6px 0 0; font-size: 0.78rem; line-height: 1.35; color: var(--c-ink-soft); }
 
-/* Collection filters */
+/* Collection filters and below-grid editorial */
+.collection-page { padding-block: clamp(28px, 5vw, 64px); }
+.collection-page .collection-head { margin-bottom: clamp(18px, 3vw, 26px); }
+.collection-page .collection-head h1 { margin-bottom: 0; }
 .collection-controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px; margin: 0 0 28px; padding-block: 14px; border-block: 1px solid var(--c-line); }
 .collection-controls__sort { display: flex; align-items: center; gap: 8px; }
 .collection-controls select, .collection-filter summary { min-height: 42px; padding: 9px 12px; border: 1px solid var(--c-line); background: #fff; font: inherit; }
@@ -121,6 +124,8 @@
 .collection-filter__price label { font-size: 0.78rem; }
 .collection-filter__price input { display: block; width: 100px; margin-top: 4px; padding: 8px; border: 1px solid var(--c-line); }
 .collection-controls__apply { min-height: 42px; padding-block: 9px; }
+.collection-description { max-width: 72ch; margin: clamp(48px, 8vw, 88px) auto 0; padding-top: clamp(32px, 5vw, 52px); border-top: 1px solid var(--c-line); }
+.collection-description__body { color: var(--c-ink-soft); line-height: 1.7; }
 .search-summary { margin: -16px 0 28px; color: var(--c-ink-soft); }
 @media (max-width: 640px) {
  .collection-controls { display: grid; grid-template-columns: 1fr 1fr; }
