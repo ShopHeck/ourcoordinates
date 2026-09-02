@@ -72,13 +72,12 @@
       <p class="pdp__shipline">
         <strong>{{ settings.shipping_promise }}.</strong>
         {%- if same_day_shipping -%}
-          &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
+          &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping.
         {%- elsif section.settings.show_engraving -%}
-          Engraved to order — ships in {{ settings.production_days }} business days,
+          Engraved to order — ships in {{ settings.production_days }} business days.
         {%- else -%}
-          Ships in {{ settings.production_days }} business days,
+          Ships in {{ settings.production_days }} business days.
         {%- endif -%}
-        &nbsp;estimated delivery {{ delivery_low | date: '%b %-d' }}–{{ delivery_high | date: '%b %-d' }}.
       </p>
 
       {%- if settings.occasion_label != blank and settings.occasion_date != blank -%}
