@@ -114,7 +114,14 @@
           {%- if section.settings.show_gift_note -%}
             <div class="gift-note">
               <label class="option-group" for="CartNote">Gift note (free — included with your order)</label>
-              <textarea id="CartNote" name="note" placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
+              {%- comment -%}
+                data-cart-note: global.js persists the note to /cart/update.js as
+                the shopper types (debounced) and on change, and marks the wallet
+                buttons busy until the save lands — otherwise Shop Pay / PayPal
+                would start checkout before the form POST ever stored the note.
+              {%- endcomment -%}
+              <textarea id="CartNote" name="note" data-cart-note placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
+              <p class="gift-note__status" data-cart-note-status aria-live="polite"></p>
             </div>
           {%- endif -%}
 

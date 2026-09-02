@@ -34,3 +34,7 @@ shopify-payment-terms{display:block;font-size:0.82rem;color:var(--c-ink-soft);ma
 .cart-upsell--page .cart-upsell__form{margin:0;}
 .cart-upsell--page .cart-upsell__btn{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border:1px solid var(--c-ink);border-radius:2px;background:transparent;color:var(--c-ink);font-size:0.78rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;}
 .cart-upsell--page .cart-upsell__btn:hover{background:var(--c-ink);color:var(--c-paper);}
+/* Express-checkout gate note (PDP) and cart-note save state (Sept 2026, Codex P1). */
+.pdp__express-note{margin:10px 0 0;font-size:0.8rem;color:var(--c-ink-soft);}
+.gift-note__status{margin:6px 0 0;min-height:1.2em;font-family:var(--f-coord);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--c-gold-text);}
+.additional-checkout-buttons[aria-busy="true"]{opacity:0.55;pointer-events:none;}

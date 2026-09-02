@@ -296,11 +296,20 @@
           Sept 2026 audit: these wallets only appeared on Shopify's checkout
           page — returning Shop Pay customers could not one-tap from the PDP.
           Shopify renders whichever wallets are enabled; nothing renders if
-          none are. The engraving-required guard in global.js still applies
-          because the buttons submit the same product form.
+          none are.
+
+          Dynamic checkout goes straight to checkout with ONLY this form's
+          variant + properties — it does not run the theme's submit handlers
+          and does not touch the cart. So the block is rendered hidden and
+          global.js reveals it only while (a) the gift-packaging add-on is
+          NOT checked (that product is added by the Add-to-cart handler, which
+          a wallet would bypass) and (b) every required engraving field has a
+          value (the engraving guard is a submit listener a wallet skips).
+          Otherwise the note below says why, and Add to cart is the path.
         {%- endcomment -%}
         {%- if section.settings.show_dynamic_checkout -%}
-          <div class="pdp__express">{{ form | payment_button }}</div>
+          <div class="pdp__express" data-express-checkout hidden>{{ form | payment_button }}</div>
+          <p class="pdp__express-note" data-express-note hidden></p>
         {%- endif -%}
 
         {%- render 'pdp-shipping-nudge', variant: current_variant -%}

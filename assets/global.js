@@ -1450,3 +1450,134 @@ function submitProductForm(form) {
     });
   }
 })();
+
+
+/* ============================================================
+   EXPRESS CHECKOUT GATE — product page (Sept 2026 audit, Codex P1)
+   Shopify's dynamic checkout button takes the form's variant + properties
+   straight to checkout: it does not fire the form's submit listeners (the
+   engraving-required guard) and never touches the cart (the gift-packaging
+   add-on is added by the Add-to-cart handler). The wallet block is rendered
+   hidden; this reveals it only while the order it would create is complete.
+   ============================================================ */
+(function () {
+  'use strict';
+  var forms = document.querySelectorAll('form[data-product-form]');
+  if (!forms.length) return;
+
+  function requiredFilled(form) {
+    var fields = form.querySelectorAll('input[required], textarea[required], select[required]');
+    for (var i = 0; i < fields.length; i++) {
+      var f = fields[i];
+      if (f.disabled || f.type === 'hidden') continue;
+      if (f.type === 'checkbox' || f.type === 'radio') {
+        if (!form.querySelector('input[name="' + f.name + '"]:checked')) return false;
+        continue;
+      }
+      if (!String(f.value || '').trim()) return false;
+    }
+    return true;
+  }
+
+  forms.forEach(function (form) {
+    var block = form.querySelector('[data-express-checkout]');
+    if (!block) return;
+    var note = form.querySelector('[data-express-note]');
+
+    function update() {
+      var giftWrap = form.querySelector('[data-gift-wrap]:checked');
+      var reason = '';
+      if (giftWrap) {
+        reason = 'Gift packaging is added with Add to cart — express checkout is unavailable while it’s selected.';
+      } else if (!requiredFilled(form)) {
+        reason = 'Express checkout unlocks once your engraving is entered.';
+      }
+      block.hidden = !!reason;
+      if (note) {
+        note.hidden = !reason;
+        note.textContent = reason;
+      }
+    }
+
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    /* set/4-sided previews toggle `required` and `disabled` programmatically */
+    if (window.MutationObserver) {
+      new MutationObserver(update).observe(form, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['required', 'disabled']
+      });
+    }
+    update();
+  });
+})();
+
+
+/* ============================================================
+   CART PAGE NOTE PERSISTENCE (Sept 2026 audit, Codex P1)
+   The /cart gift note used to be stored only when the surrounding form was
+   POSTed by the "Check out" button. Accelerated checkout buttons start
+   their wallet flow without submitting that form, so a typed note could be
+   dropped. Persist it to /cart/update.js as the shopper types (debounced)
+   and on change, and hold the wallet buttons busy until the save lands.
+   ============================================================ */
+(function () {
+  'use strict';
+  var field = document.querySelector('[data-cart-note]');
+  if (!field) return;
+
+  var status = document.querySelector('[data-cart-note-status]');
+  var express = Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
+  var timer = null;
+  var saved = field.value;
+  var inflight = null;
+
+  function setBusy(on) {
+    express.forEach(function (el) {
+      if (on) el.setAttribute('aria-busy', 'true');
+      else el.removeAttribute('aria-busy');
+    });
+  }
+
+  function save() {
+    clearTimeout(timer);
+    timer = null;
+    var value = field.value;
+    if (value === saved && !inflight) { setBusy(false); return Promise.resolve(); }
+    setBusy(true);
+    if (status) status.textContent = 'Saving note…';
+    inflight = fetch('/cart/update.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ note: value }),
+      keepalive: true
+    }).then(function (r) {
+      if (!r.ok) throw new Error('cart update failed');
+      saved = value;
+      if (status) status.textContent = value.trim() ? 'Gift note saved' : '';
+    }).catch(function () {
+      if (status) status.textContent = 'Couldn’t save the note — it will be sent with Check out.';
+    }).finally(function () {
+      inflight = null;
+      if (field.value !== saved) save(); /* typed more while saving */
+      else setBusy(false);
+    });
+    return inflight;
+  }
+
+  field.addEventListener('input', function () {
+    setBusy(true);
+    if (status) status.textContent = '';
+    clearTimeout(timer);
+    timer = setTimeout(save, 350);
+  });
+  field.addEventListener('change', save);
+  field.addEventListener('blur', save);
+  /* reaching for a wallet button: flush immediately */
+  express.forEach(function (el) {
+    ['pointerdown', 'touchstart', 'focusin'].forEach(function (ev) {
+      el.addEventListener(ev, function () { if (timer || field.value !== saved) save(); }, { passive: true });
+    });
+  });
+})();
