@@ -6,9 +6,17 @@
     {%- if s.image != blank -%}
       {{ s.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', alt: s.image_alt, widths: '800, 1200, 1600, 2000, 2400' }}
     {%- else -%}
+      {%- comment -%}
+        Sept 2026 audit: this <picture> is the homepage LCP element.
+        width/height now match the real pixel dimensions (they declared
+        1720×914 / 862×1825 for 1200×638 / 567×1200 files). Both WebP assets
+        should also be re-encoded at quality 80 (171 KB → 101 KB desktop,
+        93 KB → 45 KB mobile) — see AUDIT.md §10; the re-encoded binaries ship
+        in the audit patch file, not in the text-only PR commit.
+      {%- endcomment -%}
       <picture>
-        <source media="(max-width: 700px)" type="image/webp" srcset="{{ 'hero-necklace-mobile-v2.webp' | asset_url }}" width="862" height="1825">
-        <source type="image/webp" srcset="{{ 'hero-necklace-v2.webp' | asset_url }}" width="1720" height="914">
+        <source media="(max-width: 700px)" type="image/webp" srcset="{{ 'hero-necklace-mobile-v2.webp' | asset_url }}" width="567" height="1200">
+        <source type="image/webp" srcset="{{ 'hero-necklace-v2.webp' | asset_url }}" width="1200" height="638">
         <source media="(max-width: 700px)" srcset="{{ 'hero-necklace-mobile.jpg' | asset_url }}">
         <img src="{{ 'hero-necklace.jpg' | asset_url }}" alt="{{ s.image_alt | escape }}" width="1200" height="638" loading="eager" fetchpriority="high" decoding="async">
       </picture>
@@ -59,7 +67,7 @@
   }
   #shopify-section-{{ section.id }} .ah-inner{position:relative;width:100%;max-width:1240px;margin:0 auto;padding:110px clamp(20px,5vw,72px) 90px}
   #shopify-section-{{ section.id }} .ah-eyebrow{
-    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(121,94,63,.45);
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(121,94,63,.82);
     margin-bottom:26px;display:flex;align-items:center;gap:14px;
   }
   #shopify-section-{{ section.id }} .ah-eyebrow::before{content:"";width:36px;height:1px;background:rgba(121,94,63,.45)}

@@ -72,6 +72,14 @@
         </form>
       {%- endif -%}
 
+      {%- comment -%}
+        "Complete the gift" — the same two suggestions the drawer shows, as
+        plain /cart/add forms (no JS needed). Sept 2026 audit: the cart page
+        had no upsell surface while the drawer did; with a $47 cuff in the
+        cart the $3 free-shipping gap is the moment to offer a keychain.
+      {%- endcomment -%}
+      {%- render 'cart-upsells', heading: 'Complete the gift', gift_wrap: gift_wrap, add_mode: 'form', modifier: 'cart-upsell--page' -%}
+
       <form action="{{ routes.cart_url }}" method="post">
         {%- for item in cart.items -%}
           <div class="cart-line">
@@ -113,6 +121,12 @@
           <p class="cart-footer__subtotal">Subtotal: {{ cart.total_price | money }}</p>
           <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Orders ship in {{ settings.production_days }} business days.</p>
           <button type="submit" name="checkout" class="btn">Check out</button>
+          {%- comment -%} Accelerated checkout wallets — see cart-drawer.liquid. {%- endcomment -%}
+          {%- if additional_checkout_buttons -%}
+            <div class="additional-checkout-buttons additional-checkout-buttons--vertical">
+              {{ content_for_additional_checkout_buttons }}
+            </div>
+          {%- endif -%}
 
           <ul class="guarantees guarantees--cart">
             {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}

@@ -47,6 +47,25 @@
     {%- endif -%}
   </div>
   <p class="product-card__title">{{ card_product.title }}</p>
+  {%- comment -%}
+    Star rating from the standard reviews.rating / reviews.rating_count
+    metafields (written by Judge.me). Static markup — no widget JS, no layout
+    shift — and hidden when a product has no reviews yet. Sept 2026 audit:
+    collection cards showed no social proof at all.
+  {%- endcomment -%}
+  {%- if settings.card_show_rating -%}
+    {%- liquid
+      assign card_rating_count = card_product.metafields.reviews.rating_count | default: 0 | plus: 0
+      assign card_rating = card_product.metafields.reviews.rating.value.rating | default: 0 | plus: 0
+    -%}
+    {%- if card_rating_count > 0 and card_rating > 0 -%}
+      {%- assign card_rating_pct = card_rating | times: 20 | round: 1 -%}
+      <p class="product-card__rating" aria-label="Rated {{ card_rating | round: 1 }} out of 5 from {{ card_rating_count }} review{% if card_rating_count != 1 %}s{% endif %}">
+        <span class="product-card__stars" style="--rating:{{ card_rating_pct }}%" aria-hidden="true">★★★★★</span>
+        <span class="product-card__rating-text" aria-hidden="true">{{ card_rating | round: 1 }} ({{ card_rating_count }})</span>
+      </p>
+    {%- endif -%}
+  {%- endif -%}
   <p class="product-card__price">
     {{ card_product.price | money }}
     {%- if card_product.compare_at_price > card_product.price -%}

@@ -29,9 +29,9 @@ h2{font-size:clamp(1.5rem,3.5vw,2.4rem)}
 .mega-menu{display:none;position:absolute;left:0;right:0;top:100%;background:var(--c-paper)}
 .site-nav__mega[open]>.mega-menu{display:block}
 .site-header__actions{justify-self:end;display:flex;gap:16px;align-items:center}
-.site-header__actions a{text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header__actions a{text-decoration:none;font-size:.86rem;font-weight:600;display:inline-flex;align-items:center;min-height:44px;padding-inline:6px}
 .cart-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding-inline:4px;background:var(--c-gold);color:var(--c-ink);border-radius:999px;font-family:var(--f-coord);font-size:.68rem}
-.menu-toggle{display:none;background:none;border:0;padding:6px}
+.menu-toggle{display:none;background:none;border:0;padding:11px 10px;min-width:44px;min-height:44px;margin-left:-10px}
 .menu-toggle span{display:block;width:22px;height:2px;background:var(--c-ink);margin:5px 0}
 @media (max-width:860px){
 .site-header__inner{grid-template-columns:auto 1fr auto}

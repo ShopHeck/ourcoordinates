@@ -2,7 +2,25 @@
   Product JSON-LD rich-snippet schema. Extracted from
   sections/main-product.liquid to keep the section under the ~50 KB
   sync limit. Uses only global objects (product, shop, cart, settings).
+
+  Sept 2026 audit (see AUDIT.md §10):
+  - Emits a plain Offer with `price` when the product has a single price so
+    Google can render the price snippet; AggregateOffer only when variants
+    actually differ in price.
+  - aggregateRating from the standard reviews.rating / reviews.rating_count
+    product metafields (written by Judge.me) — the missing piece for review
+    stars in search results. Emitted only when the product has ≥ 1 review.
+  - mpn from the SKU, itemCondition, absolute https image URLs.
 {%- endcomment -%}
+{%- liquid
+  assign ld_variant = product.selected_or_first_available_variant
+  assign ld_rating_count = product.metafields.reviews.rating_count | default: 0 | plus: 0
+  assign ld_rating_value = product.metafields.reviews.rating.value.rating | default: 0 | plus: 0
+  assign ld_prod_min = settings.production_days | default: 3
+  assign ld_prod_max = ld_prod_min | plus: 2
+  assign ld_transit_min = settings.transit_days | default: 4
+  assign ld_transit_max = ld_transit_min | plus: 3
+-%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -16,21 +34,37 @@
   },
   {%- if product.featured_image -%}
   "image": [
-    "{{ product.featured_image | image_url: width: 1200 }}"
+    {{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }}
     {%- for image in product.images offset: 1 limit: 4 -%}
-    ,"{{ image | image_url: width: 1200 }}"
+    ,{{ image | image_url: width: 1200 | prepend: 'https:' | json }}
     {%- endfor -%}
   ],
   {%- endif -%}
-  {%- if product.selected_or_first_available_variant.sku != blank -%}
-  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  {%- if ld_variant.sku != blank -%}
+  "sku": {{ ld_variant.sku | json }},
+  "mpn": {{ ld_variant.sku | json }},
+  {%- endif -%}
+  {%- if ld_rating_count > 0 and ld_rating_value > 0 -%}
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ ld_rating_value | round: 2 | json }},
+    "reviewCount": {{ ld_rating_count | json }},
+    "bestRating": 5,
+    "worstRating": 1
+  },
   {%- endif -%}
   "offers": {
+    {%- if product.price_varies -%}
     "@type": "AggregateOffer",
-    "priceCurrency": "{{ cart.currency.iso_code }}",
     "lowPrice": {{ product.price_min | money_without_currency | remove: ',' | json }},
     "highPrice": {{ product.price_max | money_without_currency | remove: ',' | json }},
     "offerCount": {{ product.variants.size }},
+    {%- else -%}
+    "@type": "Offer",
+    "price": {{ ld_variant.price | money_without_currency | remove: ',' | json }},
+    {%- endif -%}
+    "priceCurrency": "{{ cart.currency.iso_code }}",
+    "itemCondition": "https://schema.org/NewCondition",
     "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
     "url": "{{ shop.url }}{{ product.url }}",
     "seller": {
@@ -47,14 +81,14 @@
         "@type": "ShippingDeliveryTime",
         "handlingTime": {
           "@type": "QuantitativeValue",
-          "minValue": {{ settings.production_days | default: 3 }},
-          "maxValue": {{ settings.production_days | default: 3 | plus: 2 }},
+          "minValue": {{ ld_prod_min }},
+          "maxValue": {{ ld_prod_max }},
           "unitCode": "DAY"
         },
         "transitTime": {
           "@type": "QuantitativeValue",
-          "minValue": {{ settings.transit_days | default: 3 }},
-          "maxValue": {{ settings.transit_days | default: 5 | plus: 3 }},
+          "minValue": {{ ld_transit_min }},
+          "maxValue": {{ ld_transit_max }},
           "unitCode": "DAY"
         }
       }

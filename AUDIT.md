@@ -253,3 +253,74 @@ theme-check lacks. The section also stays split into `snippets/pdp-*` (~21 KB,
 byte-identical rendering) with size and post-`{% endschema %}` guards as
 defense-in-depth. Full incident write-up and manual-deploy fallback:
 `docs/deployment.md`.
+
+## 10. Round 5 — September 2026 audit fixes
+
+Follow-up to the September 2, 2026 storefront audit (SEO · CRO · design ·
+performance; measured with PageSpeed Insights and a desktop + mobile
+walkthrough). The store had shipped most of the June recommendations —
+popup, pixels, live preview, sharper hero, sticky ATC, drawer upsells — so
+this round targets what was still measurably missing.
+
+### What shipped in this branch
+
+| Area | Change | Files |
+|---|---|---|
+| **CRO · critical** | **Express checkout on the product page, cart drawer and cart page.** Shop Pay / PayPal / Apple Pay / Google Pay only appeared on Shopify's checkout step before. PDP uses `{{ form \| payment_button }}` (toggle: Product page → *Show express checkout buttons*); cart surfaces use `content_for_additional_checkout_buttons`. Shop Pay Installments banner (`payment_terms`) above Add to cart. | `sections/main-product.liquid`, `sections/cart-drawer.liquid`, `sections/main-cart.liquid` |
+| **SEO · critical** | **Product schema can now carry review stars and a price.** `aggregateRating` from the `reviews.rating` / `reviews.rating_count` metafields Judge.me writes; plain `Offer.price` when the product has one price (AggregateOffer only when variants differ); `mpn`, `itemCondition`, absolute `https:` images. Every product returned `aggregateRating: null` before. | `snippets/pdp-json-ld.liquid` |
+| **SEO** | `/search` results `noindex,follow`; `/collections/shop-all-products` canonicalizes to `/collections/all` (where the nav's "Shop all jewelry" points); collection `<title>` no longer contains a literal line break; self-referencing `hreflang`. | `layout/theme.liquid` |
+| **SEO** | `for-couples` H1 override ("Couples Jewelry & Matching Sets") — its admin title is still "Valentine's Day Specials"; see checklist. | `sections/main-collection.liquid` |
+| **CRO** | Star rating on product cards (static markup from the same metafields, no widget JS, no CLS). Toggle: Theme settings → Product cards. | `snippets/product-card.liquid`, `config/settings_schema.json` |
+| **CRO** | Free-shipping nudge under the buy box ("Add $3.00 more and your order ships free"), using the cart's threshold math. | `snippets/pdp-shipping-nudge.liquid` |
+| **CRO** | Guarantee 4: "Gift-ready packaging & free gift note included" (the FAQ already promised it; the PDP never said so). | `config/settings_schema.json` |
+| **CRO** | Cart page gets the drawer's "Complete the gift" row via a shared snippet (plain `/cart/add` forms, no JS). | `snippets/cart-upsells.liquid` |
+| **Mobile** | Sticky bar "Personalize ↓" jump to the buy box (engraving field was ~1,360 px below the fold at 390 px); 44 px tap targets for the hamburger and header links (were 34×38 and 46×22). | `sections/main-product.liquid`, `snippets/critical-css.liquid`, `assets/base.css` |
+| **Performance** | **Sequenzy popup deferred** to `load` + 3 s or first interaction. Lighthouse named the popup overlay (`div.sqz-popup-visual`) the LCP element on collection pages — 20.2 s mobile LCP. Not loaded in the cart. | `layout/theme.liquid` |
+| **Performance** | Hero `<source>` `width`/`height` corrected to real dimensions. The two hero WebPs should be re-encoded at q80 (171 → 101 KB desktop, 93 → 45 KB mobile) — the re-encoded binaries are in the audit patch (`ourcoordinates-sept-2026-audit-fixes.patch`), not in the text-only PR commit; apply them with `git am` or re-upload the assets. Preconnect to `fonts.googleapis.com` added (only gstatic was warmed). IBM Plex Mono removed — it styled only the 11–12 px coordinate eyebrows; `--f-coord` is now the system monospace stack. | `assets/hero-necklace-*-v2.webp` (via patch), `sections/atelier-hero.liquid`, `layout/theme.liquid` |
+| **Design** | Hero eyebrow contrast raised (rgba .45 → .82, 11 → 12 px). | `sections/atelier-hero.liquid` |
+
+Correction to the audit report: the hero WebP was never "served as JPEG" to
+browsers — Shopify's CDN transcodes for clients whose `Accept` header lacks
+`image/webp` (the audit's curl). The real issue was file weight, fixed above.
+
+### Merchant checklist (admin — the theme can't do these)
+
+1. **Judge.me → Settings → Rich Snippets**: leave Judge.me's own JSON-LD
+   *off* — the theme now emits `aggregateRating` from the metafields, and two
+   Product objects confuse Google. Confirm **Settings → Metafields → "Sync
+   reviews to Shopify metafields"** is on (it is what populates
+   `reviews.rating`). Judge.me → **Widget settings → "Load CSS asynchronously"**
+   (or equivalent) — `shopify_v2.css` (76 KB) is render-blocking and
+   `carousels.css` loads twice; both come from the app embed.
+2. **Shipping policy page** says "processed within 2–3 business days"; the
+   theme says "ships in 5 business days" everywhere (Theme settings → lead
+   time). Align the page copy — and mention the photo proof there.
+3. **Rename collection `for-couples`** from "Valentine's Day Specials" to
+   "Couples Jewelry & Matching Sets" (Products → Collections). The theme
+   override can then be removed.
+4. **Navigation → Main menu → Shop**: add child groups so the mega menu shows
+   them — *Shop by product* (Necklaces, Bracelets, Rings, Sets, Men's, Best
+   sellers), *Shop by occasion* (Proposal, Anniversary, Long distance, New
+   beginnings, Wedding gifts — the collection templates already exist), and
+   add **How it works** and **Gift finder** as top-level links. Demote "Our
+   blog" to the footer.
+5. **Sequenzy**: set desktop trigger to exit-intent and mobile to ~30 % scroll,
+   suppress on collection pages and for 30 days after dismiss, and confirm
+   the abandoned-checkout sequence (1 h / 24 h / 72 h) exists — Klaviyo was
+   never detected.
+6. **Reviews**: turn on Judge.me's post-purchase request (send ~10 days after
+   delivery) with a photo incentive; the hero PDPs carry 6–11 reviews against
+   81 store-wide. Import any off-platform reviews. Target 50+ per hero PDP.
+7. **Redirect** `/pages/build-yours` → `/pages/gift-finder` (Online Store →
+   Navigation → URL redirects); the page is live with only a heading.
+8. **Shop Pay Installments** must be enabled in Settings → Payments for the
+   `payment_terms` banner to render; the express buttons render whichever
+   wallets are active.
+
+### Verify after deploy
+
+Rich Results Test on a PDP (stars + price present, one Product object);
+PageSpeed Insights on `/collections/coordinates-collection` mobile (LCP
+element should be the product grid, not `sqz-popup-visual`); collection
+`<title>` on one line in a crawler; express buttons visible on a PDP in an
+incognito window; `/search?q=x` shows `noindex` in source.

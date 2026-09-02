@@ -136,57 +136,12 @@
         </div>
       {%- endif -%}
 
-      {%- comment -%} ---- Cross-sell: complete the gift ---- {%- endcomment -%}
+      {%- comment -%}
+        ---- Cross-sell: complete the gift ----
+        Shared with the cart page via snippets/cart-upsells.liquid (Sept 2026).
+      {%- endcomment -%}
       {%- if section.settings.show_upsells -%}
-        {%- liquid
-          assign upsell_col = settings.upsell_collection
-          if upsell_col == blank
-            assign upsell_col = collections['best-sellers']
-          endif
-        -%}
-        {%- if upsell_col != blank and upsell_col.products.size > 0 -%}
-          {%- assign shown = 0 -%}
-          {%- capture upsell_cards -%}
-            {%- for prod in upsell_col.products limit: 12 -%}
-              {%- if shown >= 2 -%}{%- break -%}{%- endif -%}
-              {%- unless prod.available -%}{%- continue -%}{%- endunless -%}
-              {%- if gift_wrap != blank and prod.id == gift_wrap.id -%}{%- continue -%}{%- endif -%}
-              {%- assign in_cart = false -%}
-              {%- for item in cart.items -%}
-                {%- if item.product_id == prod.id -%}{%- assign in_cart = true -%}{%- break -%}{%- endif -%}
-              {%- endfor -%}
-              {%- if in_cart -%}{%- continue -%}{%- endif -%}
-              {%- assign shown = shown | plus: 1 -%}
-              {%- assign prod_tags = prod.tags | join: ',' | downcase -%}
-              {%- assign quick_addable = false -%}
-              {%- if prod.has_only_default_variant -%}
-                {%- if prod_tags contains 'no-personalization' or prod_tags contains 'quick-add' -%}
-                  {%- assign quick_addable = true -%}
-                {%- endif -%}
-              {%- endif -%}
-              <div class="cart-upsell__card">
-                <a href="{{ prod.url }}" tabindex="-1">
-                  <img src="{{ prod.featured_image | image_url: width: 128 }}" alt="{{ prod.featured_image.alt | escape }}" width="64" height="64" loading="lazy">
-                </a>
-                <div class="cart-upsell__info">
-                  <a class="cart-upsell__title" href="{{ prod.url }}">{{ prod.title }}</a>
-                  <p class="cart-upsell__price">{{ prod.price | money }}{% if prod.compare_at_price > prod.price %} <s>{{ prod.compare_at_price | money }}</s>{% endif %}</p>
-                </div>
-                {%- if quick_addable -%}
-                  <button type="button" class="cart-upsell__btn" data-drawer-add="{{ prod.selected_or_first_available_variant.id }}">Add</button>
-                {%- else -%}
-                  <a class="cart-upsell__btn" href="{{ prod.url }}">View options</a>
-                {%- endif -%}
-              </div>
-            {%- endfor -%}
-          {%- endcapture -%}
-          {%- if shown > 0 -%}
-            <div class="cart-upsell">
-              <p class="cart-upsell__heading">{{ section.settings.upsell_heading }}</p>
-              {{ upsell_cards }}
-            </div>
-          {%- endif -%}
-        {%- endif -%}
+        {%- render 'cart-upsells', heading: section.settings.upsell_heading, gift_wrap: gift_wrap, add_mode: 'drawer' -%}
       {%- endif -%}
       </div>
 
@@ -214,6 +169,17 @@
         <p class="cart-drawer__meta">Orders ship in {{ settings.production_days }} business days. Taxes &amp; shipping calculated at checkout.</p>
 
         <button type="submit" name="checkout" class="btn btn--full cart-drawer__checkout">Check out</button>
+        {%- comment -%}
+          Accelerated checkout (Shop Pay / PayPal / Apple Pay / Google Pay).
+          Shopify renders whichever wallets the store has enabled; nothing
+          renders when none are. Sept 2026 audit: these only appeared on the
+          checkout page before — the highest-leverage conversion gap found.
+        {%- endcomment -%}
+        {%- if additional_checkout_buttons -%}
+          <div class="additional-checkout-buttons additional-checkout-buttons--vertical">
+            {{ content_for_additional_checkout_buttons }}
+          </div>
+        {%- endif -%}
         <a class="cart-drawer__viewcart" href="{{ routes.cart_url }}">View full cart</a>
 
         <ul class="guarantees guarantees--drawer">

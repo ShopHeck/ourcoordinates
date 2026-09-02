@@ -1,0 +1,27 @@
+{%- comment -%}
+  Free-shipping nudge under the buy box (Sept 2026 audit).
+  Reuses the cart's threshold math: what the cart total would be after adding
+  this variant versus settings.free_shipping_threshold. The cart already says
+  "You're $3 away" — this surfaces the same fact one step earlier, where the
+  shopper can still add a second piece before checkout.
+  Renders nothing when the threshold is 0. Accepts: variant.
+  Server-rendered from the first available variant; the drawer's live bar
+  remains the source of truth once the item is in the cart.
+{%- endcomment -%}
+{%- liquid
+  assign nudge_threshold = settings.free_shipping_threshold | times: 100
+  assign nudge_remaining = 0
+  if nudge_threshold > 0 and variant != blank
+    assign nudge_total = cart.total_price | plus: variant.price
+    assign nudge_remaining = nudge_threshold | minus: nudge_total
+  endif
+-%}
+{%- if nudge_threshold > 0 and variant != blank -%}
+  <p class="pdp__shipnudge" data-ship-nudge>
+    {%- if nudge_remaining > 0 -%}
+      Add <strong>{{ nudge_remaining | money }}</strong> more and your order ships free in the US.
+    {%- else -%}
+      <strong>Ships free.</strong> This order clears the {{ nudge_threshold | money_without_trailing_zeros }} free-shipping threshold.
+    {%- endif -%}
+  </p>
+{%- endif -%}

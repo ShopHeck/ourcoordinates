@@ -1,0 +1,75 @@
+{%- comment -%}
+  "Complete the gift" cross-sell, shared by the cart drawer and the cart page
+  (Sept 2026 audit — the /cart page previously had no upsell surface, while
+  the drawer did; both now render this snippet so they can never drift).
+
+  Accepts:
+    heading   — heading text (default "Complete the gift")
+    gift_wrap — the gift-packaging product to skip (optional)
+    add_mode  — 'drawer': JS buttons (data-drawer-add) that the drawer
+                re-renders through the Section Rendering API (default)
+                'form':   plain /cart/add forms — works without JS, for /cart
+    modifier  — optional extra class on the wrapper (e.g. 'cart-upsell--page')
+
+  Picks up to two available products from settings.upsell_collection
+  (fallback: best-sellers), skipping items already in the cart and the gift
+  packaging product. Products with a single default variant tagged
+  `quick-add` or `no-personalization` get an instant Add; everything else
+  deep-links to its page so the engraving gets entered properly.
+{%- endcomment -%}
+{%- liquid
+  assign upsell_col = settings.upsell_collection
+  if upsell_col == blank
+    assign upsell_col = collections['best-sellers']
+  endif
+  assign shown = 0
+-%}
+{%- if upsell_col != blank and upsell_col.products.size > 0 -%}
+  {%- capture upsell_cards -%}
+    {%- for prod in upsell_col.products limit: 12 -%}
+      {%- if shown >= 2 -%}{%- break -%}{%- endif -%}
+      {%- unless prod.available -%}{%- continue -%}{%- endunless -%}
+      {%- if gift_wrap != blank and prod.id == gift_wrap.id -%}{%- continue -%}{%- endif -%}
+      {%- assign in_cart = false -%}
+      {%- for item in cart.items -%}
+        {%- if item.product_id == prod.id -%}{%- assign in_cart = true -%}{%- break -%}{%- endif -%}
+      {%- endfor -%}
+      {%- if in_cart -%}{%- continue -%}{%- endif -%}
+      {%- assign shown = shown | plus: 1 -%}
+      {%- assign prod_tags = prod.tags | join: ',' | downcase -%}
+      {%- assign quick_addable = false -%}
+      {%- if prod.has_only_default_variant -%}
+        {%- if prod_tags contains 'no-personalization' or prod_tags contains 'quick-add' -%}
+          {%- assign quick_addable = true -%}
+        {%- endif -%}
+      {%- endif -%}
+      <div class="cart-upsell__card">
+        <a href="{{ prod.url }}" tabindex="-1">
+          <img src="{{ prod.featured_image | image_url: width: 128 }}" alt="{{ prod.featured_image.alt | escape }}" width="64" height="64" loading="lazy">
+        </a>
+        <div class="cart-upsell__info">
+          <a class="cart-upsell__title" href="{{ prod.url }}">{{ prod.title }}</a>
+          <p class="cart-upsell__price">{{ prod.price | money }}{% if prod.compare_at_price > prod.price %} <s>{{ prod.compare_at_price | money }}</s>{% endif %}</p>
+        </div>
+        {%- if quick_addable -%}
+          {%- if add_mode == 'form' -%}
+            <form action="{{ routes.cart_add_url }}" method="post" class="cart-upsell__form">
+              <input type="hidden" name="id" value="{{ prod.selected_or_first_available_variant.id }}">
+              <button type="submit" class="cart-upsell__btn">Add</button>
+            </form>
+          {%- else -%}
+            <button type="button" class="cart-upsell__btn" data-drawer-add="{{ prod.selected_or_first_available_variant.id }}">Add</button>
+          {%- endif -%}
+        {%- else -%}
+          <a class="cart-upsell__btn" href="{{ prod.url }}">View options</a>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if shown > 0 -%}
+    <div class="cart-upsell{% if modifier != blank %} {{ modifier }}{% endif %}">
+      <p class="cart-upsell__heading">{{ heading | default: 'Complete the gift' }}</p>
+      {{ upsell_cards }}
+    </div>
+  {%- endif -%}
+{%- endif -%}

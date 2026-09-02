@@ -137,7 +137,7 @@
     </div>
 
     {%- comment -%} ---------- BUY BOX ---------- {%- endcomment -%}
-    <div data-buy-box>
+    <div data-buy-box id="BuyBox">
       {%- form 'product', product, data-product-form: '' -%}
         <input type="hidden" name="id" value="{{ current_variant.id }}">
 
@@ -279,11 +279,31 @@
           </a>
         {%- endif -%}
 
+        {%- comment -%}
+          Shop Pay Installments banner ("4 interest-free payments of $11.75")
+          — renders only when the store has Shop Pay Installments enabled.
+        {%- endcomment -%}
+        {{ form | payment_terms }}
+
         <button type="submit" class="btn btn--full" data-atc
                 data-label-add="{{ section.settings.atc_label | escape }}"
                 data-label-sold-out="Sold out">
           <span data-atc-label>{{ section.settings.atc_label }}</span>
         </button>
+
+        {%- comment -%}
+          Express checkout (Shop Pay / PayPal / Apple Pay / Google Pay).
+          Sept 2026 audit: these wallets only appeared on Shopify's checkout
+          page — returning Shop Pay customers could not one-tap from the PDP.
+          Shopify renders whichever wallets are enabled; nothing renders if
+          none are. The engraving-required guard in global.js still applies
+          because the buttons submit the same product form.
+        {%- endcomment -%}
+        {%- if section.settings.show_dynamic_checkout -%}
+          <div class="pdp__express">{{ form | payment_button }}</div>
+        {%- endif -%}
+
+        {%- render 'pdp-shipping-nudge', variant: current_variant -%}
 
         <ul class="guarantees">
           {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
@@ -291,6 +311,7 @@
             {%- if has_live_preview and settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
             {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
           {%- endif -%}
+          {%- if settings.guarantee_4 != blank -%}<li>{{ settings.guarantee_4 }}</li>{%- endif -%}
         </ul>
       {%- endform -%}
 
@@ -444,6 +465,13 @@
 
 <div class="sticky-atc" data-sticky-atc>
   <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
+  {%- comment -%}
+    On a 390px viewport the engraving field sits ~1,360px down (Sept 2026
+    audit). This jump link takes the shopper straight to the buy box.
+  {%- endcomment -%}
+  {%- if section.settings.show_engraving -%}
+    <a class="sticky-atc__jump" href="#BuyBox">Personalize ↓</a>
+  {%- endif -%}
   <button type="button" class="btn" data-sticky-submit data-atc
           data-label-add="{{ section.settings.atc_label | escape }}"
           data-label-sold-out="Sold out">
@@ -511,6 +539,7 @@
     { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "27.7676° N, 82.6403° W" },
     { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 5, "max": 60, "step": 1, "default": 30 },
     { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart — free engraving" },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout buttons", "default": true, "info": "Shop Pay, PayPal, Apple Pay and Google Pay under Add to cart. Shopify renders whichever wallets the store has enabled." },
     { "type": "checkbox", "id": "show_recently_viewed", "label": "Show 'Recently viewed' strip", "default": true },
     { "type": "text", "id": "set_pieces", "label": "Set pieces (auto or comma-separated: bracelet,necklace,ring,keychain)", "default": "auto" },
     {
