@@ -200,6 +200,18 @@ function submitProductForm(form) {
           (v.compare_at_price > v.price ? ' <s>' + money(v.compare_at_price) + '</s>' : '');
       }
       if (stickyPrice) stickyPrice.textContent = money(v.price);
+      /* free-shipping nudge is server-rendered from the first variant; on
+         products whose variants differ in price, recompute it here */
+      var nudge = root.querySelector('[data-ship-nudge]');
+      if (nudge) {
+        var threshold = parseInt(nudge.dataset.threshold, 10) || 0;
+        var cartTotal = parseInt(nudge.dataset.cartTotal, 10) || 0;
+        var remaining = threshold - (cartTotal + v.price);
+        var slot = nudge.querySelector('[data-ship-nudge-text]') || nudge;
+        slot.innerHTML = remaining > 0
+          ? 'Add <strong>' + money(remaining) + '</strong> more and your order ships free in the US.'
+          : '<strong>Ships free.</strong> This order clears the ' + money(threshold).replace(/\.00$/, '') + ' free-shipping threshold.';
+      }
       atcBtns.forEach(function (btn) {
         btn.disabled = !v.available;
         btn.querySelector('[data-atc-label]').textContent = v.available
@@ -866,8 +878,26 @@ function submitProductForm(form) {
       /* sync to corresponding hidden prop */
       var prop = setRig.querySelector('[data-set-piece-prop="' + piece + '"]');
       if (prop) prop.value = val;
+      syncExpressGate();
     });
   });
+
+  /* ---- EXPRESS CHECKOUT VETO ----
+     The per-piece inputs carry no `required` attribute (the submit listener
+     below validates them), so the wallet gate's required-field scan can't
+     see them. Publish the custom-mode verdict on the form; the gate reads
+     `data-express-blocked` and re-evaluates on `oc:express-recheck`. */
+  function syncExpressGate() {
+    var gateForm = root.querySelector('form[data-product-form]');
+    if (!gateForm) return;
+    var blocked = false;
+    if (isCustomMode) {
+      allPieceInputs.forEach(function (inp) { if (!inp.value.trim()) blocked = true; });
+    }
+    if (blocked) gateForm.dataset.expressBlocked = 'Express checkout unlocks once every piece has its engraving.';
+    else delete gateForm.dataset.expressBlocked;
+    gateForm.dispatchEvent(new CustomEvent('oc:express-recheck', { bubbles: true }));
+  }
 
   /* ---- TOGGLE between modes ---- */
   if (customToggle) {
@@ -902,11 +932,13 @@ function submitProductForm(form) {
         }
         renderUnified();
       }
+      syncExpressGate();
     });
   }
 
   /* remember original required state */
   if (mainInput && mainInput.required) mainInput.dataset.origRequired = 'true';
+  syncExpressGate();
 
   /* ---- FORM VALIDATION ---- */
   var form = root.querySelector('form[data-product-form]');
@@ -1453,12 +1485,19 @@ function submitProductForm(form) {
 
 
 /* ============================================================
-   EXPRESS CHECKOUT GATE — product page (Sept 2026 audit, Codex P1)
+   EXPRESS CHECKOUT GATE — product page (Sept 2026 audit, Codex P1s)
    Shopify's dynamic checkout button takes the form's variant + properties
    straight to checkout: it does not fire the form's submit listeners (the
-   engraving-required guard) and never touches the cart (the gift-packaging
+   engraving-required guards) and never touches the cart (the gift-packaging
    add-on is added by the Add-to-cart handler). The wallet block is rendered
    hidden; this reveals it only while the order it would create is complete.
+
+   Three sources of truth, in priority order:
+     1. a checked [data-gift-wrap]            → hide (wallet skips the cart)
+     2. form.dataset.expressBlocked           → hide with that message
+        (set by validators whose inputs carry no `required`, e.g. the set
+        template's per-piece mode; they fire `oc:express-recheck`)
+     3. any enabled `required` field empty    → hide
    ============================================================ */
 (function () {
   'use strict';
@@ -1485,10 +1524,11 @@ function submitProductForm(form) {
     var note = form.querySelector('[data-express-note]');
 
     function update() {
-      var giftWrap = form.querySelector('[data-gift-wrap]:checked');
       var reason = '';
-      if (giftWrap) {
+      if (form.querySelector('[data-gift-wrap]:checked')) {
         reason = 'Gift packaging is added with Add to cart — express checkout is unavailable while it’s selected.';
+      } else if (form.dataset.expressBlocked) {
+        reason = form.dataset.expressBlocked;
       } else if (!requiredFilled(form)) {
         reason = 'Express checkout unlocks once your engraving is entered.';
       }
@@ -1501,12 +1541,13 @@ function submitProductForm(form) {
 
     form.addEventListener('input', update);
     form.addEventListener('change', update);
+    form.addEventListener('oc:express-recheck', update);
     /* set/4-sided previews toggle `required` and `disabled` programmatically */
     if (window.MutationObserver) {
       new MutationObserver(update).observe(form, {
         subtree: true,
         attributes: true,
-        attributeFilter: ['required', 'disabled']
+        attributeFilter: ['required', 'disabled', 'data-express-blocked']
       });
     }
     update();
@@ -1515,69 +1556,127 @@ function submitProductForm(form) {
 
 
 /* ============================================================
-   CART PAGE NOTE PERSISTENCE (Sept 2026 audit, Codex P1)
-   The /cart gift note used to be stored only when the surrounding form was
-   POSTed by the "Check out" button. Accelerated checkout buttons start
-   their wallet flow without submitting that form, so a typed note could be
-   dropped. Persist it to /cart/update.js as the shopper types (debounced)
-   and on change, and hold the wallet buttons busy until the save lands.
+   GIFT NOTE PERSISTENCE — cart page AND drawer (Sept 2026, Codex P1/P2)
+   Accelerated checkout buttons start their wallet flow without submitting
+   the surrounding form, so a typed note has to be on the cart before a
+   wallet can be activated. This module:
+     - delegates on document, so the drawer's re-rendered textarea
+       ([data-drawer-note]) and the page textarea ([data-cart-note]) are
+       both covered without re-binding;
+     - serializes saves through one promise chain and ignores stale
+       completions, so an older write can never re-enable the wallets
+       while a newer value is still unsaved;
+     - holds the wallet block `inert` (+ aria-busy, + a keydown guard for
+       browsers without inert) from the first keystroke until the cart
+       holds the current value — mouse, touch AND keyboard.
+   Falls back to the form POST if a save fails.
    ============================================================ */
 (function () {
   'use strict';
-  var field = document.querySelector('[data-cart-note]');
-  if (!field) return;
+  var SELECTOR = '[data-cart-note], [data-drawer-note]';
+  var queue = Promise.resolve();
+  var seq = 0;
+  var state = { field: null, saved: null, timer: null, pending: false };
 
-  var status = document.querySelector('[data-cart-note-status]');
-  var express = Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
-  var timer = null;
-  var saved = field.value;
-  var inflight = null;
+  function walletBlocks(field) {
+    var scope = field.closest('form') || document;
+    var blocks = Array.prototype.slice.call(scope.querySelectorAll('.additional-checkout-buttons'));
+    return blocks.length ? blocks : Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
+  }
 
-  function setBusy(on) {
-    express.forEach(function (el) {
-      if (on) el.setAttribute('aria-busy', 'true');
-      else el.removeAttribute('aria-busy');
+  function setBusy(field, on) {
+    walletBlocks(field).forEach(function (el) {
+      if (on) {
+        el.setAttribute('aria-busy', 'true');
+        el.setAttribute('inert', '');
+      } else {
+        el.removeAttribute('aria-busy');
+        el.removeAttribute('inert');
+      }
     });
   }
 
-  function save() {
-    clearTimeout(timer);
-    timer = null;
+  function statusEl(field) {
+    var scope = field.closest('.gift-note, .cart-drawer__note, form') || document;
+    return scope.querySelector('[data-cart-note-status]');
+  }
+
+  function adopt(field) {
+    if (state.field !== field) {
+      state.field = field;
+      if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.value; /* server-rendered value = what the cart holds */
+      state.saved = field.dataset.noteSaved;
+    }
+  }
+
+  function settle(field) {
+    /* only release when the cart holds exactly what the field shows */
+    if (!state.pending && field.value === field.dataset.noteSaved) {
+      setBusy(field, false);
+    }
+  }
+
+  function save(field) {
+    adopt(field);
+    clearTimeout(state.timer);
+    state.timer = null;
     var value = field.value;
-    if (value === saved && !inflight) { setBusy(false); return Promise.resolve(); }
-    setBusy(true);
-    if (status) status.textContent = 'Saving note…';
-    inflight = fetch('/cart/update.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ note: value }),
-      keepalive: true
-    }).then(function (r) {
-      if (!r.ok) throw new Error('cart update failed');
-      saved = value;
-      if (status) status.textContent = value.trim() ? 'Gift note saved' : '';
-    }).catch(function () {
-      if (status) status.textContent = 'Couldn’t save the note — it will be sent with Check out.';
-    }).finally(function () {
-      inflight = null;
-      if (field.value !== saved) save(); /* typed more while saving */
-      else setBusy(false);
+    if (value === field.dataset.noteSaved && !state.pending) { settle(field); return queue; }
+    var my = ++seq;
+    state.pending = true;
+    setBusy(field, true);
+    var st = statusEl(field);
+    if (st) st.textContent = 'Saving note…';
+    queue = queue.then(function () {
+      if (my !== seq) return; /* superseded before it started — skip */
+      return fetch('/cart/update.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ note: value }),
+        keepalive: true
+      }).then(function (r) {
+        if (!r.ok) throw new Error('cart update failed');
+        field.dataset.noteSaved = value;
+        state.saved = value;
+        if (st && my === seq) st.textContent = value.trim() ? 'Gift note saved' : '';
+      }).catch(function () {
+        if (st && my === seq) st.textContent = 'Couldn’t save the note — it will be sent with Check out.';
+      });
+    }).then(function () {
+      if (my !== seq) return; /* a newer save owns the busy state */
+      state.pending = false;
+      if (field.value !== field.dataset.noteSaved) save(field); /* typed more while saving */
+      else settle(field);
     });
-    return inflight;
+    return queue;
   }
 
-  field.addEventListener('input', function () {
-    setBusy(true);
-    if (status) status.textContent = '';
-    clearTimeout(timer);
-    timer = setTimeout(save, 350);
+  document.addEventListener('input', function (e) {
+    var field = e.target;
+    if (!field.matches || !field.matches(SELECTOR)) return;
+    adopt(field);
+    setBusy(field, true);
+    var st = statusEl(field);
+    if (st) st.textContent = '';
+    clearTimeout(state.timer);
+    state.timer = setTimeout(function () { save(field); }, 350);
   });
-  field.addEventListener('change', save);
-  field.addEventListener('blur', save);
-  /* reaching for a wallet button: flush immediately */
-  express.forEach(function (el) {
-    ['pointerdown', 'touchstart', 'focusin'].forEach(function (ev) {
-      el.addEventListener(ev, function () { if (timer || field.value !== saved) save(); }, { passive: true });
-    });
+  ['change', 'blur'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      if (e.target.matches && e.target.matches(SELECTOR)) save(e.target);
+    }, true);
+  });
+
+  /* reaching for a wallet: flush immediately; block activation until saved */
+  ['pointerdown', 'touchstart', 'focusin', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      var block = e.target.closest && e.target.closest('.additional-checkout-buttons');
+      if (!block) return;
+      var field = state.field || document.querySelector(SELECTOR);
+      if (field && (state.timer || field.value !== field.dataset.noteSaved)) save(field);
+      if (block.getAttribute('aria-busy') === 'true' && ev === 'keydown' && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault(); /* inert fallback */
+      }
+    }, { capture: true, passive: ev !== 'keydown' });
   });
 })();

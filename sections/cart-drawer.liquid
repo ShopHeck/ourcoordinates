@@ -154,6 +154,8 @@
           <details class="cart-drawer__note" {% if cart.note != blank %}open{% endif %}>
             <summary>{% if cart.note != blank %}Edit gift note{% else %}Add a free gift note{% endif %} ✎</summary>
             <textarea name="note" rows="3" data-drawer-note aria-label="Gift note" placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
+            {%- comment -%} global.js saves the note as you type and holds the wallet buttons inert until it lands (Codex review). {%- endcomment -%}
+            <p class="gift-note__status" data-cart-note-status aria-live="polite"></p>
           </details>
         {%- endif -%}
 
