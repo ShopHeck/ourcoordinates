@@ -1565,7 +1565,7 @@ function submitProductForm(form) {
   var SELECTOR = '[data-cart-note], [data-drawer-note]';
   var queue = Promise.resolve();
   var seq = 0;
-  var state = { field: null, saved: null, timer: null, pending: false };
+  var state = { field: null, timer: null, pending: false };
 
   function walletBlocks() {
     /* The cart page and drawer share one cart note, so both wallet surfaces
@@ -1594,8 +1594,17 @@ function submitProductForm(form) {
     if (state.field !== field) {
       state.field = field;
       if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.value; /* server-rendered value = what the cart holds */
-      state.saved = field.dataset.noteSaved;
     }
+  }
+
+  function syncSavedFields(source, value) {
+    document.querySelectorAll(SELECTOR).forEach(function (field) {
+      /* Keep another field's in-progress edit, but move its saved baseline
+         forward so it remains correctly classified as unsaved. */
+      var wasClean = field === source || field.dataset.noteSaved === undefined || field.value === field.dataset.noteSaved;
+      field.dataset.noteSaved = value;
+      if (field !== source && wasClean) field.value = value;
+    });
   }
 
   function settle(field) {
@@ -1625,8 +1634,7 @@ function submitProductForm(form) {
         keepalive: true
       }).then(function (r) {
         if (!r.ok) throw new Error('cart update failed');
-        field.dataset.noteSaved = value;
-        state.saved = value;
+        syncSavedFields(field, value);
         if (st && my === seq) st.textContent = value.trim() ? 'Gift note saved' : '';
         return true;
       }).catch(function () {
