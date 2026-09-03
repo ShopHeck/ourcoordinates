@@ -75,12 +75,14 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /function walletBlocks\(\) \{[\s\S]*?document\.querySelectorAll\('\.additional-checkout-buttons'\)/, 'one unsaved cart note must block page and drawer wallets together');
   assert.doesNotMatch(js, /function walletBlocks\(field\)/, 'wallet blocking must not be scoped to only one cart form');
   assert.match(js, /var walletsLocked = false;/);
-  assert.match(js, /new MutationObserver\(function \(\) \{[\s\S]*?if \(walletsLocked\) syncWalletBlocks\(\);[\s\S]*?document\.documentElement, \{ childList: true, subtree: true \}/, 'Section Rendering must reapply the note lock to replacement wallet blocks');
+  assert.match(js, /new MutationObserver\(function \(\) \{[\s\S]*?if \(!walletsLocked\) return;[\s\S]*?syncWalletBlocks\(\);[\s\S]*?document\.documentElement, \{ childList: true, subtree: true \}/, 'Section Rendering must reapply the note lock to replacement wallet blocks');
+  assert.match(js, /function connectedField\(source, preserveEdit\)[\s\S]*?document\.contains\(source\)[\s\S]*?replacementIsClean[\s\S]*?replacement\.value = source\.value;/, 'a drawer rerender must transfer an in-progress note without overwriting a newer edit');
+  assert.match(js, /state\.field = connectedField\(state\.field, true\);/, 'the active note reference must follow Section Rendering replacements');
   assert.match(js, /function syncSavedFields\(source, value\) \{[\s\S]*?document\.querySelectorAll\(SELECTOR\)\.forEach/, 'a successful save must synchronize every cart-note surface');
   assert.match(js, /var wasClean = [^;]+field\.value === field\.dataset\.noteSaved;[\s\S]*?field\.dataset\.noteSaved = value;[\s\S]*?if \(field !== source && wasClean\) field\.value = value;/, 'clean copies should display the saved note without overwriting an in-progress edit');
   assert.match(js, /el\.setAttribute\('inert', ''\)/, 'wallets must be inert (keyboard too) while a save is in flight');
   assert.match(js, /e\.key === 'Enter' \|\| e\.key === ' '/, 'keydown fallback for browsers without inert');
-  assert.match(js, /return false;[\s\S]*?if \(saved\) settle\(field\);/, 'a failed save must stop without recursively retrying');
+  assert.match(js, /return null;[\s\S]*?if \(savedField\) settle\(savedField\);/, 'a failed save must stop, while success settles against the connected field');
   assert.doesNotMatch(js, /if \(field\.value !== field\.dataset\.noteSaved\) save\(field\)/, 'save completion must not recursively retry an unsaved value');
   for (const ev of ["'pointerdown'", "'touchstart'", "'focusin'", "'keydown'"]) {
     assert.ok(js.includes(ev), `wallet block must flush the note on ${ev}`);

@@ -1592,9 +1592,32 @@ function submitProductForm(form) {
     syncWalletBlocks();
   }
 
+  function connectedField(source, preserveEdit) {
+    if (document.contains(source)) return source;
+    var selector = source.matches('[data-drawer-note]') ? '[data-drawer-note]' : '[data-cart-note]';
+    var replacement = document.querySelector(selector) || document.querySelector(SELECTOR);
+    var replacementIsClean = replacement &&
+      (replacement.dataset.noteSaved === undefined || replacement.value === replacement.dataset.noteSaved);
+    if (replacement && preserveEdit && replacementIsClean) {
+      if (replacement.dataset.noteSaved === undefined) {
+        replacement.dataset.noteSaved = source.dataset.noteSaved === undefined
+          ? replacement.value
+          : source.dataset.noteSaved;
+      }
+      replacement.value = source.value;
+    }
+    return replacement || source;
+  }
+
   if (window.MutationObserver) {
     new MutationObserver(function () {
-      if (walletsLocked) syncWalletBlocks();
+      if (!walletsLocked) return;
+      if (state.field && !document.contains(state.field)) {
+        state.field = connectedField(state.field, true);
+        var st = statusEl(state.field);
+        if (st && state.pending) st.textContent = 'Saving note…';
+      }
+      syncWalletBlocks();
     }).observe(document.documentElement, { childList: true, subtree: true });
   }
 
@@ -1611,6 +1634,8 @@ function submitProductForm(form) {
   }
 
   function syncSavedFields(source, value) {
+    source.dataset.noteSaved = value;
+    var current = connectedField(source, false);
     document.querySelectorAll(SELECTOR).forEach(function (field) {
       /* Keep another field's in-progress edit, but move its saved baseline
          forward so it remains correctly classified as unsaved. */
@@ -1618,6 +1643,8 @@ function submitProductForm(form) {
       field.dataset.noteSaved = value;
       if (field !== source && wasClean) field.value = value;
     });
+    state.field = current;
+    return current;
   }
 
   function settle(field) {
@@ -1647,20 +1674,24 @@ function submitProductForm(form) {
         keepalive: true
       }).then(function (r) {
         if (!r.ok) throw new Error('cart update failed');
-        syncSavedFields(field, value);
-        if (st && my === seq) st.textContent = value.trim() ? 'Gift note saved' : '';
-        return true;
+        var savedField = syncSavedFields(field, value);
+        var savedStatus = statusEl(savedField);
+        if (savedStatus && my === seq) savedStatus.textContent = value.trim() ? 'Gift note saved' : '';
+        return savedField;
       }).catch(function () {
-        if (st && my === seq) st.textContent = 'Couldn’t save the note — it will be sent with Check out.';
-        return false;
+        var failedField = connectedField(field, true);
+        state.field = failedField;
+        var failedStatus = statusEl(failedField);
+        if (failedStatus && my === seq) failedStatus.textContent = 'Couldn’t save the note — it will be sent with Check out.';
+        return null;
       });
-    }).then(function (saved) {
+    }).then(function (savedField) {
       if (my !== seq) return; /* a newer save owns the busy state */
       state.pending = false;
       /* Input/change/blur already queues any newer value. On failure, keep
          wallets inert and let the regular cart form submit the note; do not
          recursively hammer /cart/update.js while the shopper is offline. */
-      if (saved) settle(field);
+      if (savedField) settle(savedField);
     });
     return queue;
   }

@@ -32,6 +32,7 @@ test('star-map form preserves the exact calculated moment for fulfillment', () =
   assert.match(runtime, /rig\.dataset\.skyReady !== 'true'/);
   assert.match(runtime, /form\.dataset\.expressBlocked = 'Express checkout unlocks once your star map is ready\.'/);
   assert.match(runtime, /new CustomEvent\('oc:express-recheck', \{ bubbles: true \}\)/);
+  assert.match(runtime, /addProductFormSubmitListener\(form, function \(event\)/, 'star-map validation must cover AJAX drawer adds as well as native submits');
   assert.match(runtime, /rig\.dataset\.skyReady = 'true';\s*syncExpressGate\(\);/, 'wallet can unlock only after the hidden fulfillment values are ready');
 });
 

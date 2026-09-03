@@ -334,7 +334,7 @@
     });
 
     if (form) {
-      form.addEventListener('submit', function (event) {
+      addProductFormSubmitListener(form, function (event) {
         var missing = null;
         var message = '';
         if (!dateInput.value) {
