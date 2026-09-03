@@ -8,8 +8,6 @@
     assign prod_seconds = 0
   endif
   assign transit_seconds = settings.transit_days | times: 86400
-  assign delivery_low = ships_by | plus: prod_seconds | plus: transit_seconds
-  assign delivery_high = delivery_low | plus: 259200
   assign preview_type = section.settings.preview_type | default: 'horizontal-bar'
   if product.handle == 'personalized-lock-necklace'
     assign preview_type = 'padlock'
@@ -72,7 +70,7 @@
       <p class="pdp__shipline">
         <strong>{{ settings.shipping_promise }}.</strong>
         {%- if same_day_shipping -%}
-          &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping.
+          &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
         {%- elsif section.settings.show_engraving -%}
           Engraved to order — ships in {{ settings.production_days }} business days.
         {%- else -%}
@@ -373,7 +371,7 @@
           <summary>Shipping & returns</summary>
           <div class="accordion-body">
             {%- if same_day_shipping -%}
-              <p>{{ settings.shipping_promise }}. Ships within {{ settings.production_days }} business days. If we engrave it wrong or it arrives damaged, we remake it free.</p>
+              <p>{{ settings.shipping_promise }}. In stock and ships the same day when ordered by 12 PM ET. If we engrave it wrong or it arrives damaged, we remake it free.</p>
             {%- elsif section.settings.show_engraving -%}
               <p>{{ settings.shipping_promise }}. Each piece is engraved to order and ships within {{ settings.production_days }} business days. Personalized pieces are final sale, but if we engrave it wrong or it arrives damaged we remake it free.</p>
             {%- else -%}

@@ -13,6 +13,7 @@ test('collection pages lead with products and keep one canonical editorial block
   const schema = read('snippets/viktor-seo-schema.liquid');
 
   assert.match(main, /<section class="section collection-page">/);
+  assert.match(main, /collection\.handle == 'for-couples'[\s\S]*assign collection_h1 = 'Couples Jewelry &amp; Matching Sets'/);
   assert.ok(main.indexOf('class="product-grid"') < main.indexOf('class="collection-description"'));
   assert.doesNotMatch(main.slice(0, main.indexOf('class="collection-controls"')), /collection\.description/);
   assert.match(main, /unless collection_has_seo_copy/);

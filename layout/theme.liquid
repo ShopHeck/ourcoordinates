@@ -221,10 +221,13 @@
 
   <style>{% render 'critical-css' %}</style>
 
+  {% # theme-check-disable AssetPreload %}
+  {%- comment -%}Intentional nonblocking preload swap; the noscript fallback preserves CSS without JavaScript.{%- endcomment -%}
   <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>{{ 'base.css' | asset_url | stylesheet_tag }}</noscript>
   <link rel="preload" href="{{ 'ep.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>{{ 'ep.css' | asset_url | stylesheet_tag }}</noscript>
+  {% # theme-check-enable AssetPreload %}
   {{ 'site-optimizations.css' | asset_url | stylesheet_tag: preload: true }}
   {%- if request.page_type == 'article' -%}
     {{ 'article.css' | asset_url | stylesheet_tag: preload: true }}
@@ -237,10 +240,14 @@
     11–12px coordinate eyebrows and cost a full family download; the system
     monospace stack in --f-coord renders them instantly.
   {%- endcomment -%}
+  {% # theme-check-disable AssetPreload %}
+  {% # theme-check-disable RemoteAsset %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap"></noscript>
+  {% # theme-check-enable RemoteAsset %}
+  {% # theme-check-enable AssetPreload %}
 
   {{ content_for_header }}
 
