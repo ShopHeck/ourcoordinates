@@ -114,6 +114,7 @@
     var rig = root && root.querySelector('[data-charm-names]');
     if (!rig) return;
     var alert = rig.querySelector('[data-contract-error]');
+    var form = root.querySelector('form[data-product-form]');
 
     function countFromSelection() {
       var group = root.querySelector(`[data-option-index="${rig.dataset.namesOption}"]`);
@@ -135,6 +136,11 @@
         if (preview) preview.closest('[data-charm-preview-wrap]').hidden = !enabled;
       });
       if (alert) alert.hidden = Boolean(count);
+      if (form) {
+        if (!count) form.dataset.expressBlocked = 'Express checkout is unavailable because this Names option cannot be fulfilled.';
+        else delete form.dataset.expressBlocked;
+        form.dispatchEvent(new CustomEvent('oc:express-recheck', { bubbles: true }));
+      }
       document.querySelectorAll('[data-atc]').forEach(function (button) {
         if (!count) {
           button.dataset.contractBlocked = 'true';

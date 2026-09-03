@@ -42,6 +42,14 @@ test('set template per-piece mode vetoes express checkout until every piece is e
   assert.ok((js.match(/syncExpressGate\(\);/g) || []).length >= 3, 'syncExpressGate must run on toggle, input and init');
 });
 
+test('unsupported charm-name variants veto express checkout', () => {
+  const dynamic = read('assets/personalization-dynamic.js');
+  assert.match(dynamic, /var form = root\.querySelector\('form\[data-product-form\]'\);/);
+  assert.match(dynamic, /if \(!count\) form\.dataset\.expressBlocked = 'Express checkout is unavailable because this Names option cannot be fulfilled\.'/);
+  assert.match(dynamic, /else delete form\.dataset\.expressBlocked;/);
+  assert.match(dynamic, /new CustomEvent\('oc:express-recheck', \{ bubbles: true \}\)/);
+});
+
 test('free-shipping nudge is recomputed when the variant changes', () => {
   const nudge = read('snippets/pdp-shipping-nudge.liquid');
   const js = read('assets/global.js');
