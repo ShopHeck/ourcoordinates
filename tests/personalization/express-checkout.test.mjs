@@ -81,9 +81,12 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /state\.field = connectedField\(state\.field, true\);/, 'the active note reference must follow Section Rendering replacements');
   assert.match(js, /function syncSavedFields\(source, value\) \{[\s\S]*?document\.querySelectorAll\(SELECTOR\)\.forEach/, 'a successful save must synchronize every cart-note surface');
   assert.match(js, /var wasClean = [^;]+field\.value === field\.dataset\.noteSaved;[\s\S]*?field\.dataset\.noteSaved = value;[\s\S]*?if \(field !== source && wasClean\) field\.value = value;/, 'clean copies should display the saved note without overwriting an in-progress edit');
+  assert.match(js, /state\.field = dirtyNoteField\(\) \|\| current;/, 'an older save must not replace the active dirty field');
+  assert.match(js, /function dirtyNoteField\(\)[\s\S]*?fields\[i\]\.value !== fields\[i\]\.dataset\.noteSaved/, 'wallet release must consider every copy of the shared note');
+  assert.match(js, /if \(state\.timer \|\| dirty\)[\s\S]*?setBusy\(true\);/, 'a pending debounce or dirty counterpart must retain the global wallet lock');
   assert.match(js, /el\.setAttribute\('inert', ''\)/, 'wallets must be inert (keyboard too) while a save is in flight');
   assert.match(js, /e\.key === 'Enter' \|\| e\.key === ' '/, 'keydown fallback for browsers without inert');
-  assert.match(js, /return null;[\s\S]*?if \(savedField\) settle\(savedField\);/, 'a failed save must stop, while success settles against the connected field');
+  assert.match(js, /return null;[\s\S]*?if \(savedField\) settle\(state\.field \|\| savedField\);/, 'a failed save must stop, while success settles against the active connected field');
   assert.doesNotMatch(js, /if \(field\.value !== field\.dataset\.noteSaved\) save\(field\)/, 'save completion must not recursively retry an unsaved value');
   for (const ev of ["'pointerdown'", "'touchstart'", "'focusin'", "'keydown'"]) {
     assert.ok(js.includes(ev), `wallet block must flush the note on ${ev}`);

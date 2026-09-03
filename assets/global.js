@@ -1643,15 +1643,28 @@ function submitProductForm(form) {
       field.dataset.noteSaved = value;
       if (field !== source && wasClean) field.value = value;
     });
-    state.field = current;
+    state.field = dirtyNoteField() || current;
     return current;
   }
 
-  function settle(field) {
-    /* only release when the cart holds exactly what the field shows */
-    if (!state.pending && field.value === field.dataset.noteSaved) {
-      setBusy(false);
+  function dirtyNoteField() {
+    var fields = document.querySelectorAll(SELECTOR);
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value !== fields[i].dataset.noteSaved) return fields[i];
     }
+    return null;
+  }
+
+  function settle(field) {
+    /* The note is shared: release neither checkout surface while any copy is
+       dirty or a newer value is still waiting for its debounce. */
+    var dirty = dirtyNoteField();
+    if (state.timer || dirty) {
+      if (dirty) state.field = dirty;
+      setBusy(true);
+      return;
+    }
+    if (!state.pending && field.value === field.dataset.noteSaved) setBusy(false);
   }
 
   function save(field) {
@@ -1676,7 +1689,9 @@ function submitProductForm(form) {
         if (!r.ok) throw new Error('cart update failed');
         var savedField = syncSavedFields(field, value);
         var savedStatus = statusEl(savedField);
-        if (savedStatus && my === seq) savedStatus.textContent = value.trim() ? 'Gift note saved' : '';
+        if (savedStatus && my === seq && savedField.value === savedField.dataset.noteSaved) {
+          savedStatus.textContent = value.trim() ? 'Gift note saved' : '';
+        }
         return savedField;
       }).catch(function () {
         var failedField = connectedField(field, true);
@@ -1691,7 +1706,7 @@ function submitProductForm(form) {
       /* Input/change/blur already queues any newer value. On failure, keep
          wallets inert and let the regular cart form submit the note; do not
          recursively hammer /cart/update.js while the shopper is offline. */
-      if (savedField) settle(savedField);
+      if (savedField) settle(state.field || savedField);
     });
     return queue;
   }
