@@ -193,6 +193,11 @@ function submitProductForm(form) {
     function updateVariant(revealInGallery) {
       var v = matchVariant();
       syncMetal();
+      if (form) {
+        if (!v || !v.available) form.dataset.expressUnavailable = 'true';
+        else delete form.dataset.expressUnavailable;
+        form.dispatchEvent(new CustomEvent('oc:express-recheck', { bubbles: true }));
+      }
       if (!v) return;
       if (idInput) idInput.value = v.id;
       if (priceEl) {
@@ -200,6 +205,17 @@ function submitProductForm(form) {
           (v.compare_at_price > v.price ? ' <s>' + money(v.compare_at_price) + '</s>' : '');
       }
       if (stickyPrice) stickyPrice.textContent = money(v.price);
+      /* The PDP wallet buys only this variant and bypasses the existing cart,
+         so keep its shipping claim variant-only as the selection changes. */
+      var nudge = root.querySelector('[data-ship-nudge]');
+      if (nudge) {
+        var threshold = parseInt(nudge.dataset.threshold, 10) || 0;
+        var remaining = threshold - v.price;
+        var slot = nudge.querySelector('[data-ship-nudge-text]') || nudge;
+        slot.innerHTML = remaining > 0
+          ? '<strong>' + money(remaining) + ' away from free US shipping.</strong> Add to cart to combine items.'
+          : '<strong>Ships free in the US.</strong> This item clears the ' + money(threshold).replace(/\.00$/, '') + ' threshold.';
+      }
       atcBtns.forEach(function (btn) {
         btn.disabled = !v.available;
         btn.querySelector('[data-atc-label]').textContent = v.available
@@ -866,8 +882,26 @@ function submitProductForm(form) {
       /* sync to corresponding hidden prop */
       var prop = setRig.querySelector('[data-set-piece-prop="' + piece + '"]');
       if (prop) prop.value = val;
+      syncExpressGate();
     });
   });
+
+  /* ---- EXPRESS CHECKOUT VETO ----
+     The per-piece inputs carry no `required` attribute (the submit listener
+     below validates them), so the wallet gate's required-field scan can't
+     see them. Publish the custom-mode verdict on the form; the gate reads
+     `data-express-blocked` and re-evaluates on `oc:express-recheck`. */
+  function syncExpressGate() {
+    var gateForm = root.querySelector('form[data-product-form]');
+    if (!gateForm) return;
+    var blocked = false;
+    if (isCustomMode) {
+      allPieceInputs.forEach(function (inp) { if (!inp.value.trim()) blocked = true; });
+    }
+    if (blocked) gateForm.dataset.expressBlocked = 'Express checkout unlocks once every piece has its engraving.';
+    else delete gateForm.dataset.expressBlocked;
+    gateForm.dispatchEvent(new CustomEvent('oc:express-recheck', { bubbles: true }));
+  }
 
   /* ---- TOGGLE between modes ---- */
   if (customToggle) {
@@ -902,11 +936,13 @@ function submitProductForm(form) {
         }
         renderUnified();
       }
+      syncExpressGate();
     });
   }
 
   /* remember original required state */
   if (mainInput && mainInput.required) mainInput.dataset.origRequired = 'true';
+  syncExpressGate();
 
   /* ---- FORM VALIDATION ---- */
   var form = root.querySelector('form[data-product-form]');
@@ -954,7 +990,6 @@ function submitProductForm(form) {
   var SECTION_ID = 'cart-drawer';
   var urlAdd = (drawer.dataset.urlAdd || '/cart/add') + '.js';
   var urlChange = (drawer.dataset.urlChange || '/cart/change') + '.js';
-  var urlUpdate = (drawer.dataset.urlUpdate || '/cart/update') + '.js';
   var urlRoot = drawer.dataset.urlRoot || '/';
   var busy = false;
   var lastDrawerTrigger = null;
@@ -1182,16 +1217,6 @@ function submitProductForm(form) {
   drawer.addEventListener('close', function () {
     if (lastDrawerTrigger && document.contains(lastDrawerTrigger)) lastDrawerTrigger.focus();
     lastDrawerTrigger = null;
-  });
-
-  /* persist the gift note as soon as the customer leaves the field */
-  document.addEventListener('change', function (e) {
-    if (!e.target.matches || !e.target.matches('[data-drawer-note]')) return;
-    fetch(urlUpdate, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ note: e.target.value })
-    }).catch(function () {});
   });
 
   /* returning from checkout via back button: bfcache serves stale HTML */
@@ -1449,4 +1474,367 @@ function submitProductForm(form) {
       }
     });
   }
+})();
+
+
+/* ============================================================
+   EXPRESS CHECKOUT GATE — product page (Sept 2026 audit, Codex P1s)
+   Shopify's dynamic checkout button takes the form's variant + properties
+   straight to checkout: it does not fire the form's submit listeners (the
+   engraving-required guards) and never touches the cart (the gift-packaging
+   add-on is added by the Add-to-cart handler). The wallet block is rendered
+   hidden; this reveals it only while the order it would create is complete.
+
+   Four sources of truth, in priority order:
+     1. a checked [data-gift-wrap]            → hide (wallet skips the cart)
+     2. form.dataset.expressBlocked           → hide with that message
+        (set by validators whose inputs carry no `required`, e.g. the set
+        template's per-piece mode; they fire `oc:express-recheck`)
+     3. selected variant unavailable          → hide
+     4. any enabled `required` field empty    → hide
+   ============================================================ */
+(function () {
+  'use strict';
+  var forms = document.querySelectorAll('form[data-product-form]');
+  if (!forms.length) return;
+
+  function requiredFilled(form) {
+    var fields = form.querySelectorAll('input[required], textarea[required], select[required]');
+    for (var i = 0; i < fields.length; i++) {
+      var f = fields[i];
+      if (f.disabled || f.type === 'hidden') continue;
+      if (f.type === 'checkbox' || f.type === 'radio') {
+        if (!form.querySelector('input[name="' + f.name + '"]:checked')) return false;
+        continue;
+      }
+      if (!String(f.value || '').trim()) return false;
+    }
+    return true;
+  }
+
+  forms.forEach(function (form) {
+    var block = form.querySelector('[data-express-checkout]');
+    if (!block) return;
+    var note = form.querySelector('[data-express-note]');
+
+    function update() {
+      var reason = '';
+      if (form.querySelector('[data-gift-wrap]:checked')) {
+        reason = 'Gift packaging is added with Add to cart — express checkout is unavailable while it’s selected.';
+      } else if (form.dataset.expressBlocked) {
+        reason = form.dataset.expressBlocked;
+      } else if (form.dataset.expressUnavailable === 'true') {
+        reason = 'Express checkout is unavailable for this sold-out option.';
+      } else if (!requiredFilled(form)) {
+        reason = 'Express checkout unlocks once your engraving is entered.';
+      }
+      block.hidden = !!reason;
+      if (note) {
+        note.hidden = !reason;
+        note.textContent = reason;
+      }
+    }
+
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    form.addEventListener('oc:express-recheck', update);
+    /* set/4-sided previews toggle `required` and `disabled` programmatically */
+    if (window.MutationObserver) {
+      new MutationObserver(update).observe(form, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['required', 'disabled', 'data-express-blocked', 'data-express-unavailable']
+      });
+    }
+    update();
+  });
+})();
+
+
+/* ============================================================
+   GIFT NOTE PERSISTENCE — cart page AND drawer (Sept 2026, Codex P1/P2)
+   Accelerated checkout buttons start their wallet flow without submitting
+   the surrounding form, so a typed note has to be on the cart before a
+   wallet can be activated. This module:
+     - delegates on document, so the drawer's re-rendered textarea
+       ([data-drawer-note]) and the page textarea ([data-cart-note]) are
+       both covered without re-binding;
+     - serializes saves through one promise chain and ignores stale
+       completions, so an older write can never re-enable the wallets
+       while a newer value is still unsaved;
+     - holds the wallet block `inert` (+ aria-busy, + a keydown guard for
+       browsers without inert) from the first keystroke until the cart
+       holds the current value — mouse, touch AND keyboard; and
+     - reapplies that lock when Shopify's Section Rendering API replaces the
+       drawer's accelerated-checkout markup during a pending save.
+   Falls back to the form POST if a save fails.
+   ============================================================ */
+(function () {
+  'use strict';
+  var SELECTOR = '[data-cart-note], [data-drawer-note]';
+  var queue = Promise.resolve();
+  var seq = 0;
+  var initialField = document.querySelector(SELECTOR);
+  var state = {
+    field: null,
+    saved: initialField && initialField.dataset.noteSaved !== undefined ? initialField.dataset.noteSaved : null,
+    timer: null,
+    pending: false,
+    failed: false
+  };
+  var walletsLocked = false;
+
+  function walletBlocks() {
+    /* The cart page and drawer share one cart note, so both wallet surfaces
+       must remain blocked until that single server-side value is current. */
+    return Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
+  }
+
+  function syncWalletBlocks() {
+    walletBlocks().forEach(function (el) {
+      if (walletsLocked) {
+        el.setAttribute('aria-busy', 'true');
+        el.setAttribute('inert', '');
+      } else {
+        el.removeAttribute('aria-busy');
+        el.removeAttribute('inert');
+      }
+    });
+  }
+
+  function setBusy(on) {
+    walletsLocked = on;
+    syncWalletBlocks();
+  }
+
+  function connectedField(source, preserveEdit) {
+    if (document.contains(source)) return source;
+    var selector = source.matches('[data-drawer-note]') ? '[data-drawer-note]' : '[data-cart-note]';
+    var replacement = document.querySelector(selector) || document.querySelector(SELECTOR);
+    var replacementIsClean = replacement &&
+      (replacement.dataset.noteSaved === undefined || replacement.value === replacement.dataset.noteSaved);
+    if (replacement && preserveEdit && replacementIsClean) {
+      if (replacement.dataset.noteSaved === undefined) {
+        replacement.dataset.noteSaved = source.dataset.noteSaved === undefined
+          ? replacement.defaultValue
+          : source.dataset.noteSaved;
+      }
+      replacement.value = source.value;
+    }
+    return replacement || source;
+  }
+
+  function reconcileRenderedFields() {
+    if (state.saved === null) return;
+    document.querySelectorAll(SELECTOR).forEach(function (field) {
+      if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.defaultValue;
+      var clean = field.value === field.dataset.noteSaved;
+      if (clean && field.dataset.noteSaved !== state.saved) {
+        field.dataset.noteSaved = state.saved;
+        field.value = state.saved;
+      }
+    });
+  }
+
+  if (window.MutationObserver) {
+    new MutationObserver(function () {
+      if (state.field && !document.contains(state.field)) {
+        state.field = connectedField(state.field, walletsLocked);
+      }
+      reconcileRenderedFields();
+      if (walletsLocked) {
+        var st = statusEl(state.field);
+        if (st && state.pending && st.textContent !== 'Saving note…') st.textContent = 'Saving note…';
+        syncWalletBlocks();
+      }
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  function statusEl(field) {
+    var scope = field.closest('.gift-note, .cart-drawer__note, form') || document;
+    return scope.querySelector('[data-cart-note-status]');
+  }
+
+  function adopt(field) {
+    if (state.field !== field) {
+      state.field = field;
+      if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.defaultValue; /* initial markup = what the cart holds */
+      if (state.saved === null) state.saved = field.dataset.noteSaved;
+    }
+  }
+
+  function syncSavedFields(source, value) {
+    state.saved = value;
+    source.dataset.noteSaved = value;
+    var current = connectedField(source, false);
+    document.querySelectorAll(SELECTOR).forEach(function (field) {
+      /* Keep another field's in-progress edit, but move its saved baseline
+         forward so it remains correctly classified as unsaved. */
+      var wasClean = field === source || field.dataset.noteSaved === undefined || field.value === field.dataset.noteSaved;
+      field.dataset.noteSaved = value;
+      if (field !== source && wasClean) field.value = value;
+    });
+    state.field = dirtyNoteField() || current;
+    return current;
+  }
+
+  function dirtyNoteField() {
+    var fields = document.querySelectorAll(SELECTOR);
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value !== fields[i].dataset.noteSaved) return fields[i];
+    }
+    return null;
+  }
+
+  function syncDraftFields(source) {
+    document.querySelectorAll(SELECTOR).forEach(function (field) {
+      if (field !== source) field.value = source.value;
+    });
+  }
+
+  function settle(field) {
+    /* The note is shared: release neither checkout surface while any copy is
+       dirty or a newer value is still waiting for its debounce. */
+    var dirty = dirtyNoteField();
+    if (state.timer || dirty) {
+      if (dirty) state.field = dirty;
+      setBusy(true);
+      return;
+    }
+    if (!state.pending && field.value === field.dataset.noteSaved) setBusy(false);
+  }
+
+  function save(field) {
+    adopt(field);
+    clearTimeout(state.timer);
+    state.timer = null;
+    var value = field.value;
+    if (value === field.dataset.noteSaved && !state.pending) { settle(field); return queue; }
+    var my = ++seq;
+    state.pending = true;
+    state.failed = false;
+    setBusy(true);
+    var st = statusEl(field);
+    if (st) st.textContent = 'Saving note…';
+    queue = queue.then(function () {
+      if (my !== seq) return; /* superseded before it started — skip */
+      return fetch('/cart/update.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ note: value }),
+        keepalive: true
+      }).then(function (r) {
+        if (!r.ok) throw new Error('cart update failed');
+        var savedField = syncSavedFields(field, value);
+        if (my === seq) state.failed = false;
+        var savedStatus = statusEl(savedField);
+        if (savedStatus && my === seq && savedField.value === savedField.dataset.noteSaved) {
+          savedStatus.textContent = value.trim() ? 'Gift note saved' : '';
+        }
+        return savedField;
+      }).catch(function () {
+        var failedField = connectedField(field, true);
+        state.field = failedField;
+        if (my === seq) state.failed = true;
+        var failedStatus = statusEl(failedField);
+        if (failedStatus && my === seq) failedStatus.textContent = 'Couldn’t save the note — it will be sent with Check out.';
+        return null;
+      });
+    }).then(function (savedField) {
+      if (my !== seq) return; /* a newer save owns the busy state */
+      state.pending = false;
+      /* Input/change/blur already queues any newer value. On failure, keep
+         wallets inert and let the regular cart form submit the note; do not
+         recursively hammer /cart/update.js while the shopper is offline. */
+      if (savedField) settle(state.field || savedField);
+    });
+    return queue;
+  }
+
+  document.addEventListener('input', function (e) {
+    var field = e.target;
+    if (!field.matches || !field.matches(SELECTOR)) return;
+    adopt(field);
+    syncDraftFields(field);
+    state.failed = false;
+    setBusy(true);
+    var st = statusEl(field);
+    if (st) st.textContent = '';
+    clearTimeout(state.timer);
+    state.timer = setTimeout(function () { save(field); }, 350);
+  });
+  ['change', 'blur'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      if (!e.target.matches || !e.target.matches(SELECTOR)) return;
+      adopt(e.target);
+      syncDraftFields(e.target);
+      save(e.target);
+    }, true);
+  });
+
+  function submitRegularCart(form, submitter) {
+    var active = dirtyNoteField() || state.field || form.querySelector(SELECTOR);
+    if (active) syncDraftFields(active);
+
+    /* Let the current serialized write finish before deciding whether a newer
+       draft still needs its own save. This prevents an older keepalive request
+       from landing after the checkout form posts the latest note. */
+    if (state.pending) {
+      queue.then(function () { submitRegularCart(form, submitter); });
+      return;
+    }
+
+    var dirty = dirtyNoteField();
+    if (!state.failed && (state.timer || dirty)) {
+      save(dirty || active).then(function () { submitRegularCart(form, submitter); });
+      return;
+    }
+
+    clearTimeout(state.timer);
+    state.timer = null;
+    delete form.dataset.noteCheckoutPending;
+    form.dataset.noteCheckoutReady = 'true';
+    if (form.requestSubmit) {
+      form.requestSubmit(submitter || undefined);
+    } else {
+      if (submitter && submitter.name) {
+        var fallback = document.createElement('input');
+        fallback.type = 'hidden';
+        fallback.name = submitter.name;
+        fallback.value = submitter.value || '';
+        form.appendChild(fallback);
+      }
+      form.submit();
+    }
+  }
+
+  /* Regular checkout must drain the note queue before its form POST. */
+  document.addEventListener('submit', function (e) {
+    var field = e.target.querySelector && e.target.querySelector(SELECTOR);
+    if (!field) return;
+    if (e.target.dataset.noteCheckoutReady === 'true') {
+      delete e.target.dataset.noteCheckoutReady;
+      return;
+    }
+    var active = dirtyNoteField() || state.field;
+    if (active && field !== active) field.value = active.value;
+    if (!state.pending && !state.timer && !dirtyNoteField()) return;
+    e.preventDefault();
+    if (e.target.dataset.noteCheckoutPending === 'true') return;
+    e.target.dataset.noteCheckoutPending = 'true';
+    submitRegularCart(e.target, e.submitter);
+  }, true);
+
+  /* reaching for a wallet: flush immediately; block activation until saved */
+  ['pointerdown', 'touchstart', 'focusin', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      var block = e.target.closest && e.target.closest('.additional-checkout-buttons');
+      if (!block) return;
+      var field = state.field || document.querySelector(SELECTOR);
+      if (field && (state.timer || field.value !== field.dataset.noteSaved)) save(field);
+      if (block.getAttribute('aria-busy') === 'true' && ev === 'keydown' && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault(); /* inert fallback */
+      }
+    }, { capture: true, passive: ev !== 'keydown' });
+  });
 })();

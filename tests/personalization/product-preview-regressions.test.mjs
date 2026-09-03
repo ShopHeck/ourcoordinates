@@ -22,11 +22,18 @@ test('star-map astronomy is isolated to a conditionally loaded product asset', (
 
 test('star-map form preserves the exact calculated moment for fulfillment', () => {
   const snippet = read('snippets/pdp-preview-star-map.liquid');
+  const runtime = read('assets/star-map.js');
 
   assert.match(snippet, /data-sm-status/);
   assert.match(snippet, /data-sm-timezone[^>]*name="properties\[_Star Map Time Zone\]"/);
   assert.match(snippet, /data-sm-utc[^>]*name="properties\[_Star Map UTC\]"/);
   assert.match(snippet, /data-sm-input-location[^>]*aria-describedby="sm-location-help sm-status"/);
+  assert.match(runtime, /function syncExpressGate\(\)/);
+  assert.match(runtime, /rig\.dataset\.skyReady !== 'true'/);
+  assert.match(runtime, /form\.dataset\.expressBlocked = 'Express checkout unlocks once your star map is ready\.'/);
+  assert.match(runtime, /new CustomEvent\('oc:express-recheck', \{ bubbles: true \}\)/);
+  assert.match(runtime, /addProductFormSubmitListener\(form, function \(event\)/, 'star-map validation must cover AJAX drawer adds as well as native submits');
+  assert.match(runtime, /rig\.dataset\.skyReady = 'true';\s*syncExpressGate\(\);/, 'wallet can unlock only after the hidden fulfillment values are ready');
 });
 
 test('interlocking ring metal is controlled only by the selected variant', () => {

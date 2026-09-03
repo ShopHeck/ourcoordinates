@@ -2,7 +2,21 @@
   <div class="page-width">
     <div class="collection-head">
       <p class="coord-eyebrow">{{ section.settings.eyebrow | default: 'Collection' }}</p>
-      <h1>{% if collection.handle == 'all' %}Personalized Jewelry &amp; Coordinates Gifts{% else %}{{ collection.title }}{% endif %}</h1>
+      {%- comment -%}
+        H1 overrides. `for-couples` was titled "Valentine's Day Specials" in
+        admin, so its H1 contradicted its <title> ("Couples Jewelry…") all
+        year (Sept 2026 audit). Renaming the collection in admin is the
+        permanent fix; this keeps the page coherent until then.
+      {%- endcomment -%}
+      {%- liquid
+        assign collection_h1 = collection.title
+        if collection.handle == 'all'
+          assign collection_h1 = 'Personalized Jewelry &amp; Coordinates Gifts'
+        elsif collection.handle == 'for-couples'
+          assign collection_h1 = 'Couples Jewelry &amp; Matching Sets'
+        endif
+      -%}
+      <h1>{{ collection_h1 }}</h1>
       {%- if collection.handle == 'all' and collection.description == blank -%}
         <p class="collection-head__intro">Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes made to hold a place or message that matters.</p>
       {%- endif -%}

@@ -12,6 +12,12 @@
 
   {%- liquid
     assign seo_title = page_title | replace: '&amp;', '&'
+    comment
+      Sept 2026 audit: collection SEO titles saved in admin carry a trailing
+      newline, which rendered as a literal line break before "– OurCoordinates"
+      in every collection <title>. Strip it at the source.
+    endcomment
+    assign seo_title = seo_title | strip_newlines | strip
     assign seo_description = page_description | replace: '&amp;', '&'
     assign seo_canonical = canonical_url
     assign seo_type = 'website'
@@ -116,6 +122,21 @@
       assign seo_description = 'Shop personalized coordinates bracelets engraved with a meaningful location, from classic cuffs to leather and chain-link styles.'
     endif
 
+    comment
+      Sept 2026 audit — indexability:
+      - Internal search result pages were indexable with a self-canonical
+        (crawl-budget leak, thin content). noindex,follow keeps link equity.
+      - /collections/shop-all-products duplicates /collections/all, which is
+        where the nav's "Shop all jewelry" actually points and which carries
+        the custom title/H1/intro. Canonicalize the duplicate to it.
+    endcomment
+    if request.page_type == 'search'
+      assign seo_noindex = true
+    endif
+    if request.page_type == 'collection' and collection.handle == 'shop-all-products'
+      assign seo_canonical = shop.url | append: '/collections/all'
+    endif
+
     assign social_image_url = blank
     assign social_image_alt = page_title
     if page_image
@@ -138,6 +159,8 @@
   -%}
 
   <link rel="canonical" href="{{ seo_canonical }}">
+  <link rel="alternate" hreflang="en-US" href="{{ seo_canonical }}">
+  <link rel="alternate" hreflang="x-default" href="{{ seo_canonical }}">
   {%- if seo_noindex -%}<meta name="robots" content="noindex,follow">{%- endif -%}
 
   <title>
@@ -188,7 +211,7 @@
       --c-ink-soft: {{ settings.color_ink | color_modify: 'alpha', 0.64 }};
       --f-display: 'Fraunces', Georgia, 'Times New Roman', serif;
       --f-body: 'Inter', -apple-system, 'Segoe UI', sans-serif;
-      --f-coord: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+      --f-coord: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
       --page-max: 1200px;
       --gutter: clamp(16px, 4vw, 40px);
     }
@@ -205,9 +228,17 @@
     {{ 'article.css' | asset_url | stylesheet_tag: preload: true }}
   {%- endif -%}
 
+  {%- comment -%}
+    Fonts (Sept 2026 audit): preconnect to BOTH Google Fonts origins — the
+    CSS comes from fonts.googleapis.com and the woff2 from fonts.gstatic.com,
+    and only the latter was warmed. IBM Plex Mono dropped: it styled only the
+    11–12px coordinate eyebrows and cost a full family download; the system
+    monospace stack in --f-coord renders them instantly.
+  {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap"></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap"></noscript>
 
   {{ content_for_header }}
 
@@ -262,8 +293,26 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "url": "https://ourcoordinates.com/pages/faqs", "mainEntity": [{"@type": "Question", "name": "How do I add coordinates to my piece?", "acceptedAnswer": {"@type": "Answer", "text": "Search any address or drop a pin on the map on the product page — we convert it to exact latitude and longitude automatically. Your engraving updates in the live preview as you go, and the coordinates travel with your order. No need to look coordinates up yourself."}}, {"@type": "Question", "name": "Can I engrave something other than coordinates?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Names, dates, and short messages engrave on most pieces — the personalization field on each product page shows exactly how many characters fit and how your text will look. Coordinates are our signature, but the engraving is yours."}}, {"@type": "Question", "name": "What materials do you use?", "acceptedAnswer": {"@type": "Answer", "text": "Every piece is handcrafted from 316L stainless steel — the corrosion-resistant alloy used in fine watches — engraved to order in our USA studio. Gold and rose gold styles use 18K plating; black styles use a durable PVD coating."}}, {"@type": "Question", "name": "How does the live engraving preview work?", "acceptedAnswer": {"@type": "Answer", "text": "As you type your coordinates or message, the preview renders your exact text on the piece in your selected finish — what you see in the preview is what gets engraved. On custom orders we also send a photo proof before engraving begins."}}, {"@type": "Question", "name": "Can I see my design before it ships?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — custom orders include a photo proof before engraving. Check your spelling and dates carefully at checkout too: because every piece is engraved to order, the preview and proof are your design checkpoints."}}, {"@type": "Question", "name": "How long does shipping take?", "acceptedAnswer": {"@type": "Answer", "text": "Every piece is engraved to order. Most orders arrive within 7–20 business days of the day you order — that covers up to 5 business days of engraving, then transit. Standard US shipping is free on orders over $50, and expedited options are available at checkout when the date matters. You'll get tracking the moment your order ships."}}, {"@type": "Question", "name": "Do you ship internationally?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — we ship worldwide. International orders may be subject to customs duties or taxes, which are the responsibility of the recipient. US standard shipping is free on orders over $50."}}, {"@type": "Question", "name": "How do I track my order?", "acceptedAnswer": {"@type": "Answer", "text": "You'll receive a shipment confirmation email with your tracking number as soon as your order ships, and the tracking number activates within 24 hours."}}, {"@type": "Question", "name": "What if I entered the wrong shipping address?", "acceptedAnswer": {"@type": "Answer", "text": "Contact us immediately at info@ourcoordinates.com — because engraving starts right away, there's a short window to correct an address before your order ships, and we'll do everything we can to catch it in time."}}, {"@type": "Question", "name": "Can I return or exchange my order?", "acceptedAnswer": {"@type": "Answer", "text": "Personalized and custom-engraved pieces are non-returnable and non-refundable, because they are made only for you and cannot be resold. Non-personalized items can be returned unworn and in original packaging within 30 days of delivery. If we made an engraving error or your piece arrived damaged, we remake or refund it — always."}}, {"@type": "Question", "name": "Can personalized items be returned?", "acceptedAnswer": {"@type": "Answer", "text": "No — personalized and custom-engraved pieces are non-returnable and non-refundable. They are made only for you and cannot be restocked. The exceptions are our mistakes: if we engraved it wrong, or it arrived damaged, email us and we will remake it or refund you at no cost. Check your spelling and dates at checkout, and on custom orders review the photo proof."}}, {"@type": "Question", "name": "What if my order arrives damaged?", "acceptedAnswer": {"@type": "Answer", "text": "Email info@ourcoordinates.com within 7 days of delivery with a photo of the damage and we'll send a replacement or make it right — at no cost to you."}}, {"@type": "Question", "name": "How do I care for my jewelry?", "acceptedAnswer": {"@type": "Answer", "text": "Remove your piece before swimming or exercising, store it dry and individually, and clean it with a soft microfiber cloth. Avoid perfumes, lotions, and harsh chemicals — they're what dull finishes over time. The full routine is in our jewelry cleaning & care guide."}}, {"@type": "Question", "name": "Can I shower or swim with it?", "acceptedAnswer": {"@type": "Answer", "text": "Daily wear — showers, sweat, weather — is fine for 316L stainless steel. Take it off for the ocean and the pool: chlorine and salt water are what wear on plating and finishes fastest."}}, {"@type": "Question", "name": "Will the engraving fade or wear off?", "acceptedAnswer": {"@type": "Answer", "text": "No — engraving is cut into the metal, not printed on it, so your coordinates or message stay legible for the life of the piece. Surface finishes can mellow over years of wear, which is what the care guide prevents."}}, {"@type": "Question", "name": "Do pieces come gift-ready?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — every order arrives in gift-ready packaging, and you can add a gift note at checkout that ships inside the box. Gift receipts are included without prices."}}, {"@type": "Question", "name": "I'm not sure what to pick. Can you help?", "acceptedAnswer": {"@type": "Answer", "text": "Take the 60-second gift finder: tell us who it's for, what the moment means, and your budget, and we'll narrow the store to three pieces you can personalize. No coordinates needed to start."}}, {"@type": "Question", "name": "When should I order for a holiday or birthday?", "acceptedAnswer": {"@type": "Answer", "text": "Order at least four weeks ahead — delivery takes 7–20 business days from the day you order, engraving included. Our seasonal collections show an order-by date banner timed to each occasion, and expedited shipping is available at checkout."}}, {"@type": "Question", "name": "Where are the pieces made?", "acceptedAnswer": {"@type": "Answer", "text": "Every piece is engraved to order in our USA studio. We're a family-run brand based in Tampa Bay, Florida — and the founder still checks the engraving previews."}}, {"@type": "Question", "name": "How do I contact support?", "acceptedAnswer": {"@type": "Answer", "text": "Email info@ourcoordinates.com or use our contact page — we respond within 24 hours, and we're quick about remakes when something's off."}}]}</script>
 {%- endif -%}
 <!-- /OC:FAQPAGE-SCHEMA -->
-{% comment %} Sequenzy saved popup embed {% endcomment %}
-<script async src="https://sequenzy.com/embed/popups/m46zb8jmpgswuonpi6rjdwlg?v=capture-runtime-20260820-17"></script>
+{%- comment -%}
+  Sequenzy saved popup embed — deferred (Sept 2026 audit).
+  Lighthouse identified the popup's image overlay (div.sqz-popup-visual) as
+  the Largest Contentful Paint element on collection pages (20.2 s mobile
+  LCP): the 96 KB bundle arrived during first paint and drew over the grid.
+  The popup keeps working; it now loads after the window `load` event + 3 s,
+  or on the shopper's first interaction — whichever comes first — so it can
+  never be in the LCP window. Not loaded in the cart, where every element
+  should point at checkout. Popup timing/exit-intent rules live in Sequenzy.
+{%- endcomment -%}
+{%- unless template.name == 'cart' -%}
+<script>
+(function(){
+  var src='https://sequenzy.com/embed/popups/m46zb8jmpgswuonpi6rjdwlg?v=capture-runtime-20260820-17',done=false;
+  function load(){if(done)return;done=true;var s=document.createElement('script');s.src=src;s.async=true;document.head.appendChild(s);}
+  ['scroll','pointerdown','keydown','touchstart'].forEach(function(t){addEventListener(t,load,{once:true,passive:true});});
+  addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+{%- endunless -%}
   {%- render 'viktor-seo-schema' -%}
 </head>
 
