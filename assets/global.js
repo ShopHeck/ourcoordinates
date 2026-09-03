@@ -1579,7 +1579,8 @@ function submitProductForm(form) {
     field: null,
     saved: initialField && initialField.dataset.noteSaved !== undefined ? initialField.dataset.noteSaved : null,
     timer: null,
-    pending: false
+    pending: false,
+    failed: false
   };
   var walletsLocked = false;
 
@@ -1711,6 +1712,7 @@ function submitProductForm(form) {
     if (value === field.dataset.noteSaved && !state.pending) { settle(field); return queue; }
     var my = ++seq;
     state.pending = true;
+    state.failed = false;
     setBusy(true);
     var st = statusEl(field);
     if (st) st.textContent = 'Saving note…';
@@ -1724,6 +1726,7 @@ function submitProductForm(form) {
       }).then(function (r) {
         if (!r.ok) throw new Error('cart update failed');
         var savedField = syncSavedFields(field, value);
+        if (my === seq) state.failed = false;
         var savedStatus = statusEl(savedField);
         if (savedStatus && my === seq && savedField.value === savedField.dataset.noteSaved) {
           savedStatus.textContent = value.trim() ? 'Gift note saved' : '';
@@ -1732,6 +1735,7 @@ function submitProductForm(form) {
       }).catch(function () {
         var failedField = connectedField(field, true);
         state.field = failedField;
+        if (my === seq) state.failed = true;
         var failedStatus = statusEl(failedField);
         if (failedStatus && my === seq) failedStatus.textContent = 'Couldn’t save the note — it will be sent with Check out.';
         return null;
@@ -1752,6 +1756,7 @@ function submitProductForm(form) {
     if (!field.matches || !field.matches(SELECTOR)) return;
     adopt(field);
     syncDraftFields(field);
+    state.failed = false;
     setBusy(true);
     var st = statusEl(field);
     if (st) st.textContent = '';
@@ -1767,14 +1772,57 @@ function submitProductForm(form) {
     }, true);
   });
 
-  /* Regular checkout submits its own form immediately. Mirror the active
-     draft first so either cart surface posts the same note while the AJAX
-     persistence request finishes with that identical value. */
+  function submitRegularCart(form, submitter) {
+    var active = dirtyNoteField() || state.field || form.querySelector(SELECTOR);
+    if (active) syncDraftFields(active);
+
+    /* Let the current serialized write finish before deciding whether a newer
+       draft still needs its own save. This prevents an older keepalive request
+       from landing after the checkout form posts the latest note. */
+    if (state.pending) {
+      queue.then(function () { submitRegularCart(form, submitter); });
+      return;
+    }
+
+    var dirty = dirtyNoteField();
+    if (!state.failed && (state.timer || dirty)) {
+      save(dirty || active).then(function () { submitRegularCart(form, submitter); });
+      return;
+    }
+
+    clearTimeout(state.timer);
+    state.timer = null;
+    delete form.dataset.noteCheckoutPending;
+    form.dataset.noteCheckoutReady = 'true';
+    if (form.requestSubmit) {
+      form.requestSubmit(submitter || undefined);
+    } else {
+      if (submitter && submitter.name) {
+        var fallback = document.createElement('input');
+        fallback.type = 'hidden';
+        fallback.name = submitter.name;
+        fallback.value = submitter.value || '';
+        form.appendChild(fallback);
+      }
+      form.submit();
+    }
+  }
+
+  /* Regular checkout must drain the note queue before its form POST. */
   document.addEventListener('submit', function (e) {
     var field = e.target.querySelector && e.target.querySelector(SELECTOR);
     if (!field) return;
+    if (e.target.dataset.noteCheckoutReady === 'true') {
+      delete e.target.dataset.noteCheckoutReady;
+      return;
+    }
     var active = dirtyNoteField() || state.field;
     if (active && field !== active) field.value = active.value;
+    if (!state.pending && !state.timer && !dirtyNoteField()) return;
+    e.preventDefault();
+    if (e.target.dataset.noteCheckoutPending === 'true') return;
+    e.target.dataset.noteCheckoutPending = 'true';
+    submitRegularCart(e.target, e.submitter);
   }, true);
 
   /* reaching for a wallet: flush immediately; block activation until saved */

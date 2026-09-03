@@ -97,7 +97,10 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /state\.field = dirtyNoteField\(\) \|\| current;/, 'an older save must not replace the active dirty field');
   assert.match(js, /function dirtyNoteField\(\)[\s\S]*?fields\[i\]\.value !== fields\[i\]\.dataset\.noteSaved/, 'wallet release must consider every copy of the shared note');
   assert.match(js, /function syncDraftFields\(source\)[\s\S]*?if \(field !== source\) field\.value = source\.value;/, 'typing on either cart surface must update the other regular checkout form');
-  assert.match(js, /document\.addEventListener\('submit'[\s\S]*?dirtyNoteField\(\) \|\| state\.field[\s\S]*?field\.value = active\.value;/, 'regular checkout must submit the active note draft from either surface');
+  assert.match(js, /function submitRegularCart\(form, submitter\)[\s\S]*?if \(state\.pending\)[\s\S]*?queue\.then/, 'regular checkout must wait for an older serialized write');
+  assert.match(js, /if \(!state\.failed && \(state\.timer \|\| dirty\)\)[\s\S]*?save\(dirty \|\| active\)\.then/, 'regular checkout must persist the latest draft after the queue drains');
+  assert.match(js, /form\.dataset\.noteCheckoutReady = 'true';[\s\S]*?form\.requestSubmit\(submitter \|\| undefined\)/, 'the original checkout action must resume only after note writes settle');
+  assert.match(js, /document\.addEventListener\('submit'[\s\S]*?e\.preventDefault\(\);[\s\S]*?submitRegularCart\(e\.target, e\.submitter\)/, 'dirty cart forms must not navigate before note serialization');
   assert.match(js, /if \(state\.timer \|\| dirty\)[\s\S]*?setBusy\(true\);/, 'a pending debounce or dirty counterpart must retain the global wallet lock');
   assert.match(js, /el\.setAttribute\('inert', ''\)/, 'wallets must be inert (keyboard too) while a save is in flight');
   assert.match(js, /e\.key === 'Enter' \|\| e\.key === ' '/, 'keydown fallback for browsers without inert');
