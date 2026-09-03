@@ -200,17 +200,16 @@ function submitProductForm(form) {
           (v.compare_at_price > v.price ? ' <s>' + money(v.compare_at_price) + '</s>' : '');
       }
       if (stickyPrice) stickyPrice.textContent = money(v.price);
-      /* free-shipping nudge is server-rendered from the first variant; on
-         products whose variants differ in price, recompute it here */
+      /* The PDP wallet buys only this variant and bypasses the existing cart,
+         so keep its shipping claim variant-only as the selection changes. */
       var nudge = root.querySelector('[data-ship-nudge]');
       if (nudge) {
         var threshold = parseInt(nudge.dataset.threshold, 10) || 0;
-        var cartTotal = parseInt(nudge.dataset.cartTotal, 10) || 0;
-        var remaining = threshold - (cartTotal + v.price);
+        var remaining = threshold - v.price;
         var slot = nudge.querySelector('[data-ship-nudge-text]') || nudge;
         slot.innerHTML = remaining > 0
-          ? 'Add <strong>' + money(remaining) + '</strong> more and your order ships free in the US.'
-          : '<strong>Ships free.</strong> This order clears the ' + money(threshold).replace(/\.00$/, '') + ' free-shipping threshold.';
+          ? '<strong>' + money(remaining) + ' away from free US shipping.</strong> Add to cart to combine items.'
+          : '<strong>Ships free in the US.</strong> This item clears the ' + money(threshold).replace(/\.00$/, '') + ' threshold.';
       }
       atcBtns.forEach(function (btn) {
         btn.disabled = !v.available;

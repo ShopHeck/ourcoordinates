@@ -1,9 +1,8 @@
 {%- comment -%}
   Free-shipping nudge under the buy box (Sept 2026 audit).
-  Reuses the cart's threshold math: what the cart total would be after adding
-  this variant versus settings.free_shipping_threshold. The cart already says
-  "You're $3 away" — this surfaces the same fact one step earlier, where the
-  shopper can still add a second piece before checkout.
+  Product-page accelerated checkout buys this variant without the existing
+  cart, so the claim is based on the selected variant alone. When it is below
+  the threshold, the copy directs shoppers to Add to cart to combine items.
   Renders nothing when the threshold is 0. Accepts: variant.
   Server-rendered from the first available variant; the drawer's live bar
   remains the source of truth once the item is in the cart.
@@ -12,21 +11,20 @@
   assign nudge_threshold = settings.free_shipping_threshold | times: 100
   assign nudge_remaining = 0
   if nudge_threshold > 0 and variant != blank
-    assign nudge_total = cart.total_price | plus: variant.price
-    assign nudge_remaining = nudge_threshold | minus: nudge_total
+    assign nudge_remaining = nudge_threshold | minus: variant.price
   endif
 -%}
 {%- if nudge_threshold > 0 and variant != blank -%}
   {%- comment -%}
-    data-threshold / data-cart-total let global.js recompute the line when
-    the shopper picks a variant with a different price (Codex review).
+    data-threshold lets global.js recompute the line when the shopper picks a
+    variant with a different price (Codex review).
   {%- endcomment -%}
-  <p class="pdp__shipnudge" data-ship-nudge data-threshold="{{ nudge_threshold }}" data-cart-total="{{ cart.total_price }}">
+  <p class="pdp__shipnudge" data-ship-nudge data-threshold="{{ nudge_threshold }}">
     <span data-ship-nudge-text>
       {%- if nudge_remaining > 0 -%}
-        Add <strong>{{ nudge_remaining | money }}</strong> more and your order ships free in the US.
+        <strong>{{ nudge_remaining | money }} away from free US shipping.</strong> Add to cart to combine items.
       {%- else -%}
-        <strong>Ships free.</strong> This order clears the {{ nudge_threshold | money_without_trailing_zeros }} free-shipping threshold.
+        <strong>Ships free in the US.</strong> This item clears the {{ nudge_threshold | money_without_trailing_zeros }} threshold.
       {%- endif -%}
     </span>
   </p>

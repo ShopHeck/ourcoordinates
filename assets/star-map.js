@@ -241,6 +241,15 @@
         parseCoordinates(locationInput && locationInput.value);
     }
 
+    function syncExpressGate() {
+      if (!form) return;
+      var blocked = !dateInput.value || !selectedLocation() || rig.dataset.skyReady !== 'true' ||
+        (captionInput.required && !captionInput.value.trim());
+      if (blocked) form.dataset.expressBlocked = 'Express checkout unlocks once your star map is ready.';
+      else delete form.dataset.expressBlocked;
+      form.dispatchEvent(new CustomEvent('oc:express-recheck', { bubbles: true }));
+    }
+
     function clearPinnedLocation() {
       if (exactCoordinates) exactCoordinates.value = '';
       if (searchedPlace) searchedPlace.value = '';
@@ -273,6 +282,7 @@
       if (timezoneProperty) timezoneProperty.value = '';
       if (utcProperty) utcProperty.value = '';
       rig.dataset.skyReady = 'false';
+      syncExpressGate();
     }
 
     function render() {
@@ -304,6 +314,7 @@
         if (timezoneProperty) timezoneProperty.value = timeZone;
         if (utcProperty) utcProperty.value = utc.toISOString();
         rig.dataset.skyReady = 'true';
+        syncExpressGate();
         setStatus(
           'Sky calculated for ' + formatCoordinates(location) + ' \u00b7 ' + shortTimeZoneName(utc, timeZone),
           'ready'

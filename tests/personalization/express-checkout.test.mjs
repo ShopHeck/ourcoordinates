@@ -45,10 +45,13 @@ test('set template per-piece mode vetoes express checkout until every piece is e
 test('free-shipping nudge is recomputed when the variant changes', () => {
   const nudge = read('snippets/pdp-shipping-nudge.liquid');
   const js = read('assets/global.js');
-  assert.match(nudge, /data-ship-nudge data-threshold="\{\{ nudge_threshold \}\}" data-cart-total="\{\{ cart\.total_price \}\}"/);
+  assert.match(nudge, /data-ship-nudge data-threshold="\{\{ nudge_threshold \}\}"/);
+  assert.doesNotMatch(nudge, /cart\.total_price/, 'Buy Now bypasses the existing cart, so its shipping claim must be variant-only');
   assert.match(nudge, /data-ship-nudge-text/);
+  assert.match(nudge, /Add to cart to combine items/);
   assert.match(js, /var nudge = root\.querySelector\('\[data-ship-nudge\]'\);/);
-  assert.match(js, /threshold - \(cartTotal \+ v\.price\)/);
+  assert.match(js, /var remaining = threshold - v\.price;/);
+  assert.doesNotMatch(js, /nudge\.dataset\.cartTotal/);
 });
 
 test('gift note is persisted before a wallet checkout can start — cart page and drawer', () => {
