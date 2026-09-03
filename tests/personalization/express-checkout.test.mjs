@@ -71,6 +71,8 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /if \(my !== seq\) return;/, 'stale completions must not release the wallets');
   assert.match(js, /function walletBlocks\(\) \{[\s\S]*?document\.querySelectorAll\('\.additional-checkout-buttons'\)/, 'one unsaved cart note must block page and drawer wallets together');
   assert.doesNotMatch(js, /function walletBlocks\(field\)/, 'wallet blocking must not be scoped to only one cart form');
+  assert.match(js, /var walletsLocked = false;/);
+  assert.match(js, /new MutationObserver\(function \(\) \{[\s\S]*?if \(walletsLocked\) syncWalletBlocks\(\);[\s\S]*?document\.documentElement, \{ childList: true, subtree: true \}/, 'Section Rendering must reapply the note lock to replacement wallet blocks');
   assert.match(js, /function syncSavedFields\(source, value\) \{[\s\S]*?document\.querySelectorAll\(SELECTOR\)\.forEach/, 'a successful save must synchronize every cart-note surface');
   assert.match(js, /var wasClean = [^;]+field\.value === field\.dataset\.noteSaved;[\s\S]*?field\.dataset\.noteSaved = value;[\s\S]*?if \(field !== source && wasClean\) field\.value = value;/, 'clean copies should display the saved note without overwriting an in-progress edit');
   assert.match(js, /el\.setAttribute\('inert', ''\)/, 'wallets must be inert (keyboard too) while a save is in flight');

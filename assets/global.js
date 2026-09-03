@@ -1557,7 +1557,9 @@ function submitProductForm(form) {
        while a newer value is still unsaved;
      - holds the wallet block `inert` (+ aria-busy, + a keydown guard for
        browsers without inert) from the first keystroke until the cart
-       holds the current value — mouse, touch AND keyboard.
+       holds the current value — mouse, touch AND keyboard; and
+     - reapplies that lock when Shopify's Section Rendering API replaces the
+       drawer's accelerated-checkout markup during a pending save.
    Falls back to the form POST if a save fails.
    ============================================================ */
 (function () {
@@ -1566,6 +1568,7 @@ function submitProductForm(form) {
   var queue = Promise.resolve();
   var seq = 0;
   var state = { field: null, timer: null, pending: false };
+  var walletsLocked = false;
 
   function walletBlocks() {
     /* The cart page and drawer share one cart note, so both wallet surfaces
@@ -1573,9 +1576,9 @@ function submitProductForm(form) {
     return Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
   }
 
-  function setBusy(on) {
+  function syncWalletBlocks() {
     walletBlocks().forEach(function (el) {
-      if (on) {
+      if (walletsLocked) {
         el.setAttribute('aria-busy', 'true');
         el.setAttribute('inert', '');
       } else {
@@ -1583,6 +1586,17 @@ function submitProductForm(form) {
         el.removeAttribute('inert');
       }
     });
+  }
+
+  function setBusy(on) {
+    walletsLocked = on;
+    syncWalletBlocks();
+  }
+
+  if (window.MutationObserver) {
+    new MutationObserver(function () {
+      if (walletsLocked) syncWalletBlocks();
+    }).observe(document.documentElement, { childList: true, subtree: true });
   }
 
   function statusEl(field) {
