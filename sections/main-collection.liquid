@@ -1,4 +1,11 @@
-<section class="section">
+{%- liquid
+  assign collection_has_seo_copy = false
+  if collection.metafields.custom.seo_copy.value != blank
+    assign collection_has_seo_copy = true
+  endif
+-%}
+
+<section class="section collection-page">
   <div class="page-width">
     <div class="collection-head">
       <p class="coord-eyebrow">{{ section.settings.eyebrow | default: 'Collection' }}</p>
@@ -17,13 +24,6 @@
         endif
       -%}
       <h1>{{ collection_h1 }}</h1>
-      {%- if collection.handle == 'all' and collection.description == blank -%}
-        <p class="collection-head__intro">Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes made to hold a place or message that matters.</p>
-      {%- endif -%}
-      {%- if collection.description != blank -%}
-        <div class="rte" style="max-width:62ch">{{ collection.description }}</div>
-      {%- endif -%}
-
       {%- comment -%}
         Occasion order-by banner for seasonal collection templates.
         Order-by date = occasion minus production, transit, and the same
@@ -140,6 +140,27 @@
           {%- endfor -%}
           {%- if paginate.next -%}<a href="{{ paginate.next.url }}">›</a>{%- endif -%}
         </nav>
+      {%- endif -%}
+
+      {%- liquid
+        assign show_collection_description = false
+        if paginate.current_page == 1 and active_filter_count == 0 and collection.sort_by == blank and current_tags == blank
+          unless collection_has_seo_copy
+            if collection.description != blank or collection.handle == 'all'
+              assign show_collection_description = true
+            endif
+          endunless
+        endif
+      -%}
+      {%- if show_collection_description -%}
+        <section class="collection-description" aria-labelledby="CollectionDescriptionTitle-{{ section.id }}">
+          <h2 id="CollectionDescriptionTitle-{{ section.id }}">{{ 'collections.general.about_collection' | t: title: collection.title }}</h2>
+          {%- if collection.description != blank -%}
+            <div class="rte collection-description__body">{{ collection.description }}</div>
+          {%- else -%}
+            <p class="collection-description__body">{{ 'collections.general.all_products_intro' | t }}</p>
+          {%- endif -%}
+        </section>
       {%- endif -%}
     {%- endpaginate -%}
   </div>
