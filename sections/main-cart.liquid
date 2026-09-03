@@ -120,7 +120,7 @@
                 buttons busy until the save lands — otherwise Shop Pay / PayPal
                 would start checkout before the form POST ever stored the note.
               {%- endcomment -%}
-              <textarea id="CartNote" name="note" data-cart-note placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note }}</textarea>
+              <textarea id="CartNote" name="note" data-cart-note data-note-saved="{{ cart.note | escape }}" placeholder="e.g. Happy anniversary. This is where it all started. — J">{{ cart.note | escape }}</textarea>
               <p class="gift-note__status" data-cart-note-status aria-live="polite"></p>
             </div>
           {%- endif -%}

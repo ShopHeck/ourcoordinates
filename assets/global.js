@@ -1601,7 +1601,7 @@ function submitProductForm(form) {
     if (replacement && preserveEdit && replacementIsClean) {
       if (replacement.dataset.noteSaved === undefined) {
         replacement.dataset.noteSaved = source.dataset.noteSaved === undefined
-          ? replacement.value
+          ? replacement.defaultValue
           : source.dataset.noteSaved;
       }
       replacement.value = source.value;
@@ -1629,7 +1629,7 @@ function submitProductForm(form) {
   function adopt(field) {
     if (state.field !== field) {
       state.field = field;
-      if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.value; /* server-rendered value = what the cart holds */
+      if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.defaultValue; /* initial markup = what the cart holds */
     }
   }
 

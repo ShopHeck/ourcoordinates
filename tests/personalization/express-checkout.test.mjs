@@ -61,9 +61,9 @@ test('gift note is persisted before a wallet checkout can start — cart page an
 
   assert.match(cart, /content_for_additional_checkout_buttons/);
   assert.match(drawer, /content_for_additional_checkout_buttons/);
-  assert.match(cart, /name="note" data-cart-note/);
+  assert.match(cart, /name="note" data-cart-note data-note-saved="\{\{ cart\.note \| escape \}\}"/, 'page note baseline must exist before the first input event');
   assert.match(cart, /data-cart-note-status/);
-  assert.match(drawer, /data-drawer-note/);
+  assert.match(drawer, /data-drawer-note data-note-saved="\{\{ cart\.note \| escape \}\}"/, 'drawer note baseline must survive Section Rendering');
   assert.match(drawer, /data-cart-note-status/, 'drawer shows the same save status line');
 
   assert.match(js, /var SELECTOR = '\[data-cart-note\], \[data-drawer-note\]';/, 'one delegated module must cover page and drawer');
@@ -77,6 +77,7 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /var walletsLocked = false;/);
   assert.match(js, /new MutationObserver\(function \(\) \{[\s\S]*?if \(!walletsLocked\) return;[\s\S]*?syncWalletBlocks\(\);[\s\S]*?document\.documentElement, \{ childList: true, subtree: true \}/, 'Section Rendering must reapply the note lock to replacement wallet blocks');
   assert.match(js, /function connectedField\(source, preserveEdit\)[\s\S]*?document\.contains\(source\)[\s\S]*?replacementIsClean[\s\S]*?replacement\.value = source\.value;/, 'a drawer rerender must transfer an in-progress note without overwriting a newer edit');
+  assert.match(js, /field\.dataset\.noteSaved = field\.defaultValue;/, 'fallback baseline must use the initial textarea value, never the already-edited live value');
   assert.match(js, /state\.field = connectedField\(state\.field, true\);/, 'the active note reference must follow Section Rendering replacements');
   assert.match(js, /function syncSavedFields\(source, value\) \{[\s\S]*?document\.querySelectorAll\(SELECTOR\)\.forEach/, 'a successful save must synchronize every cart-note surface');
   assert.match(js, /var wasClean = [^;]+field\.value === field\.dataset\.noteSaved;[\s\S]*?field\.dataset\.noteSaved = value;[\s\S]*?if \(field !== source && wasClean\) field\.value = value;/, 'clean copies should display the saved note without overwriting an in-progress edit');
