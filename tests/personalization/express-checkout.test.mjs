@@ -66,10 +66,15 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /var SELECTOR = '\[data-cart-note\], \[data-drawer-note\]';/, 'one delegated module must cover page and drawer');
   assert.match(js, /\/cart\/update\.js/);
   assert.match(js, /keepalive: true/);
+  assert.equal((js.match(/fetch\('\/cart\/update\.js'/g) || []).length, 1, 'only the serialized note writer may update the cart note');
   assert.match(js, /queue = queue\.then\(/, 'saves must be serialized');
   assert.match(js, /if \(my !== seq\) return;/, 'stale completions must not release the wallets');
+  assert.match(js, /function walletBlocks\(\) \{[\s\S]*?document\.querySelectorAll\('\.additional-checkout-buttons'\)/, 'one unsaved cart note must block page and drawer wallets together');
+  assert.doesNotMatch(js, /function walletBlocks\(field\)/, 'wallet blocking must not be scoped to only one cart form');
   assert.match(js, /el\.setAttribute\('inert', ''\)/, 'wallets must be inert (keyboard too) while a save is in flight');
   assert.match(js, /e\.key === 'Enter' \|\| e\.key === ' '/, 'keydown fallback for browsers without inert');
+  assert.match(js, /return false;[\s\S]*?if \(saved\) settle\(field\);/, 'a failed save must stop without recursively retrying');
+  assert.doesNotMatch(js, /if \(field\.value !== field\.dataset\.noteSaved\) save\(field\)/, 'save completion must not recursively retry an unsaved value');
   for (const ev of ["'pointerdown'", "'touchstart'", "'focusin'", "'keydown'"]) {
     assert.ok(js.includes(ev), `wallet block must flush the note on ${ev}`);
   }

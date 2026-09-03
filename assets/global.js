@@ -986,7 +986,6 @@ function submitProductForm(form) {
   var SECTION_ID = 'cart-drawer';
   var urlAdd = (drawer.dataset.urlAdd || '/cart/add') + '.js';
   var urlChange = (drawer.dataset.urlChange || '/cart/change') + '.js';
-  var urlUpdate = (drawer.dataset.urlUpdate || '/cart/update') + '.js';
   var urlRoot = drawer.dataset.urlRoot || '/';
   var busy = false;
   var lastDrawerTrigger = null;
@@ -1214,16 +1213,6 @@ function submitProductForm(form) {
   drawer.addEventListener('close', function () {
     if (lastDrawerTrigger && document.contains(lastDrawerTrigger)) lastDrawerTrigger.focus();
     lastDrawerTrigger = null;
-  });
-
-  /* persist the gift note as soon as the customer leaves the field */
-  document.addEventListener('change', function (e) {
-    if (!e.target.matches || !e.target.matches('[data-drawer-note]')) return;
-    fetch(urlUpdate, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ note: e.target.value })
-    }).catch(function () {});
   });
 
   /* returning from checkout via back button: bfcache serves stale HTML */
@@ -1578,14 +1567,14 @@ function submitProductForm(form) {
   var seq = 0;
   var state = { field: null, saved: null, timer: null, pending: false };
 
-  function walletBlocks(field) {
-    var scope = field.closest('form') || document;
-    var blocks = Array.prototype.slice.call(scope.querySelectorAll('.additional-checkout-buttons'));
-    return blocks.length ? blocks : Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
+  function walletBlocks() {
+    /* The cart page and drawer share one cart note, so both wallet surfaces
+       must remain blocked until that single server-side value is current. */
+    return Array.prototype.slice.call(document.querySelectorAll('.additional-checkout-buttons'));
   }
 
-  function setBusy(field, on) {
-    walletBlocks(field).forEach(function (el) {
+  function setBusy(on) {
+    walletBlocks().forEach(function (el) {
       if (on) {
         el.setAttribute('aria-busy', 'true');
         el.setAttribute('inert', '');
@@ -1612,7 +1601,7 @@ function submitProductForm(form) {
   function settle(field) {
     /* only release when the cart holds exactly what the field shows */
     if (!state.pending && field.value === field.dataset.noteSaved) {
-      setBusy(field, false);
+      setBusy(false);
     }
   }
 
@@ -1624,7 +1613,7 @@ function submitProductForm(form) {
     if (value === field.dataset.noteSaved && !state.pending) { settle(field); return queue; }
     var my = ++seq;
     state.pending = true;
-    setBusy(field, true);
+    setBusy(true);
     var st = statusEl(field);
     if (st) st.textContent = 'Saving note…';
     queue = queue.then(function () {
@@ -1639,14 +1628,18 @@ function submitProductForm(form) {
         field.dataset.noteSaved = value;
         state.saved = value;
         if (st && my === seq) st.textContent = value.trim() ? 'Gift note saved' : '';
+        return true;
       }).catch(function () {
         if (st && my === seq) st.textContent = 'Couldn’t save the note — it will be sent with Check out.';
+        return false;
       });
-    }).then(function () {
+    }).then(function (saved) {
       if (my !== seq) return; /* a newer save owns the busy state */
       state.pending = false;
-      if (field.value !== field.dataset.noteSaved) save(field); /* typed more while saving */
-      else settle(field);
+      /* Input/change/blur already queues any newer value. On failure, keep
+         wallets inert and let the regular cart form submit the note; do not
+         recursively hammer /cart/update.js while the shopper is offline. */
+      if (saved) settle(field);
     });
     return queue;
   }
@@ -1655,7 +1648,7 @@ function submitProductForm(form) {
     var field = e.target;
     if (!field.matches || !field.matches(SELECTOR)) return;
     adopt(field);
-    setBusy(field, true);
+    setBusy(true);
     var st = statusEl(field);
     if (st) st.textContent = '';
     clearTimeout(state.timer);
