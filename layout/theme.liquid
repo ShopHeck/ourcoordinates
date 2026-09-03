@@ -49,8 +49,6 @@
       if seo_description == blank
         assign seo_description = 'Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes personalized with a place or message that matters.'
       endif
-    elsif request.page_type == 'collection' and collection.products_count == 0
-      assign seo_noindex = true
     elsif request.page_type == 'collection' and collection.handle == 'coordinates-sets' and seo_description == blank
       assign seo_description = 'Shop matching coordinates jewelry sets engraved with one meaningful place, including necklaces, bracelets, rings, and keepsakes made to share.'
     elsif request.page_type == 'collection' and collection.handle == 'in-stock' and seo_description == blank
@@ -131,12 +129,17 @@
       - /collections/shop-all-products duplicates /collections/all, which is
         where the nav's "Shop all jewelry" actually points and which carries
         the custom title/H1/intro. Canonicalize the duplicate to it.
+      - Empty collections should stay crawlable for discovery but out of the
+        search index, regardless of which handle-specific metadata branch ran.
     endcomment
     if request.page_type == 'search'
       assign seo_noindex = true
     endif
     if request.page_type == 'collection' and collection.handle == 'shop-all-products'
       assign seo_canonical = shop.url | append: '/collections/all'
+    endif
+    if request.page_type == 'collection' and collection.products_count == 0
+      assign seo_noindex = true
     endif
 
     assign social_image_url = blank

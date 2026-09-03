@@ -47,5 +47,6 @@ test('empty collections are kept out of search while preserving customer recover
 
   const emptyCollectionBranch = layout.slice(layout.indexOf("request.page_type == 'collection' and collection.products_count == 0"));
   assert.match(emptyCollectionBranch.slice(0, 180), /assign seo_noindex = true/);
+  assert.doesNotMatch(layout, /elsif request\.page_type == 'collection' and collection\.products_count == 0/);
   assert.match(main, /collection\.products_count == 0[\s\S]*routes\.all_products_collection_url/);
 });
