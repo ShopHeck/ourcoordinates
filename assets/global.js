@@ -193,6 +193,11 @@ function submitProductForm(form) {
     function updateVariant(revealInGallery) {
       var v = matchVariant();
       syncMetal();
+      if (form) {
+        if (!v || !v.available) form.dataset.expressUnavailable = 'true';
+        else delete form.dataset.expressUnavailable;
+        form.dispatchEvent(new CustomEvent('oc:express-recheck', { bubbles: true }));
+      }
       if (!v) return;
       if (idInput) idInput.value = v.id;
       if (priceEl) {
@@ -1480,12 +1485,13 @@ function submitProductForm(form) {
    add-on is added by the Add-to-cart handler). The wallet block is rendered
    hidden; this reveals it only while the order it would create is complete.
 
-   Three sources of truth, in priority order:
+   Four sources of truth, in priority order:
      1. a checked [data-gift-wrap]            → hide (wallet skips the cart)
      2. form.dataset.expressBlocked           → hide with that message
         (set by validators whose inputs carry no `required`, e.g. the set
         template's per-piece mode; they fire `oc:express-recheck`)
-     3. any enabled `required` field empty    → hide
+     3. selected variant unavailable          → hide
+     4. any enabled `required` field empty    → hide
    ============================================================ */
 (function () {
   'use strict';
@@ -1517,6 +1523,8 @@ function submitProductForm(form) {
         reason = 'Gift packaging is added with Add to cart — express checkout is unavailable while it’s selected.';
       } else if (form.dataset.expressBlocked) {
         reason = form.dataset.expressBlocked;
+      } else if (form.dataset.expressUnavailable === 'true') {
+        reason = 'Express checkout is unavailable for this sold-out option.';
       } else if (!requiredFilled(form)) {
         reason = 'Express checkout unlocks once your engraving is entered.';
       }
@@ -1535,7 +1543,7 @@ function submitProductForm(form) {
       new MutationObserver(update).observe(form, {
         subtree: true,
         attributes: true,
-        attributeFilter: ['required', 'disabled', 'data-express-blocked']
+        attributeFilter: ['required', 'disabled', 'data-express-blocked', 'data-express-unavailable']
       });
     }
     update();
@@ -1677,6 +1685,12 @@ function submitProductForm(form) {
     return null;
   }
 
+  function syncDraftFields(source) {
+    document.querySelectorAll(SELECTOR).forEach(function (field) {
+      if (field !== source) field.value = source.value;
+    });
+  }
+
   function settle(field) {
     /* The note is shared: release neither checkout surface while any copy is
        dirty or a newer value is still waiting for its debounce. */
@@ -1737,6 +1751,7 @@ function submitProductForm(form) {
     var field = e.target;
     if (!field.matches || !field.matches(SELECTOR)) return;
     adopt(field);
+    syncDraftFields(field);
     setBusy(true);
     var st = statusEl(field);
     if (st) st.textContent = '';
@@ -1745,9 +1760,22 @@ function submitProductForm(form) {
   });
   ['change', 'blur'].forEach(function (ev) {
     document.addEventListener(ev, function (e) {
-      if (e.target.matches && e.target.matches(SELECTOR)) save(e.target);
+      if (!e.target.matches || !e.target.matches(SELECTOR)) return;
+      adopt(e.target);
+      syncDraftFields(e.target);
+      save(e.target);
     }, true);
   });
+
+  /* Regular checkout submits its own form immediately. Mirror the active
+     draft first so either cart surface posts the same note while the AJAX
+     persistence request finishes with that identical value. */
+  document.addEventListener('submit', function (e) {
+    var field = e.target.querySelector && e.target.querySelector(SELECTOR);
+    if (!field) return;
+    var active = dirtyNoteField() || state.field;
+    if (active && field !== active) field.value = active.value;
+  }, true);
 
   /* reaching for a wallet: flush immediately; block activation until saved */
   ['pointerdown', 'touchstart', 'focusin', 'keydown'].forEach(function (ev) {

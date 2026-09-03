@@ -25,9 +25,12 @@ test('PDP express checkout is rendered hidden and gated by global.js', () => {
   assert.match(js, /\[data-express-checkout\]/);
   assert.match(js, /\[data-gift-wrap\]:checked/, 'gift packaging must hide express checkout');
   assert.match(js, /input\[required\], textarea\[required\], select\[required\]/, 'required engraving must gate express checkout');
-  assert.match(js, /attributeFilter: \['required', 'disabled', 'data-express-blocked'\]/, 'set/4-sided previews toggle required at runtime');
+  assert.match(js, /attributeFilter: \['required', 'disabled', 'data-express-blocked', 'data-express-unavailable'\]/, 'runtime validation and availability changes must recheck the wallet');
   // validators whose inputs carry no `required` (set per-piece mode) veto via the form dataset
   assert.match(js, /form\.dataset\.expressBlocked/);
+  assert.match(js, /form\.dataset\.expressUnavailable = 'true'/, 'sold-out variants must veto express checkout');
+  assert.match(js, /form\.dataset\.expressUnavailable === 'true'/);
+  assert.match(js, /data-express-unavailable/);
   assert.match(js, /addEventListener\('oc:express-recheck', update\)/);
 });
 
@@ -93,6 +96,8 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /var wasClean = [^;]+field\.value === field\.dataset\.noteSaved;[\s\S]*?field\.dataset\.noteSaved = value;[\s\S]*?if \(field !== source && wasClean\) field\.value = value;/, 'clean copies should display the saved note without overwriting an in-progress edit');
   assert.match(js, /state\.field = dirtyNoteField\(\) \|\| current;/, 'an older save must not replace the active dirty field');
   assert.match(js, /function dirtyNoteField\(\)[\s\S]*?fields\[i\]\.value !== fields\[i\]\.dataset\.noteSaved/, 'wallet release must consider every copy of the shared note');
+  assert.match(js, /function syncDraftFields\(source\)[\s\S]*?if \(field !== source\) field\.value = source\.value;/, 'typing on either cart surface must update the other regular checkout form');
+  assert.match(js, /document\.addEventListener\('submit'[\s\S]*?dirtyNoteField\(\) \|\| state\.field[\s\S]*?field\.value = active\.value;/, 'regular checkout must submit the active note draft from either surface');
   assert.match(js, /if \(state\.timer \|\| dirty\)[\s\S]*?setBusy\(true\);/, 'a pending debounce or dirty counterpart must retain the global wallet lock');
   assert.match(js, /el\.setAttribute\('inert', ''\)/, 'wallets must be inert (keyboard too) while a save is in flight');
   assert.match(js, /e\.key === 'Enter' \|\| e\.key === ' '/, 'keydown fallback for browsers without inert');
