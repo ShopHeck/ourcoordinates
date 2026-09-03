@@ -1566,7 +1566,13 @@ function submitProductForm(form) {
   var SELECTOR = '[data-cart-note], [data-drawer-note]';
   var queue = Promise.resolve();
   var seq = 0;
-  var state = { field: null, timer: null, pending: false };
+  var initialField = document.querySelector(SELECTOR);
+  var state = {
+    field: null,
+    saved: initialField && initialField.dataset.noteSaved !== undefined ? initialField.dataset.noteSaved : null,
+    timer: null,
+    pending: false
+  };
   var walletsLocked = false;
 
   function walletBlocks() {
@@ -1609,15 +1615,29 @@ function submitProductForm(form) {
     return replacement || source;
   }
 
+  function reconcileRenderedFields() {
+    if (state.saved === null) return;
+    document.querySelectorAll(SELECTOR).forEach(function (field) {
+      if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.defaultValue;
+      var clean = field.value === field.dataset.noteSaved;
+      if (clean && field.dataset.noteSaved !== state.saved) {
+        field.dataset.noteSaved = state.saved;
+        field.value = state.saved;
+      }
+    });
+  }
+
   if (window.MutationObserver) {
     new MutationObserver(function () {
-      if (!walletsLocked) return;
       if (state.field && !document.contains(state.field)) {
-        state.field = connectedField(state.field, true);
-        var st = statusEl(state.field);
-        if (st && state.pending) st.textContent = 'Saving note…';
+        state.field = connectedField(state.field, walletsLocked);
       }
-      syncWalletBlocks();
+      reconcileRenderedFields();
+      if (walletsLocked) {
+        var st = statusEl(state.field);
+        if (st && state.pending && st.textContent !== 'Saving note…') st.textContent = 'Saving note…';
+        syncWalletBlocks();
+      }
     }).observe(document.documentElement, { childList: true, subtree: true });
   }
 
@@ -1630,10 +1650,12 @@ function submitProductForm(form) {
     if (state.field !== field) {
       state.field = field;
       if (field.dataset.noteSaved === undefined) field.dataset.noteSaved = field.defaultValue; /* initial markup = what the cart holds */
+      if (state.saved === null) state.saved = field.dataset.noteSaved;
     }
   }
 
   function syncSavedFields(source, value) {
+    state.saved = value;
     source.dataset.noteSaved = value;
     var current = connectedField(source, false);
     document.querySelectorAll(SELECTOR).forEach(function (field) {

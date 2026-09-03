@@ -83,10 +83,12 @@ test('gift note is persisted before a wallet checkout can start — cart page an
   assert.match(js, /function walletBlocks\(\) \{[\s\S]*?document\.querySelectorAll\('\.additional-checkout-buttons'\)/, 'one unsaved cart note must block page and drawer wallets together');
   assert.doesNotMatch(js, /function walletBlocks\(field\)/, 'wallet blocking must not be scoped to only one cart form');
   assert.match(js, /var walletsLocked = false;/);
-  assert.match(js, /new MutationObserver\(function \(\) \{[\s\S]*?if \(!walletsLocked\) return;[\s\S]*?syncWalletBlocks\(\);[\s\S]*?document\.documentElement, \{ childList: true, subtree: true \}/, 'Section Rendering must reapply the note lock to replacement wallet blocks');
+  assert.match(js, /new MutationObserver\(function \(\) \{[\s\S]*?reconcileRenderedFields\(\);[\s\S]*?if \(walletsLocked\)[\s\S]*?syncWalletBlocks\(\);[\s\S]*?document\.documentElement, \{ childList: true, subtree: true \}/, 'Section Rendering must reconcile note text and reapply an active wallet lock');
   assert.match(js, /function connectedField\(source, preserveEdit\)[\s\S]*?document\.contains\(source\)[\s\S]*?replacementIsClean[\s\S]*?replacement\.value = source\.value;/, 'a drawer rerender must transfer an in-progress note without overwriting a newer edit');
   assert.match(js, /field\.dataset\.noteSaved = field\.defaultValue;/, 'fallback baseline must use the initial textarea value, never the already-edited live value');
-  assert.match(js, /state\.field = connectedField\(state\.field, true\);/, 'the active note reference must follow Section Rendering replacements');
+  assert.match(js, /state\.field = connectedField\(state\.field, walletsLocked\);/, 'the active note reference must follow Section Rendering replacements');
+  assert.match(js, /saved: initialField && initialField\.dataset\.noteSaved !== undefined \? initialField\.dataset\.noteSaved : null/, 'the accepted note must outlive the wallet lock');
+  assert.match(js, /function reconcileRenderedFields\(\)[\s\S]*?clean && field\.dataset\.noteSaved !== state\.saved[\s\S]*?field\.value = state\.saved;/, 'a late stale section response must display the accepted note');
   assert.match(js, /function syncSavedFields\(source, value\) \{[\s\S]*?document\.querySelectorAll\(SELECTOR\)\.forEach/, 'a successful save must synchronize every cart-note surface');
   assert.match(js, /var wasClean = [^;]+field\.value === field\.dataset\.noteSaved;[\s\S]*?field\.dataset\.noteSaved = value;[\s\S]*?if \(field !== source && wasClean\) field\.value = value;/, 'clean copies should display the saved note without overwriting an in-progress edit');
   assert.match(js, /state\.field = dirtyNoteField\(\) \|\| current;/, 'an older save must not replace the active dirty field');
