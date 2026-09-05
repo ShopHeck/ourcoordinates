@@ -68,7 +68,8 @@ test('homepage puts featured products directly after a compact, accurately label
   const hero = home.sections[home.order[0]].settings;
   assert.equal(home.order[1], 'featured');
   assert.equal(home.sections.featured.settings.compact, true);
-  assert.equal(hero.show_etching, false);
+  assert.equal(hero.show_etching, true);
+  assert.equal(hero.etch_caption, '');
   assert.equal(hero.cta1_link, 'shopify://collections/best-sellers');
   assert.equal(hero.cta1_label, 'Shop best sellers');
   assert.equal(hero.cta2_link, 'shopify://pages/gift-finder');
