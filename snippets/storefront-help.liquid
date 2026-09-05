@@ -1,0 +1,60 @@
+{% doc %}
+  Renders version-controlled shipping and FAQ copy on the existing help handles.
+{% enddoc %}
+<section class="section storefront-help">
+  <div class="page-width page-narrow">
+    <h1>{{ page.title | escape }}</h1>
+    {%- if page.handle == 'shipping' -%}
+      <p>{{ 'delivery.intro' | t }}</p>
+      {% render 'delivery-details' %}
+      <h2>{{ 'delivery.tracking_heading' | t }}</h2>
+      <p>{{ 'delivery.tracking' | t }}</p>
+      <h2>{{ 'delivery.help_heading' | t }}</h2>
+      <p>{{ 'delivery.help' | t }}</p>
+    {%- else -%}
+      <p>{{ 'help.intro' | t }}</p>
+      <details open>
+        <summary>{{ 'help.personalize_heading' | t }}</summary>
+        <p>{{ 'help.personalize' | t }}</p>
+      </details>
+      <details>
+        <summary>{{ 'help.delivery_heading' | t }}</summary>
+        {% render 'delivery-details' %}
+      </details>
+      <details>
+        <summary>{{ 'delivery.tracking_heading' | t }}</summary>
+        <p>{{ 'delivery.tracking' | t }}</p>
+      </details>
+      <details>
+        <summary>{{ 'help.materials_heading' | t }}</summary>
+        <p>{{ 'help.materials' | t }}</p>
+      </details>
+      <details>
+        <summary>{{ 'help.sizing_heading' | t }}</summary>
+        <p>{{ 'help.sizing' | t }} <a href="{{ routes.root_url }}pages/size-guide">{{ 'help.size_guide' | t }}</a></p>
+      </details>
+      <details>
+        <summary>{{ 'help.gifts_heading' | t }}</summary>
+        <p>{{ 'help.gifts' | t }}</p>
+      </details>
+      <details>
+        <summary>{{ 'help.returns_heading' | t }}</summary>
+        <p>{{ 'help.returns' | t }} <a href="{{ shop.refund_policy.url }}">{{ 'help.return_policy' | t }}</a></p>
+      </details>
+      <details>
+        <summary>{{ 'delivery.help_heading' | t }}</summary>
+        <p>{{ 'delivery.help' | t }}</p>
+      </details>
+    {%- endif -%}
+    <p><a href="{{ routes.root_url }}pages/contact">{{ 'help.contact' | t }}</a> · <a href="{{ routes.root_url }}collections/best-sellers">{{ 'help.shop' | t }}</a></p>
+  </div>
+</section>
+{% stylesheet %}
+  .storefront-help h1 { margin-bottom: 24px; }
+  .storefront-help h2 { margin-top: 32px; font-size: 1.5rem; }
+  .storefront-help details { padding: 16px 0; border-bottom: 1px solid var(--c-line); }
+  .storefront-help summary { min-height: 44px; cursor: pointer; font-weight: 600; padding-block: 10px; }
+  .storefront-help p { max-width: 65ch; color: var(--c-ink-soft); }
+  .storefront-help a { text-underline-offset: 3px; }
+  @media (max-width: 700px) { .storefront-help { padding-block: 32px; } }
+{% endstylesheet %}

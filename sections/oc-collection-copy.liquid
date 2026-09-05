@@ -8,6 +8,12 @@
 
 {%- liquid
   assign oc_seo = collection.metafields.custom.seo_copy.value
+  if collection.handle == 'best-sellers'
+    capture oc_seo
+      echo 'collections.best_sellers.copy_html' | t
+      echo 'collections.best_sellers.shipping_html' | t
+    endcapture
+  endif
   assign oc_active_filter_count = 0
   for filter in collection.filters
     assign oc_active_filter_count = oc_active_filter_count | plus: filter.active_values.size

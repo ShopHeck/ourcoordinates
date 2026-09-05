@@ -1,0 +1,10 @@
+{% doc %}
+  Displays owner-confirmed US delivery and photo-proof information.
+  @param {boolean} [same_day_shipping] - Preserve the in-stock magnetic set exception.
+{% enddoc %}
+<div class="delivery-details">
+  <p>{{ 'delivery.rates' | t }}</p>
+  {% unless same_day_shipping %}<p>{{ 'delivery.production' | t }}</p>{% endunless %}
+  <p>{{ 'delivery.transit' | t }}</p>
+  {% unless same_day_shipping %}<p>{{ 'delivery.proof' | t }}</p>{% endunless %}
+</div>

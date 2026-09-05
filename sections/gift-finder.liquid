@@ -3,7 +3,7 @@
     <header class="gift-finder__head">
       <p class="coord-eyebrow">A meaningful gift in about a minute</p>
       <h1>{{ page.title }}</h1>
-      <p>Tell us who and what the piece should remember. We’ll narrow the store to three available options that fit the story and budget.</p>
+      <p>{{ 'gift_finder.intro' | t }}</p>
     </header>
 
     <form class="gift-finder__form" data-gift-finder-form>
@@ -31,20 +31,26 @@
       <fieldset>
         <legend><span>3</span> What budget feels right?</legend>
         <div class="gift-finder__choices gift-finder__choices--three">
-          <label><input type="radio" name="budget" value="under-40" required><span>Under $40</span></label>
-          <label><input type="radio" name="budget" value="40-75"><span>$40–$75</span></label>
-          <label><input type="radio" name="budget" value="75-plus"><span>$75+</span></label>
+          {%- assign budget_low = 4000 | money_with_currency | strip_html -%}
+          {%- assign budget_high = 7500 | money_with_currency | strip_html -%}
+          <label><input type="radio" name="budget" value="under-40" required><span>{{ 'gift_finder.under' | t: price: budget_low }}</span></label>
+          <label><input type="radio" name="budget" value="40-75"><span>{{ budget_low }}–{{ budget_high }}</span></label>
+          <label><input type="radio" name="budget" value="75-plus"><span>{{ 'gift_finder.over' | t: price: budget_high }}</span></label>
         </div>
       </fieldset>
 
       <button type="submit" class="btn">Show my best matches</button>
     </form>
 
-    <div class="gift-finder__results" data-gift-results hidden tabindex="-1" aria-live="polite">
+    <noscript><p>{{ 'gift_finder.no_script' | t }} <a href="{{ routes.root_url }}collections/personalized-jewelry">{{ 'gift_finder.browse' | t }}</a></p></noscript>
+
+    <div class="gift-finder__results" data-gift-results hidden tabindex="-1" aria-live="polite"
+         data-summary="{{ 'gift_finder.summary' | t | escape }}" data-empty="{{ 'gift_finder.empty' | t | escape }}">
       <p class="coord-eyebrow">Recommended for your story</p>
-      <h2>Three pieces worth personalizing</h2>
+      <h2>{{ 'gift_finder.results_heading' | t }}</h2>
       <p data-gift-summary></p>
       <div class="gift-finder__grid" data-gift-grid></div>
+      <p data-gift-browse hidden><a href="{{ routes.root_url }}collections/personalized-jewelry">{{ 'gift_finder.browse' | t }}</a></p>
       <button type="button" class="gift-finder__restart" data-gift-restart>Change my answers</button>
     </div>
 
@@ -52,19 +58,21 @@
       {%- for block in section.blocks -%}
         {%- assign item = block.settings.product -%}
         {%- if item != blank and item.available -%}
+          {%- assign gift_variants = item.variants | where: 'available', true | sort: 'price' -%}
+          {%- assign gift_variant = gift_variants | first -%}
           <article data-gift-candidate
                    data-audiences="{{ block.settings.audiences | downcase | escape }}"
                    data-occasions="{{ block.settings.occasions | downcase | escape }}"
-                   data-budget="{{ block.settings.budget }}"
+                   data-price="{{ gift_variant.price }}"
                    {{ block.shopify_attributes }}>
-            <a class="gift-result" href="{{ item.url }}">
+            <a class="gift-result" href="{{ item.url }}?variant={{ gift_variant.id }}">
               <div class="gift-result__media">
                 {{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '320, 500, 700', sizes: '(max-width: 700px) 88vw, 30vw', alt: item.featured_image.alt }}
               </div>
               <div class="gift-result__body">
                 <h3>{{ item.title }}</h3>
                 <p>{{ block.settings.reason }}</p>
-                <span>{{ item.price | money }} · Personalize this →</span>
+                <span>{{ gift_variant.price | money }} · {{ 'gift_finder.personalize' | t }}</span>
               </div>
             </a>
           </article>
@@ -95,17 +103,26 @@
       var recipient = data.get('recipient');
       var occasion = data.get('occasion');
       var budget = data.get('budget');
-      var ranked = candidates.map(function (card, index) {
+      var ranked = candidates.filter(function (card) {
+        var price = Number(card.dataset.price);
+        if (!card.dataset.price || !Number.isFinite(price) || price < 0) return false;
+        if (budget === 'under-40') return price < 4000;
+        if (budget === '40-75') return price >= 4000 && price <= 7500;
+        if (budget === '75-plus') return price >= 7500;
+        return false;
+      }).map(function (card, index) {
         var score = 0;
         if (includes(card.dataset.audiences, recipient) || includes(card.dataset.audiences, 'all')) score += 3;
         if (includes(card.dataset.occasions, occasion) || includes(card.dataset.occasions, 'all')) score += 4;
-        if (card.dataset.budget === budget) score += 5;
         return { card: card, score: score, index: index };
       }).sort(function (a, b) { return b.score - a.score || a.index - b.index; }).slice(0, 3);
 
       grid.replaceChildren();
       ranked.forEach(function (entry) { grid.appendChild(entry.card.cloneNode(true)); });
-      summary.textContent = 'Available now, matched to your recipient, story, and budget. Choose one to add the exact coordinates on its product page.';
+      summary.textContent = ranked.length ? results.dataset.summary.replace(/\[(recipient|occasion|budget)\]/g, function (_, name) {
+        return form.querySelector('input[name="' + name + '"]:checked').nextElementSibling.textContent;
+      }) : results.dataset.empty;
+      root.querySelector('[data-gift-browse]').hidden = ranked.length > 0;
       results.hidden = false;
       results.focus();
       results.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
@@ -135,7 +152,8 @@
         {
           "type": "select",
           "id": "budget",
-          "label": "Budget",
+          "label": "Legacy budget (not used)",
+          "info": "Results now use the current price of the cheapest available variant, not this saved category.",
           "options": [
             { "value": "under-40", "label": "Under $40" },
             { "value": "40-75", "label": "$40–$75" },

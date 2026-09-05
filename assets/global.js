@@ -22,6 +22,18 @@ function submitProductForm(form) {
   else form.submit();
 }
 
+function productPersonalizationPending(form) {
+  if (!form) return false;
+  if (form.dataset.expressBlocked) return true;
+  return Array.prototype.some.call(form.querySelectorAll('input[required], textarea[required], select[required]'), function (field) {
+    if (field.disabled || field.type === 'hidden') return false;
+    if (field.type === 'radio' || field.type === 'checkbox') {
+      return !form.querySelector('input[name="' + field.name + '"]:checked');
+    }
+    return !String(field.value || '').trim() || (field.validity && !field.validity.valid);
+  });
+}
+
 (function () {
   'use strict';
 
@@ -166,6 +178,8 @@ function submitProductForm(form) {
     function matchVariant() {
       if (!product) return null;
       var opts = currentOptions();
+      // Shopify omits option radios for its single default variant.
+      if (!opts.length && product.variants.length === 1) return product.variants[0];
       return product.variants.find(function (v) {
         return v.options.every(function (o, i) { return o === opts[i]; });
       });
@@ -228,6 +242,7 @@ function submitProductForm(form) {
       var url = new URL(window.location);
       url.searchParams.set('variant', v.id);
       history.replaceState({}, '', url);
+      syncStickyAction();
     }
 
     root.addEventListener('change', function (e) {
@@ -286,11 +301,35 @@ function submitProductForm(form) {
     /* sticky mobile ATC: show once buy box scrolls out of view */
     var sticky = document.querySelector('[data-sticky-atc]');
     var buyBox = root.querySelector('[data-buy-box]');
+    var stickyButton = sticky && sticky.querySelector('[data-sticky-submit]');
+    function syncStickyAction() {
+      if (!stickyButton || stickyButton.disabled) return;
+      stickyButton.querySelector('[data-atc-label]').textContent = productPersonalizationPending(form)
+        ? stickyButton.dataset.labelPersonalize : stickyButton.dataset.labelAdd;
+    }
+    if (stickyButton && form) {
+      form.addEventListener('input', syncStickyAction);
+      form.addEventListener('change', syncStickyAction);
+      form.addEventListener('oc:express-recheck', syncStickyAction);
+      if (window.MutationObserver) {
+        new MutationObserver(syncStickyAction).observe(form, {
+          subtree: true, attributes: true,
+          attributeFilter: ['required', 'disabled', 'data-express-blocked']
+        });
+      }
+      syncStickyAction();
+    }
     if (sticky && buyBox && 'IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) {
         sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
       }, { rootMargin: '-80px 0px 0px 0px' }).observe(buyBox);
       sticky.querySelector('[data-sticky-submit]').addEventListener('click', function () {
+        if (productPersonalizationPending(form)) {
+          buyBox.scrollIntoView({ behavior: 'auto', block: 'start' });
+          var field = form.querySelector('input[required]:not([disabled]):not([type="hidden"]), textarea[required]:not([disabled]), select[required]:not([disabled])');
+          if (field) field.focus({ preventScroll: true });
+          return;
+        }
         submitProductForm(form);
       });
     }

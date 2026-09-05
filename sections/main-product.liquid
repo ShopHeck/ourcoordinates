@@ -257,26 +257,6 @@
           </label>
         {%- endif -%}
 
-        {%- liquid
-          assign set_product = section.settings.set_upsell_product
-          assign is_set = false
-          if product.type == 'Set' or product.tags contains 'set' or product.tags contains 'matching-set' or product.handle contains '-set'
-            assign is_set = true
-          endif
-        -%}
-        {%- if set_product != blank and set_product.available and set_product.id != product.id and is_set == false -%}
-          <a class="set-upsell" href="{{ set_product.url }}">
-            {%- if set_product.featured_image -%}
-              <img src="{{ set_product.featured_image | image_url: width: 112 }}" alt="{{ set_product.featured_image.alt | default: set_product.title | escape }}" width="56" height="56" loading="lazy">
-            {%- endif -%}
-            <span class="set-upsell__text">
-              <strong>{{ section.settings.set_upsell_heading | default: 'Make it a set' }}</strong>
-              <em>{{ set_product.title }} from {{ set_product.price | money }}</em>
-            </span>
-            <span class="set-upsell__cta">View set →</span>
-          </a>
-        {%- endif -%}
-
         {%- comment -%}
           Shop Pay Installments banner ("4 interest-free payments of $11.75")
           — renders only when the store has Shop Pay Installments enabled.
@@ -321,6 +301,26 @@
           {%- if settings.guarantee_4 != blank -%}<li>{{ settings.guarantee_4 }}</li>{%- endif -%}
         </ul>
       {%- endform -%}
+
+      {%- liquid
+        assign set_product = section.settings.set_upsell_product
+        assign is_set = false
+        if product.type == 'Set' or product.tags contains 'set' or product.tags contains 'matching-set' or product.handle contains '-set'
+          assign is_set = true
+        endif
+      -%}
+      {%- if set_product != blank and set_product.available and set_product.id != product.id and is_set == false -%}
+        <a class="set-upsell" href="{{ set_product.url }}">
+          {%- if set_product.featured_image -%}
+            <img src="{{ set_product.featured_image | image_url: width: 112 }}" alt="{{ set_product.featured_image.alt | default: set_product.title | escape }}" width="56" height="56" loading="lazy">
+          {%- endif -%}
+          <span class="set-upsell__text">
+            <strong>{{ 'products.product.pair_with' | t }}</strong>
+            <em>{{ set_product.title }} · {{ set_product.price | money }}</em>
+          </span>
+          <span class="set-upsell__cta">{{ 'products.product.view_product' | t }}</span>
+        </a>
+      {%- endif -%}
 
       <div class="restock" data-restock-form{% if current_variant.available %} hidden{% endif %}>
         <p class="restock__title">Want to know when this piece returns?</p>
@@ -370,12 +370,13 @@
         <details>
           <summary>Shipping & returns</summary>
           <div class="accordion-body">
+            {% render 'delivery-details', same_day_shipping: same_day_shipping %}
             {%- if same_day_shipping -%}
-              <p>{{ settings.shipping_promise }}. In stock and ships the same day when ordered by 12 PM ET. If we engrave it wrong or it arrives damaged, we remake it free.</p>
+              <p>In stock and ships the same day when ordered by 12 PM ET. If it arrives damaged, contact us for help.</p>
             {%- elsif section.settings.show_engraving -%}
-              <p>{{ settings.shipping_promise }}. Each piece is engraved to order and ships within {{ settings.production_days }} business days. Personalized pieces are final sale, but if we engrave it wrong or it arrives damaged we remake it free.</p>
+              <p>Personalized pieces are final sale, but if we engrave it wrong or it arrives damaged we remake it free.</p>
             {%- else -%}
-              <p>{{ settings.shipping_promise }}. Ships within {{ settings.production_days }} business days. If we engrave it wrong or it arrives damaged, we remake it free.</p>
+              <p>If it arrives damaged, contact us for help.</p>
             {%- endif -%}
           </div>
         </details>
@@ -480,6 +481,7 @@
     <a class="sticky-atc__jump" href="#BuyBox">Personalize ↓</a>
   {%- endif -%}
   <button type="button" class="btn" data-sticky-submit data-atc
+          data-label-personalize="{{ 'products.product.personalize' | t | escape }}"
           data-label-add="{{ section.settings.atc_label | escape }}"
           data-label-sold-out="Sold out">
     <span data-atc-label>{{ section.settings.atc_label }}</span>
