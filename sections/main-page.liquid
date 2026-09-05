@@ -2,6 +2,8 @@
   {% render 'about-us-page' %}
 {%- elsif page.handle == 'contact' -%}
   {% render 'contact-us-page' %}
+{%- elsif page.handle == 'shipping' or page.handle == 'faqs' -%}
+  {% render 'storefront-help' %}
 {%- else -%}
   <section class="section">
     <div class="page-width page-narrow">

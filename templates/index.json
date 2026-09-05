@@ -15,17 +15,17 @@
       "settings": {
         "image_alt": "Gold bar necklace engraved with coordinates, resting on cream linen",
         "eyebrow": "Custom coordinates jewelry · engraved to order in the USA",
-        "headline": "Some <em>places</em><br>deserve to<br>be <em>worn.</em>",
-        "subline": "Every piece is laser-engraved with the latitude & longitude of the place that made you — then photographed and sent to you for approval before it ever ships.",
-        "show_etching": true,
+        "headline": "Some places<br>deserve to be worn.",
+        "subline": "Turn a meaningful place into a piece you can wear. Choose your jewelry, find your coordinates and preview your engraving.",
+        "show_etching": false,
         "etch_text": "48.8584° N, 2.2945° E",
         "etch_caption": "Find Your Coordinates Below",
-        "cta1_label": "Find Your Coordinates",
-        "cta1_link": "shopify://pages/gift-finder",
-        "cta2_label": "Shop Best Sellers →",
-        "cta2_link": "shopify://collections/best-sellers",
+        "cta1_label": "Shop best sellers",
+        "cta1_link": "shopify://collections/best-sellers",
+        "cta2_label": "Find a gift",
+        "cta2_link": "shopify://pages/gift-finder",
         "ship_line": "Order today — ships within 5 business days",
-        "height": 92,
+        "height": 60,
         "color_bg": "#fff9ef",
         "color_text": "#795e3f"
       }
@@ -127,6 +127,7 @@
       "settings": {
         "eyebrow": "Featured gifts",
         "heading": "Personalized jewelry for every story",
+        "compact": true,
         "subheading": "",
         "collection": "personalized-jewelry",
         "limit": 8,
@@ -137,7 +138,7 @@
       "type": "story-cta",
       "settings": {
         "eyebrow": "Need help choosing?",
-        "heading": "Tell us the story. Get three pieces that fit.",
+        "heading": "Tell us the story. Find a piece that fits.",
         "text": "Choose who it’s for, what the moment means, and your budget. We’ll narrow the store to available pieces you can personalize.",
         "button_label": "Find their piece",
         "button_link": "/pages/gift-finder",
@@ -260,9 +261,9 @@
   },
   "order": [
     "atelier_hero_ApVc6Q",
+    "featured",
     "marquee",
     "trust",
-    "featured",
     "story",
     "sets",
     "atelier_customer_stories_MeFCbT",

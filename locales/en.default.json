@@ -9,15 +9,62 @@
     }
   },
   "collections": {
+    "best_sellers": {
+      "copy_html": "<h2>Find a piece for a place that matters</h2><p>Explore coordinates jewelry and other customer favorites, then choose the style, finish and personalization that suit the person wearing it. The Coordinates Cuff Bracelet supports one engraving line; check each product page for its own field limits, sizing and material details.</p><h3>Choosing a personalized gift</h3><p>Start with the jewelry they already wear and a place or message they will recognize. Use the available product preview and check every engraving detail before ordering. Photo proofs are not yet a standard part of our process.</p>",
+      "shipping_html": "<h3>Shipping and returns</h3><p>Standard US shipping is US$5.99, with free standard shipping on US orders over US$50. Tracking is included on every order. Production and transit are separate: see our <a href=\"/pages/shipping\">shipping details</a> for the current timeline. Personalized pieces are final sale for change of mind; our <a href=\"/policies/refund-policy\">return policy</a> explains support for engraving errors, damage and eligible non-personalized returns.</p><p>Not sure where to start? Use the <a href=\"/pages/gift-finder\">gift finder</a> to narrow the available pieces by recipient, story and budget.</p>"
+    },
     "general": {
       "about_collection": "About {{ title }}",
       "all_products_intro": "Shop engraved coordinates jewelry, matching sets, bracelets, rings, and keepsakes made to hold a place or message that matters."
     }
   },
+  "delivery": {
+    "intro": "Plan for two stages: preparing your engraving, then shipping your order.",
+    "rates": "Standard US shipping is US$5.99. US orders over US$50 qualify for free standard shipping. Tracking is included on every order.",
+    "production": "Engraving takes 5 business days from the date your order is processed. The daily processing cutoff is 12 PM Eastern Time. Production time is separate from transit time.",
+    "transit": "Standard transit takes 7–10 business days after dispatch. This is an estimate, not a guaranteed arrival date. Available shipping options and final charges appear at checkout.",
+    "proof": "Photo proofs are not yet a standard part of our process. Check all engraving details before ordering and use the product preview where available; do not rely on a later photo-approval step.",
+    "tracking_heading": "How do I track my order?",
+    "tracking": "Tracking is included on all orders. Use the tracking information in your shipping confirmation to follow your delivery.",
+    "help_heading": "Need to correct an order or check a gift deadline?",
+    "help": "Contact us with your order number or the date you need your gift. Changes depend on whether production has started, and delivery estimates should not be treated as a guarantee."
+  },
+  "help": {
+    "intro": "A few practical answers to help you choose, personalize and look after your piece.",
+    "personalize_heading": "How do I personalize my jewelry?",
+    "personalize": "Choose the options on the product page and complete its engraving fields. On coordinates pieces, use the location finder or enter coordinates you have already checked. Other pieces may accept names, dates or initials. Follow the field limits and review every detail before checkout. Previews are available on supported products and are a guide to your selection, not a photograph of the finished piece.",
+    "delivery_heading": "What does shipping cost and how long does it take?",
+    "materials_heading": "What materials and finishes are available?",
+    "materials": "Materials and finishes vary by product. Check the specific product details and selected finish before ordering; not every piece uses the same metal or coating. Follow the care guidance for that material and finish.",
+    "sizing_heading": "How do I choose the right size?",
+    "sizing": "Check the dimensions and size options on the product page. Measure an existing well-fitting piece when possible, and contact us if you are unsure before ordering personalized jewelry.",
+    "size_guide": "Read the size guide",
+    "gifts_heading": "Can I add a gift note?",
+    "gifts": "Yes. Add a free gift note in the cart before checkout. Check the selected product and any packaging options to see what is included.",
+    "returns_heading": "Can personalized pieces be returned?",
+    "returns": "Personalized pieces cannot be returned for a change of mind or information you supplied incorrectly. If we made an engraving error or the item arrived damaged, contact us so we can make it right. See the full policy for eligibility, time limits and non-personalized returns.",
+    "return_policy": "Read the return policy",
+    "contact": "Contact us",
+    "shop": "Shop best sellers"
+  },
+  "gift_finder": {
+    "intro": "Tell us who and what the piece should remember. We’ll suggest up to three available pieces within your budget, based on their lowest available price.",
+    "under": "Under {{ price }}",
+    "over": "{{ price }}+",
+    "results_heading": "Your gift shortlist",
+    "summary": "For [recipient] · [occasion] · [budget]. Choose a piece to personalize. Prices exclude delivery and taxes.",
+    "empty": "No available pieces in this price range right now. Change your budget or browse the full collection.",
+    "browse": "Browse personalized jewelry",
+    "no_script": "The gift finder needs JavaScript. You can still shop our collection directly.",
+    "personalize": "Personalize this"
+  },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
-      "sold_out": "Sold out"
+      "sold_out": "Sold out",
+      "pair_with": "Pair it with",
+      "view_product": "View product",
+      "personalize": "Personalize your piece"
     }
   }
 }

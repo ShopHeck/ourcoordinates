@@ -65,39 +65,45 @@
     position:absolute;inset:0;
     background:linear-gradient(100deg, rgba(255,249,239,.97) 0%, rgba(255,249,239,.88) 30%, rgba(255,249,239,.45) 58%, rgba(255,249,239,0) 78%);
   }
-  #shopify-section-{{ section.id }} .ah-inner{position:relative;width:100%;max-width:1240px;margin:0 auto;padding:110px clamp(20px,5vw,72px) 90px}
+  #shopify-section-{{ section.id }} .ah-inner{position:relative;width:100%;max-width:1240px;margin:0 auto;padding:52px clamp(20px,5vw,72px)}
   #shopify-section-{{ section.id }} .ah-eyebrow{
-    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(121,94,63,.82);
-    margin-bottom:26px;display:flex;align-items:center;gap:14px;
+    font-size:12px;letter-spacing:.1em;color:{{ s.color_text }};
+    margin-bottom:18px;display:flex;align-items:center;gap:14px;
   }
   #shopify-section-{{ section.id }} .ah-eyebrow::before{content:"";width:36px;height:1px;background:rgba(121,94,63,.45)}
   #shopify-section-{{ section.id }} .ah-h1{
     font-family:'Instrument Serif', Georgia, serif;font-weight:400;
-    font-size:clamp(50px,6.8vw,98px);line-height:.99;letter-spacing:-.02em;margin:0;
+    font-size:clamp(44px,5.2vw,74px);line-height:1.04;letter-spacing:-.02em;margin:0;max-width:16ch;
     color:{{ s.color_text }};
   }
   #shopify-section-{{ section.id }} .ah-h1 em{font-style:italic}
-  #shopify-section-{{ section.id }} .ah-sub{margin:26px 0 0;font-size:clamp(15px,1.3vw,18px);color:rgba(121,94,63,.7);max-width:44ch}
+  #shopify-section-{{ section.id }} .ah-sub{margin:18px 0 0;font-size:16px;color:{{ s.color_text }};max-width:40ch}
   #shopify-section-{{ section.id }} .ah-etch{margin-top:34px;max-width:520px}
   #shopify-section-{{ section.id }} .ah-etch svg{width:100%;height:auto;overflow:visible;display:block}
   #shopify-section-{{ section.id }} .ah-etch-cap{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(121,94,63,.45);margin-top:8px}
-  #shopify-section-{{ section.id }} .ah-actions{margin-top:34px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+  #shopify-section-{{ section.id }} .ah-actions{margin-top:24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   #shopify-section-{{ section.id }} .ah-btn{
-    font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:19px;
+    font-family:var(--f-body);font-size:15px;font-weight:600;min-height:48px;display:inline-flex;align-items:center;justify-content:center;
     background:{{ s.color_text }};color:{{ s.color_bg }};text-decoration:none;
     padding:14px 34px;border-radius:100px;transition:background .3s cubic-bezier(.2,.8,.2,1),letter-spacing .3s;
   }
   #shopify-section-{{ section.id }} .ah-btn:hover{background:#5f4830;letter-spacing:.02em}
   #shopify-section-{{ section.id }} .ah-ghost{
-    color:{{ s.color_text }};text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-    border-bottom:1px solid rgba(121,94,63,.45);padding-bottom:3px;transition:border-color .3s;
+    color:{{ s.color_text }};text-decoration:none;font-size:15px;min-height:44px;display:inline-flex;align-items:center;
+    border-bottom:1px solid rgba(121,94,63,.45);padding-block:8px;transition:border-color .3s;
   }
   #shopify-section-{{ section.id }} .ah-ghost:hover{border-color:{{ s.color_text }}}
-  #shopify-section-{{ section.id }} .ah-ship{margin-top:22px;font-size:12.5px;color:rgba(121,94,63,.7);display:flex;align-items:center;gap:9px}
+  #shopify-section-{{ section.id }} .ah-ship{margin-top:16px;font-size:13px;color:{{ s.color_text }};display:flex;align-items:center;gap:9px}
   #shopify-section-{{ section.id }} .ah-pulse{width:7px;height:7px;border-radius:50%;background:{{ s.color_text }};animation:ah-pulse-{{ section.id }} 2s ease-in-out infinite}
   @keyframes ah-pulse-{{ section.id }}{0%,100%{opacity:.35}50%{opacity:1}}
   @media(max-width:700px){
     #shopify-section-{{ section.id }} .atelier-hero-{{ section.id }}{min-height:auto}
+    #shopify-section-{{ section.id }} .ah-inner{padding:30px 20px}
+    #shopify-section-{{ section.id }} .ah-eyebrow{max-width:30ch;margin-bottom:14px}
+    #shopify-section-{{ section.id }} .ah-h1{font-size:44px;max-width:14ch}
+    #shopify-section-{{ section.id }} .ah-sub{max-width:34ch;font-size:15px;margin-top:14px}
+    #shopify-section-{{ section.id }} .ah-btn{padding:12px 22px}
+    #shopify-section-{{ section.id }} .ah-actions{margin-top:20px}
     #shopify-section-{{ section.id }} .ah-veil{background:linear-gradient(180deg, rgba(255,249,239,.95) 0%, rgba(255,249,239,.8) 55%, rgba(255,249,239,.55) 100%)}
   }
   @media (prefers-reduced-motion: reduce){
@@ -153,7 +159,7 @@
     { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Gold bar necklace engraved with coordinates, resting on cream linen" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Custom coordinates jewelry · engraved to order in the USA" },
     { "type": "textarea", "id": "headline", "label": "Headline (HTML allowed)", "default": "Some <em>places</em><br>deserve to<br>be <em>worn.</em>" },
-    { "type": "textarea", "id": "subline", "label": "Subline", "default": "Every piece is laser-engraved with the latitude & longitude of the place that made you — then photographed and sent to you for approval before it ever ships." },
+    { "type": "textarea", "id": "subline", "label": "Subline", "default": "Turn a meaningful place into a piece you can wear. Choose your jewelry, find your coordinates and preview your engraving." },
     { "type": "checkbox", "id": "show_etching", "label": "Show self-etching coordinates line", "default": true },
     { "type": "text", "id": "etch_text", "label": "Etching coordinates", "default": "48.8584° N, 2.2945° E" },
     { "type": "text", "id": "etch_caption", "label": "Etching caption", "default": "Yours begins here — type a place below" },
