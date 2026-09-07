@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "general": {
     "meta": {
@@ -19,20 +28,20 @@
     }
   },
   "delivery": {
-    "intro": "Plan for two stages: preparing your engraving, then shipping your order.",
-    "rates": "Standard US shipping is US$5.99. US orders over US$50 qualify for free standard shipping. Tracking is included on every order.",
-    "production": "Engraving takes 5 business days from the date your order is processed. The daily processing cutoff is 12 PM Eastern Time. Production time is separate from transit time.",
-    "transit": "Standard transit takes 7–10 business days after dispatch. This is an estimate, not a guaranteed arrival date. Available shipping options and final charges appear at checkout.",
-    "proof": "Photo proofs are not yet a standard part of our process. Check all engraving details before ordering and use the product preview where available; do not rely on a later photo-approval step.",
+    "intro": "Every piece is custom-engraved in the USA after you drop your pin. Plan for production, then carrier transit.",
+    "rates": "Standard US shipping is free on orders over $50. Tracking is included on every order. Available options and final charges appear at checkout.",
+    "production": "We typically ship within 7–10 business days of your order. The daily processing cutoff is 12 PM Eastern Time. Production time is separate from transit time.",
+    "transit": "After we ship, carrier transit adds additional business days depending on your address (usually several domestically). This is an estimate, not a guaranteed arrival date.",
+    "proof": "Check all engraving details before ordering and use the live preview on the product page. Photo proofs are not a standard step — confirm your pin and text before checkout.",
     "tracking_heading": "How do I track my order?",
     "tracking": "Tracking is included on all orders. Use the tracking information in your shipping confirmation to follow your delivery.",
     "help_heading": "Need to correct an order or check a gift deadline?",
-    "help": "Contact us with your order number or the date you need your gift. Changes depend on whether production has started, and delivery estimates should not be treated as a guarantee."
+    "help": "Contact us with your order number or the date you need your gift. Changes depend on whether production has started. Need it for a date? Order by the gift-finder deadline — we will not promise in-hand dates we cannot hit."
   },
   "help": {
     "intro": "A few practical answers to help you choose, personalize and look after your piece.",
     "personalize_heading": "How do I personalize my jewelry?",
-    "personalize": "Choose the options on the product page and complete its engraving fields. On coordinates pieces, use the location finder or enter coordinates you have already checked. Other pieces may accept names, dates or initials. Follow the field limits and review every detail before checkout. Previews are available on supported products and are a guide to your selection, not a photograph of the finished piece.",
+    "personalize": "On the product page — before you add to cart — drop a pin on the map or type latitude/longitude. You will see the coordinates that get engraved before checkout. The map is not after add-to-cart. Other pieces may accept names, dates or initials. Follow the field limits and review every detail before checkout.",
     "delivery_heading": "What does shipping cost and how long does it take?",
     "materials_heading": "What materials and finishes are available?",
     "materials": "Materials and finishes vary by product. Check the specific product details and selected finish before ordering; not every piece uses the same metal or coating. Follow the care guidance for that material and finish.",
@@ -42,7 +51,7 @@
     "gifts_heading": "Can I add a gift note?",
     "gifts": "Yes. Add a free gift note in the cart before checkout. Check the selected product and any packaging options to see what is included.",
     "returns_heading": "Can personalized pieces be returned?",
-    "returns": "Personalized pieces cannot be returned for a change of mind or information you supplied incorrectly. If we made an engraving error or the item arrived damaged, contact us so we can make it right. See the full policy for eligibility, time limits and non-personalized returns.",
+    "returns": "Personalized engraving is made for you, so we don’t take standard change-of-mind returns. If you’re not happy within 30 days of delivery, contact us — we’ll remake it or refund you under our Happiness Guarantee. Ignore any older “non-returnable / no exceptions” wording.",
     "return_policy": "Read the return policy",
     "contact": "Contact us",
     "shop": "Shop best sellers"
