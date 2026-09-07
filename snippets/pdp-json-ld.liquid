@@ -16,8 +16,8 @@
   assign ld_variant = product.selected_or_first_available_variant
   assign ld_rating_count = product.metafields.reviews.rating_count | default: 0 | plus: 0
   assign ld_rating_value = product.metafields.reviews.rating.value.rating | default: 0 | plus: 0
-  assign ld_prod_min = settings.production_days | default: 3
-  assign ld_prod_max = ld_prod_min | plus: 2
+  assign ld_prod_min = 7
+  assign ld_prod_max = 10
   assign ld_transit_min = settings.transit_days | default: 4
   assign ld_transit_max = ld_transit_min | plus: 3
 -%}

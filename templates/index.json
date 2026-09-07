@@ -14,17 +14,17 @@
       "name": "Atelier Hero",
       "settings": {
         "image_alt": "Gold bar necklace engraved with coordinates, resting on cream linen",
-        "eyebrow": "Custom coordinates jewelry · engraved to order in the USA",
+        "eyebrow": "Custom coordinates jewelry \u00b7 engraved to order in the USA",
         "headline": "Some places<br>deserve to be worn.",
         "subline": "Turn a meaningful place into a piece you can wear. Choose your jewelry, find your coordinates and preview your engraving.",
         "show_etching": true,
-        "etch_text": "48.8584° N, 2.2945° E",
+        "etch_text": "48.8584\u00b0 N, 2.2945\u00b0 E",
         "etch_caption": "",
         "cta1_label": "Shop best sellers",
         "cta1_link": "shopify://collections/best-sellers",
         "cta2_label": "Find a gift",
         "cta2_link": "shopify://pages/gift-finder",
-        "ship_line": "Order today — ships within 5 business days",
+        "ship_line": "National Daughter\u2019s Day \u2014 Sep 25 \u00b7 Order by Sep 9 for the best shot at in-hand (we ship in 7\u201310 business days; transit after that).",
         "height": 60,
         "color_bg": "#fff9ef",
         "color_text": "#795e3f"
@@ -139,7 +139,7 @@
       "settings": {
         "eyebrow": "Need help choosing?",
         "heading": "Tell us the story. Find a piece that fits.",
-        "text": "Choose who it’s for, what the moment means, and your budget. We’ll narrow the store to available pieces you can personalize.",
+        "text": "Choose who it\u2019s for, what the moment means, and your budget. We\u2019ll narrow the store to available pieces you can personalize.",
         "button_label": "Find their piece",
         "button_link": "/pages/gift-finder",
         "button_label_2": "",
@@ -150,8 +150,8 @@
       "type": "featured-collection",
       "settings": {
         "eyebrow": "Better together",
-        "heading": "Matching sets — one place, worn by both",
-        "subheading": "Enter your coordinates once and the engraving flows across every piece in the set — necklace, bracelet, keychain, or ring.",
+        "heading": "Matching sets \u2014 one place, worn by both",
+        "subheading": "Enter your coordinates once and the engraving flows across every piece in the set \u2014 necklace, bracelet, keychain, or ring.",
         "collection": "coordinates-sets",
         "limit": 4,
         "hide_sold_out": true
@@ -168,7 +168,7 @@
             "quote": "I engraved the exact spot he proposed. Every time I look down I feel it again.",
             "story": "Engrave the coordinates of where you said yes, then add the date or a short message that only the two of you understand.",
             "coord_label": "A proposal place",
-            "coord_value": "27.7676° N, 82.6403° W",
+            "coord_value": "27.7676\u00b0 N, 82.6403\u00b0 W",
             "piece_product": "",
             "piece_link": "shopify://collections/coordinates-collection"
           }
@@ -178,10 +178,10 @@
           "settings": {
             "photo": "shopify://shop_images/customer-mother.jpg",
             "name": "A NEW BEGINNING",
-            "quote": "We marked the hospital where she was born. It’s the first gift that actually means something.",
+            "quote": "We marked the hospital where she was born. It\u2019s the first gift that actually means something.",
             "story": "Mark a birthplace, first home, or city that began a new chapter with coordinates chosen by the person giving the gift.",
             "coord_label": "A meaningful beginning",
-            "coord_value": "32.7767° N, 96.7970° W",
+            "coord_value": "32.7767\u00b0 N, 96.7970\u00b0 W",
             "piece_product": "",
             "piece_link": "shopify://collections/coordinates-collection"
           }
@@ -191,10 +191,10 @@
           "settings": {
             "photo": "shopify://shop_images/customer-friends.jpg",
             "name": "WHERE YOU MET",
-            "quote": "Matching bracelets with the café where we first met. We still click them when we’re together.",
-            "story": "Turn the café, campus, station, or neighborhood where your paths crossed into a matching everyday reminder.",
+            "quote": "Matching bracelets with the caf\u00e9 where we first met. We still click them when we\u2019re together.",
+            "story": "Turn the caf\u00e9, campus, station, or neighborhood where your paths crossed into a matching everyday reminder.",
             "coord_label": "A shared starting point",
-            "coord_value": "40.7411° N, 73.9897° W",
+            "coord_value": "40.7411\u00b0 N, 73.9897\u00b0 W",
             "piece_product": "coordinates-bracelet",
             "piece_link": ""
           }

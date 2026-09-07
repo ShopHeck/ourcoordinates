@@ -64,7 +64,7 @@
         <div class="cart-progress cart-drawer__progress" aria-live="polite">
           <p class="cart-progress__label">
             {%- if remaining > 0 -%}
-              You're <strong>{{ remaining | money }}</strong> away from free shipping.
+              You're <strong>{{ remaining | money }}</strong> away from free shipping — add gift packaging or another piece.
             {%- else -%}
               <strong>You've unlocked free shipping.</strong>
             {%- endif -%}
@@ -168,7 +168,7 @@
             {{ cart.total_price | money }}
           </span>
         </div>
-        <p class="cart-drawer__meta">Orders ship in {{ settings.production_days }} business days. Taxes &amp; shipping calculated at checkout.</p>
+        <p class="cart-drawer__meta">Orders ship in 7–10 business days · 30-day happiness guarantee. Taxes &amp; shipping calculated at checkout.</p>
 
         <button type="submit" name="checkout" class="btn btn--full cart-drawer__checkout">Check out</button>
         {%- comment -%}

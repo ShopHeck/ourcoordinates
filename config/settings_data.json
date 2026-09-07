@@ -15,12 +15,12 @@
     "color_graphite": "#3E3E3E",
     "shipping_promise": "Free US shipping on orders over $50",
     "free_shipping_threshold": 50,
-    "production_days": 5,
+    "production_days": 7,
     "transit_days": 5,
-    "guarantee_1": "Free remake if we get it wrong",
+    "guarantee_1": "30-day happiness guarantee (remake or refund)",
     "guarantee_2": "Live engraving preview",
     "guarantee_3": "Engraved to order in the USA",
-    "guarantee_4": "",
+    "guarantee_4": "Ships in 7–10 business days",
     "gift_wrap_product": "",
     "upsell_collection": "best-sellers",
     "social_instagram": "https://www.instagram.com/ourcoordinates/",
@@ -49,6 +49,8 @@
         "disabled": false,
         "settings": {}
       }
-    }
+    },
+    "occasion_label": "National Daughter's Day",
+    "occasion_date": "2026-09-25"
   }
 }

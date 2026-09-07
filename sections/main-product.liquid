@@ -71,12 +71,13 @@
         <strong>{{ settings.shipping_promise }}.</strong>
         {%- if same_day_shipping -%}
           &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
-        {%- elsif section.settings.show_engraving -%}
-          Engraved to order — ships in {{ settings.production_days }} business days.
         {%- else -%}
-          Ships in {{ settings.production_days }} business days.
+          Ships in 7–10 business days · 30-day happiness guarantee (remake or refund)
         {%- endif -%}
       </p>
+      {%- if section.settings.show_engraving -%}
+        <p class="pdp__cta-line" style="margin:6px 0 0;font-size:0.92em;opacity:0.9">Drop your pin. We’ll engrave the coordinates in the USA.</p>
+      {%- endif -%}
 
       {%- if settings.occasion_label != blank and settings.occasion_date != blank -%}
         {%- liquid
@@ -238,6 +239,7 @@
                   Find my coordinates →
                 </button>
                 <span data-engrave-count>0 / {{ section.settings.engraving_max }}</span>
+                <p class="pdp__engrave-tip" style="margin:8px 0 0;font-size:0.85em;opacity:0.85;line-height:1.4">Engraving tip: use decimal degrees with N/S and E/W. Example: 40.7128° N, 74.0060° W. Stay within the character limit shown next to the field — longer strings may truncate on the piece.</p>
               </div>
             </div>
           {%- endif -%}

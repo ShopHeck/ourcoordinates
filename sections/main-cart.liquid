@@ -34,7 +34,7 @@
         <div class="cart-progress">
           <p class="cart-progress__label">
             {%- if remaining > 0 -%}
-              You're <strong>{{ remaining | money }}</strong> away from {{ settings.shipping_promise | downcase }}.
+              You're <strong>{{ remaining | money }}</strong> away from free shipping — add gift packaging or another piece.
             {%- else -%}
               <strong>You've unlocked free shipping.</strong>
             {%- endif -%}
@@ -126,7 +126,7 @@
           {%- endif -%}
 
           <p class="cart-footer__subtotal">Subtotal: {{ cart.total_price | money }}</p>
-          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Orders ship in {{ settings.production_days }} business days.</p>
+          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Orders ship in 7–10 business days · 30-day happiness guarantee.</p>
           <button type="submit" name="checkout" class="btn">Check out</button>
           {%- comment -%} Accelerated checkout wallets — see cart-drawer.liquid. {%- endcomment -%}
           {%- if additional_checkout_buttons -%}
