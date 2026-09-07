@@ -22,7 +22,7 @@
   <p class="pdp__shipnudge" data-ship-nudge data-threshold="{{ nudge_threshold }}">
     <span data-ship-nudge-text>
       {%- if nudge_remaining > 0 -%}
-        <strong>{{ nudge_remaining | money }} away from free US shipping.</strong> Add to cart to combine items.
+        <strong>You're {{ nudge_remaining | money }} away from free shipping — add gift packaging or another piece.</strong>
       {%- else -%}
         <strong>Ships free in the US.</strong> This item clears the {{ nudge_threshold | money_without_trailing_zeros }} threshold.
       {%- endif -%}
