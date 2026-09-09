@@ -1,0 +1,21 @@
+{%- liquid
+  assign letters_option_index = 1
+  for option in product.options_with_values
+    if option.name == 'Letters'
+      assign letters_option_index = forloop.index0
+    endif
+  endfor
+  assign selected_range = product.selected_or_first_available_variant.options[letters_option_index] | remove: ' Letters' | split: '-'
+-%}
+<div class="bubble-name">
+  <label class="buy-step" for="BubbleName-{{ section.id }}">Name / letters</label>
+  <input type="text" id="BubbleName-{{ section.id }}" name="properties[Name]"
+         data-bubble-name data-letters-option-index="{{ letters_option_index }}"
+         placeholder="e.g. LAUREN or K&amp;Y" required maxlength="14"
+         pattern="(?=.*\S).{ {{- selected_range.first -}},{{- selected_range.last -}}}"
+         autocomplete="off" autocapitalize="off" spellcheck="false"
+         aria-describedby="BubbleNameHelp-{{ section.id }} BubbleNameCount-{{ section.id }} BubbleNameFeedback-{{ section.id }}">
+  <p id="BubbleNameHelp-{{ section.id }}">Enter your text exactly as you want it made. Every letter, symbol and space counts — K&amp;Y is 3 characters. Up to 14 characters.</p>
+  <p id="BubbleNameCount-{{ section.id }}" data-bubble-count aria-live="polite">0 / 14 characters</p>
+  <p id="BubbleNameFeedback-{{ section.id }}" data-bubble-feedback aria-live="polite">Choose the matching character range above and check your spelling.</p>
+</div>

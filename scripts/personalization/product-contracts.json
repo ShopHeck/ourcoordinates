@@ -4,9 +4,9 @@
     {
       "handle": "custom-3d-letter-bubble-necklace",
       "templateSuffix": "bubble-necklace",
-      "contract": "none",
-      "properties": [],
-      "javascript": false,
+      "contract": "bubble-name",
+      "properties": ["Name"],
+      "javascript": true,
       "mutable": true
     },
     {

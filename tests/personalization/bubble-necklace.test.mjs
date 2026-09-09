@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import test from 'node:test';
 const read=p=>readFileSync(new URL('../../'+p,import.meta.url),'utf8');
-test('bubble necklace uses a dedicated non-personalized purchase contract',()=>{
+test('bubble necklace uses a dedicated name-only purchase contract',()=>{
  const t=JSON.parse(read('templates/product.bubble-necklace.json'));
  const s=t.sections.main.settings;
  assert.equal(s.show_engraving,false);
@@ -12,9 +12,14 @@ test('bubble necklace uses a dedicated non-personalized purchase contract',()=>{
  assert.ok(!Object.values(t.sections).some(x=>x.type==='apps'));
  const contract=JSON.parse(read('scripts/personalization/product-contracts.json')).products.find(x=>x.handle==='custom-3d-letter-bubble-necklace');
  assert.equal(contract.templateSuffix,'bubble-necklace');
- assert.equal(contract.contract,'none');
- assert.deepEqual(contract.properties,[]);
- assert.doesNotMatch(JSON.stringify(t),/Enter your name|How engraving works|photo proof|free engraving|waterproof|solid gold/i);
+ assert.equal(contract.contract,'bubble-name');
+ assert.deepEqual(contract.properties,['Name']);
+ assert.equal(contract.javascript,true);
+ const field=read('snippets/pdp-bubble-name.liquid');
+ assert.match(field,/name="properties\[Name\]"/);
+ assert.match(field,/required maxlength="14"/);
+ assert.doesNotMatch(field,/data-engrave|properties\[Engraving\]|<svg/);
+ assert.doesNotMatch(JSON.stringify(t),/How engraving works|photo proof|free engraving|waterproof|solid gold/i);
 });
 test('bubble-specific summary and delivery copy do not promise engraving or guaranteed arrival',()=>{
  const s=read('sections/main-product.liquid');

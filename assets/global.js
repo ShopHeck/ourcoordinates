@@ -1565,7 +1565,9 @@ function productPersonalizationPending(form) {
       } else if (form.dataset.expressUnavailable === 'true') {
         reason = 'Express checkout is unavailable for this sold-out option.';
       } else if (!requiredFilled(form)) {
-        reason = 'Express checkout unlocks once your engraving is entered.';
+        reason = form.querySelector('[data-bubble-name]')
+          ? 'Enter your name or letters to unlock express checkout.'
+          : 'Express checkout unlocks once your engraving is entered.';
       }
       block.hidden = !!reason;
       if (note) {
