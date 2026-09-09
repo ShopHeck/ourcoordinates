@@ -1,3 +1,4 @@
+import { parseShopifyJson } from '../../scripts/shopify-json.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -35,7 +36,7 @@ test('collection header spacing is compact in critical and full CSS', () => {
 });
 
 test('new collection editorial strings are localized', () => {
-  const locale = JSON.parse(read('locales/en.default.json'));
+  const locale = parseShopifyJson(read('locales/en.default.json'));
 
   assert.equal(locale.collections.general.about_collection, 'About {{ title }}');
   assert.match(locale.collections.general.all_products_intro, /engraved coordinates jewelry/);

@@ -1,3 +1,4 @@
+import { parseShopifyJson } from './shopify-json.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -62,7 +63,7 @@ async function run() {
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
   const plan = JSON.parse(await readFile(resolve(value('--plan')), 'utf8'));
   const source = JSON.parse(await readFile(resolve(value('--source-backup')), 'utf8'));
-  const { delivery } = JSON.parse(await readFile(resolve(root, 'locales/en.default.json'), 'utf8'));
+  const { delivery } = parseShopifyJson(await readFile(resolve(root, 'locales/en.default.json'), 'utf8'));
   validateApprovedPlan(plan, source, delivery);
   const store = normalizeStore(process.env.SHOPIFY_STORE || '');
   const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;

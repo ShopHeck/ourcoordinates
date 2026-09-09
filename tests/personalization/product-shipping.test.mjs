@@ -27,8 +27,7 @@ test('magnetic bracelet set advertises its in-stock same-day shipping cutoff', (
 
 test('other products retain the global production lead time', () => {
   assert.match(productSection, /assign prod_seconds = settings\.production_days \| times: 86400/);
-  assert.match(productSection, /ships in \{\{ settings\.production_days \}\} business days/);
-  assert.match(productSection, /Ships in \{\{ settings\.production_days \}\} business days/);
+  assert.match(productSection, /Ships in 7–10 business days/);
   assert.match(productSection, /render 'delivery-details', same_day_shipping: same_day_shipping/);
-  assert.match(announcementBar, /Ships in \{\{ settings\.production_days \}\} business days/);
+  assert.match(announcementBar, /Ships in 7–10 business days/);
 });

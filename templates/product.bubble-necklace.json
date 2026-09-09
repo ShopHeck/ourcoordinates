@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "preview_type": "horizontal-bar",
+        "show_engraving": false,
+        "engraving_required": false,
+        "engraving_placeholder": "",
+        "engraving_max": 14,
+        "atc_label": "Add to cart",
+        "review_style": "app",
+        "show_dynamic_checkout": true,
+        "show_recently_viewed": true
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "More to love",
+        "heading": "You may also like",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cross"
+  ]
+}

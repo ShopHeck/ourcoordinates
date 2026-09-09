@@ -1,0 +1,56 @@
+{
+  "release": "bubble-necklace-2026-09-09",
+  "mode": "append-only",
+  "assetRoot": "admin-assets/bubble-necklace-2026-09-09",
+  "products": [
+    {
+      "handle": "custom-3d-letter-bubble-necklace",
+      "expectedProductId": "gid://shopify/Product/8302991048962",
+      "expectedStatus": "ACTIVE",
+      "media": [
+        {
+          "filename": "gold-zircon-worn-v2.webp",
+          "role": "worn lifestyle",
+          "alt": "Gold zircon 3D bubble letter necklace spelling K&Y, worn with a cream knit top.",
+          "finish": "Gold Zircon"
+        },
+        {
+          "filename": "silver-zircon-worn-v2.webp",
+          "role": "worn lifestyle",
+          "alt": "Silver zircon 3D bubble letter necklace spelling LAUREN, worn with a pale blue linen shirt.",
+          "finish": "Silver Zircon"
+        },
+        {
+          "filename": "gold-zircon-gift-v2.webp",
+          "role": "gifting",
+          "alt": "Gold zircon K&Y bubble letter necklace being given by hand at a kitchen table.",
+          "finish": "Gold Zircon"
+        },
+        {
+          "filename": "silver-zircon-gift-v2.webp",
+          "role": "gifting",
+          "alt": "Mother fastening a silver zircon LAUREN bubble letter necklace for her adult daughter.",
+          "finish": "Silver Zircon"
+        },
+        {
+          "filename": "bubble-j-necklace-worn-v2.webp",
+          "role": "worn lifestyle",
+          "alt": "Polished gold 3D bubble letter J necklace worn with a white linen shirt.",
+          "finish": "Gold"
+        },
+        {
+          "filename": "bubble-j-necklace-gift-v2.webp",
+          "role": "gifting",
+          "alt": "Polished gold bubble letter J necklace being given by hand in a quiet gift moment.",
+          "finish": "Gold"
+        },
+        {
+          "filename": "silver-bubble-olivia-worn-v2.webp",
+          "finish": "Silver",
+          "role": "worn lifestyle",
+          "alt": "Polished silver 3D bubble necklace spelling OLIVIA, worn with an off-white cotton blouse."
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,10 @@
   assign current_variant = product.selected_or_first_available_variant
   assign ships_by = 'now' | date: '%s' | plus: 0
   assign same_day_shipping = false
+  assign is_bubble_necklace = false
+  if product.handle == 'custom-3d-letter-bubble-necklace'
+    assign is_bubble_necklace = true
+  endif
   assign prod_seconds = settings.production_days | times: 86400
   if product.handle == 'magnetic-couples-bracelet-set'
     assign same_day_shipping = true
@@ -31,13 +35,26 @@
     assign initial_metal = 'black'
   endif
   assign personalization_release = 'oc-order-safe-2026-08-23-1'
+  assign atc_label = section.settings.atc_label
   assign personalization_contract = preview_type
   unless section.settings.show_engraving
     assign personalization_contract = 'none'
   endunless
+  if is_bubble_necklace
+    assign preview_type = 'bubble-name'
+    assign has_live_preview = false
+    assign atc_label = 'Add to cart'
+    assign personalization_contract = 'bubble-name'
+  endif
 -%}
 
+{%- if is_bubble_necklace -%}
+  {{ 'bubble-necklace.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'bubble-necklace.js' | asset_url }}" defer></script>
+{%- endif -%}
+
 <section class="section" data-product
+         {% if is_bubble_necklace %}data-bubble-necklace{% endif %}
          data-preview-type="{{ preview_type }}"
          {% if initial_metal != blank %}data-metal="{{ initial_metal }}"{% endif %}
          data-personalization-release="{{ personalization_release }}"
@@ -48,6 +65,9 @@
     <div class="pdp__summary">
       <p class="pdp__vendor">{{ product.vendor }}</p>
       <h1 class="pdp__title">{{ product.title }}</h1>
+      {%- if is_bubble_necklace -%}
+        {% render 'pdp-bubble-summary' %}
+      {%- endif -%}
 
       {%- if section.settings.review_style == 'app' -%}
         <!-- Start of Judge.me code -->
@@ -71,16 +91,18 @@
         <strong>{{ settings.shipping_promise }}.</strong>
         {%- if same_day_shipping -%}
           &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
+        {%- elsif is_bubble_necklace -%}
+          &nbsp;Ships in 7–10 business days · 30-day happiness guarantee (remake or refund)
         {%- else -%}
           Ships in 7–10 business days · 30-day happiness guarantee (remake or refund)
         {%- endif -%}
       </p>
-      {%- if section.settings.show_engraving -%}
+      {%- if section.settings.show_engraving and is_bubble_necklace == false -%}
         <p class="pdp__cta-line" style="margin:6px 0 0;font-size:0.92em;opacity:0.9">Drop your pin. We’ll engrave the coordinates in the USA.</p>
         <p class="pdp__engrave-tip-global" style="margin:6px 0 0;font-size:0.85em;opacity:0.85;line-height:1.4">Engraving tip: use decimal degrees with N/S and E/W. Example: 40.7128° N, 74.0060° W. Stay within the character limit shown next to the field — longer strings may truncate on the piece.</p>
       {%- endif -%}
 
-      {%- if settings.occasion_label != blank and settings.occasion_date != blank -%}
+      {%- if settings.occasion_label != blank and settings.occasion_date != blank and is_bubble_necklace == false -%}
         {%- liquid
           assign occasion_ts = settings.occasion_date | date: '%s' | plus: 0
           assign lead_seconds = prod_seconds | plus: transit_seconds | plus: 259200
@@ -145,7 +167,9 @@
           {%- for option in product.options_with_values -%}
             <fieldset class="swatches option-group" data-option-index="{{ forloop.index0 }}">
               <legend class="buy-step">
-                {{ option.name }}
+                {%- if is_bubble_necklace and option.name == 'Color' -%}Finish
+                {%- elsif is_bubble_necklace and option.name == 'Letters' -%}Number of characters
+                {%- else -%}{{ option.name }}{%- endif -%}
                 {%- assign opt_name_down = option.name | downcase -%}
                 {%- if opt_name_down == 'engrave' or opt_name_down contains 'side' %} <span>— engraving is free on every side</span>{% endif -%}
               </legend>
@@ -153,13 +177,17 @@
                 <input type="radio" id="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
                        name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}"
                        {% if option.selected_value == value %}checked{% endif %}>
-                <label for="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}">{{ value }}</label>
+                <label for="opt-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}">{%- if is_bubble_necklace and option.name == 'Letters' -%}{{ value | remove: ' Letters' | replace: '-', '–' }}{%- else -%}{{ value }}{%- endif -%}</label>
               {%- endfor -%}
             </fieldset>
           {%- endfor -%}
         {%- endunless -%}
 
-        {%- if section.settings.show_engraving -%}
+        {%- if is_bubble_necklace -%}
+          {% render 'pdp-bubble-name', product: product, section: section %}
+        {%- endif -%}
+
+        {%- if section.settings.show_engraving and is_bubble_necklace == false -%}
 
           <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
             <defs>
@@ -267,9 +295,9 @@
         {{ form | payment_terms }}
 
         <button type="submit" class="btn btn--full" data-atc
-                data-label-add="{{ section.settings.atc_label | escape }}"
+                data-label-add="{{ atc_label | escape }}"
                 data-label-sold-out="Sold out">
-          <span data-atc-label>{{ section.settings.atc_label }}</span>
+          <span data-atc-label>{{ atc_label }}</span>
         </button>
 
         {%- comment -%}
@@ -297,7 +325,7 @@
 
         <ul class="guarantees">
           {%- if settings.guarantee_1 != blank -%}<li>{{ settings.guarantee_1 }}</li>{%- endif -%}
-          {%- if section.settings.show_engraving -%}
+          {%- if section.settings.show_engraving and is_bubble_necklace == false -%}
             {%- if has_live_preview and settings.guarantee_2 != blank -%}<li>{{ settings.guarantee_2 }}</li>{%- endif -%}
             {%- if settings.guarantee_3 != blank -%}<li>{{ settings.guarantee_3 }}</li>{%- endif -%}
           {%- endif -%}
@@ -343,13 +371,16 @@
         <details open>
           <summary>Description</summary>
           <div class="accordion-body rte">
-            {%- if product.handle == 'personalized-lock-necklace' -%}
+            {%- if is_bubble_necklace -%}
+              {% render 'pdp-description-bubble' %}
+            {%- elsif product.handle == 'personalized-lock-necklace' -%}
               {% render 'pdp-description-padlock' %}
             {%- else -%}
               {{ product.description }}
             {%- endif -%}
           </div>
         </details>
+        {%- unless is_bubble_necklace -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'accordion' -%}
             <details {{ block.shopify_attributes }}>
@@ -370,13 +401,18 @@
             </details>
           {%- endif -%}
         {%- endfor -%}
+        {%- endunless -%}
         <details>
           <summary>Shipping & returns</summary>
           <div class="accordion-body">
-            {% render 'delivery-details', same_day_shipping: same_day_shipping %}
+            {%- if is_bubble_necklace -%}
+              {% render 'pdp-bubble-delivery' %}
+            {%- else -%}
+              {% render 'delivery-details', same_day_shipping: same_day_shipping %}
+            {%- endif -%}
             {%- if same_day_shipping -%}
               <p>In stock and ships the same day when ordered by 12 PM ET. If it arrives damaged, contact us for help.</p>
-            {%- elsif section.settings.show_engraving -%}
+            {%- elsif section.settings.show_engraving and is_bubble_necklace == false -%}
               <p>Personalized pieces are final sale, but if we engrave it wrong or it arrives damaged we remake it free.</p>
             {%- else -%}
               <p>If it arrives damaged, contact us for help.</p>
@@ -393,10 +429,14 @@
     <section class="page-width pdp-reviews" id="reviews" aria-labelledby="product-reviews-title">
       <div class="pdp-reviews__header">
         <div>
-          <p class="coord-eyebrow">From their coordinates</p>
+          <p class="coord-eyebrow">{% if is_bubble_necklace %}Their moments{% else %}From their coordinates{% endif %}</p>
           <h2 id="product-reviews-title">{{ product.title }} reviews</h2>
         </div>
-        <p>Real feedback on the engraving, fit, finish, and moments customers chose to keep close.</p>
+        {%- if is_bubble_necklace -%}
+          <p>Customer feedback on the necklace’s fit, finish, and gifting experience.</p>
+        {%- else -%}
+          <p>Real feedback on the engraving, fit, finish, and moments customers chose to keep close.</p>
+        {%- endif -%}
       </div>
       <div id="judgeme_product_reviews"
            class="jdgm-widget jdgm-review-widget"
@@ -480,14 +520,16 @@
     On a 390px viewport the engraving field sits ~1,360px down (Sept 2026
     audit). This jump link takes the shopper straight to the buy box.
   {%- endcomment -%}
-  {%- if section.settings.show_engraving -%}
+  {%- if is_bubble_necklace -%}
+    <a class="sticky-atc__jump" href="#BuyBox">Add your name ↓</a>
+  {%- elsif section.settings.show_engraving -%}
     <a class="sticky-atc__jump" href="#BuyBox">Personalize ↓</a>
   {%- endif -%}
   <button type="button" class="btn" data-sticky-submit data-atc
-          data-label-personalize="{{ 'products.product.personalize' | t | escape }}"
-          data-label-add="{{ section.settings.atc_label | escape }}"
+          data-label-personalize="{% if is_bubble_necklace %}Add your name{% else %}{{ 'products.product.personalize' | t | escape }}{% endif %}"
+          data-label-add="{{ atc_label | escape }}"
           data-label-sold-out="Sold out">
-    <span data-atc-label>{{ section.settings.atc_label }}</span>
+    <span data-atc-label>{{ atc_label }}</span>
   </button>
 </div>
 

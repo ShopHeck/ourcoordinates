@@ -1,9 +1,10 @@
+import { parseShopifyJson } from '../../scripts/shopify-json.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { APPROVED_HANDLES, assertVersion, descriptionHash, updateInput, unchangedFields, validateApprovedPlan } from '../../scripts/apply-delivery-copy-plan.mjs';
 import { prepareDeliveryCopyPlan, outdatedDelivery } from '../../scripts/prepare-delivery-copy-plan.mjs';
-const { delivery } = JSON.parse(readFileSync(new URL('../../locales/en.default.json', import.meta.url), 'utf8'));
+const { delivery } = parseShopifyJson(readFileSync(new URL('../../locales/en.default.json', import.meta.url), 'utf8'));
 const source = { products: APPROVED_HANDLES.map((handle, i) => ({ id: `gid://shopify/Product/${i}`, handle, status: 'ACTIVE', updatedAt: '2026-09-05', descriptionHtml: outdatedDelivery })) };
 
 test('description-only apply whitelists mutation fields and detects concurrency', () => {

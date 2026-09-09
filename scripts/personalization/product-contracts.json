@@ -2,6 +2,14 @@
   "release": "oc-order-safe-2026-08-23-1",
   "products": [
     {
+      "handle": "custom-3d-letter-bubble-necklace",
+      "templateSuffix": "bubble-necklace",
+      "contract": "bubble-name",
+      "properties": ["Name"],
+      "javascript": true,
+      "mutable": true
+    },
+    {
       "handle": "premium-gift-packaging",
       "templateSuffix": "non-custom",
       "contract": "none",

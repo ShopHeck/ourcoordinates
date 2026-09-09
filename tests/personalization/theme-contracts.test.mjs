@@ -14,7 +14,7 @@ const byHandle = new Map(manifest.products.map((item) => [item.handle, item]));
 
 test('manifest has one unique, versioned contract per approved handle', () => {
   assert.equal(manifest.release, 'oc-order-safe-2026-08-23-1');
-  assert.equal(manifest.products.length, 11);
+  assert.equal(manifest.products.length, 12);
   assert.equal(byHandle.size, manifest.products.length);
   for (const item of manifest.products) {
     assert.match(item.handle, /^[a-z0-9-]+$/);
@@ -58,8 +58,15 @@ function assertTemplateContract(handle, snippetPath) {
   const template = json(`templates/product.${item.templateSuffix}.json`);
   const snippet = read(snippetPath);
   const section = read('sections/main-product.liquid');
-  assert.equal(template.sections.main.settings.preview_type, item.contract);
-  assert.equal(template.sections.main.settings.show_engraving, item.contract !== 'none');
+  if (item.contract === 'bubble-name') {
+    assert.equal(template.sections.main.settings.show_engraving, false);
+    assert.match(section, /if is_bubble_necklace[\s\S]*assign preview_type = 'bubble-name'/);
+    assert.match(section, /render 'pdp-bubble-name'/);
+    assert.doesNotMatch(snippet, /data-engrave-input|properties\[Engraving\]/);
+  } else {
+    assert.equal(template.sections.main.settings.preview_type, item.contract);
+    assert.equal(template.sections.main.settings.show_engraving, item.contract !== 'none');
+  }
   if (item.contract === 'charm-name-necklace') {
     assert.deepEqual(item.properties, Array.from({ length: 8 }, (_, index) => `Name ${index + 1}`));
     assert.match(snippet, /for index in \(1\.\.8\)/);
@@ -69,7 +76,7 @@ function assertTemplateContract(handle, snippetPath) {
       assert.ok(snippet.includes(`name="properties[${property}]"`), `${handle} missing ${property}`);
     }
   }
-  assert.ok(section.includes(`preview_type == '${item.contract}'`));
+  if (item.contract !== 'bubble-name') assert.ok(section.includes(`preview_type == '${item.contract}'`));
 }
 
 test('heart necklace has one front engraving and no side controls', () => {
@@ -170,7 +177,8 @@ test('every mutable personalized contract has a matching template, snippet, and 
     'birthstone-ring': 'snippets/pdp-preview-birthstone-ring.liquid',
     'nameplate': 'snippets/pdp-preview-nameplate.liquid',
     'vertical-name': 'snippets/pdp-preview-vertical-name.liquid',
-    'leather-bracelet': 'snippets/pdp-preview-leather-bracelet.liquid'
+    'leather-bracelet': 'snippets/pdp-preview-leather-bracelet.liquid',
+    'bubble-name': 'snippets/pdp-bubble-name.liquid'
   };
   for (const item of manifest.products.filter((entry) => entry.mutable && entry.contract !== 'none')) {
     assertTemplateContract(item.handle, snippetByContract[item.contract]);
