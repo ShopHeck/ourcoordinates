@@ -36,16 +36,14 @@
   endif
   assign personalization_release = 'oc-order-safe-2026-08-23-1'
   assign atc_label = section.settings.atc_label
-  if is_bubble_necklace
-    assign preview_type = 'bubble-name'
-    assign has_live_preview = false
-    assign atc_label = 'Add to cart'
-  endif
   assign personalization_contract = preview_type
   unless section.settings.show_engraving
     assign personalization_contract = 'none'
   endunless
   if is_bubble_necklace
+    assign preview_type = 'bubble-name'
+    assign has_live_preview = false
+    assign atc_label = 'Add to cart'
     assign personalization_contract = 'bubble-name'
   endif
 -%}
