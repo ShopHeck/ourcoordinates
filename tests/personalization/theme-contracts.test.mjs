@@ -14,7 +14,7 @@ const byHandle = new Map(manifest.products.map((item) => [item.handle, item]));
 
 test('manifest has one unique, versioned contract per approved handle', () => {
   assert.equal(manifest.release, 'oc-order-safe-2026-08-23-1');
-  assert.equal(manifest.products.length, 11);
+  assert.equal(manifest.products.length, 12);
   assert.equal(byHandle.size, manifest.products.length);
   for (const item of manifest.products) {
     assert.match(item.handle, /^[a-z0-9-]+$/);

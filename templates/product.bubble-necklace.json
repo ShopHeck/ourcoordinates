@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "details": {
+          "type": "accordion",
+          "settings": {
+            "title": "Materials, finish & fit",
+            "content": "<p>Stainless-steel construction with gold-tone, silver-tone, or rose-gold-tone finish options. Chain lengths: 16, 18, or 20 inches.</p><p>Measure a necklace you already enjoy wearing to choose your length. The fit will vary with your neckline and body proportions.</p><p>Wipe gently with a soft, dry cloth. Remove before swimming, showering, or applying perfume, and store separately.</p>"
+          }
+        },
+        "order": {
+          "type": "accordion",
+          "settings": {
+            "title": "Is this necklace customizable?",
+            "content": "<p>No. This necklace is sold in the listed designs. Choose your style, finish, and chain length above. There is no name entry, engraving, or coordinates personalization.</p>"
+          }
+        },
+        "gift": {
+          "type": "accordion",
+          "settings": {
+            "title": "Choosing a gift",
+            "content": "<p>A thoughtful choice for a birthday, an anniversary, or a just-because surprise. Choose a style marked “Rose Box” if you want the rose-style presentation box.</p><p>Need help choosing? <a href=\"/pages/contact\">Contact us before ordering</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "details",
+        "order",
+        "gift"
+      ],
+      "settings": {
+        "preview_type": "horizontal-bar",
+        "show_engraving": false,
+        "engraving_required": false,
+        "engraving_placeholder": "",
+        "engraving_max": 30,
+        "atc_label": "Add to cart",
+        "review_style": "app",
+        "show_dynamic_checkout": true,
+        "show_recently_viewed": true
+      }
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "More to love",
+        "heading": "You may also like",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cross"
+  ]
+}

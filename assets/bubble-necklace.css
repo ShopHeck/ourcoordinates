@@ -1,0 +1,9 @@
+/* Keep the signup dialog's close control above its image on this PDP.
+   The app's later positioned image otherwise covers the button on mobile. */
+body:has([data-bubble-necklace]) .sqz-popup-close {
+  z-index: 2;
+  min-width: 44px;
+  min-height: 44px;
+  background: #fff;
+  color: #111;
+}

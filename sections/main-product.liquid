@@ -2,6 +2,10 @@
   assign current_variant = product.selected_or_first_available_variant
   assign ships_by = 'now' | date: '%s' | plus: 0
   assign same_day_shipping = false
+  assign is_bubble_necklace = false
+  if product.handle == 'custom-3d-letter-bubble-necklace'
+    assign is_bubble_necklace = true
+  endif
   assign prod_seconds = settings.production_days | times: 86400
   if product.handle == 'magnetic-couples-bracelet-set'
     assign same_day_shipping = true
@@ -37,7 +41,12 @@
   endunless
 -%}
 
+{%- if is_bubble_necklace -%}
+  {{ 'bubble-necklace.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
 <section class="section" data-product
+         {% if is_bubble_necklace %}data-bubble-necklace{% endif %}
          data-preview-type="{{ preview_type }}"
          {% if initial_metal != blank %}data-metal="{{ initial_metal }}"{% endif %}
          data-personalization-release="{{ personalization_release }}"
@@ -48,6 +57,9 @@
     <div class="pdp__summary">
       <p class="pdp__vendor">{{ product.vendor }}</p>
       <h1 class="pdp__title">{{ product.title }}</h1>
+      {%- if is_bubble_necklace -%}
+        {% render 'pdp-bubble-summary' %}
+      {%- endif -%}
 
       {%- if section.settings.review_style == 'app' -%}
         <!-- Start of Judge.me code -->
@@ -71,6 +83,8 @@
         <strong>{{ settings.shipping_promise }}.</strong>
         {%- if same_day_shipping -%}
           &nbsp;In stock &mdash; order by 12 PM ET for same-day shipping,
+        {%- elsif is_bubble_necklace -%}
+          &nbsp;Ships in 7–10 business days · 30-day happiness guarantee (remake or refund)
         {%- else -%}
           Ships in 7–10 business days · 30-day happiness guarantee (remake or refund)
         {%- endif -%}
@@ -80,7 +94,7 @@
         <p class="pdp__engrave-tip-global" style="margin:6px 0 0;font-size:0.85em;opacity:0.85;line-height:1.4">Engraving tip: use decimal degrees with N/S and E/W. Example: 40.7128° N, 74.0060° W. Stay within the character limit shown next to the field — longer strings may truncate on the piece.</p>
       {%- endif -%}
 
-      {%- if settings.occasion_label != blank and settings.occasion_date != blank -%}
+      {%- if settings.occasion_label != blank and settings.occasion_date != blank and is_bubble_necklace == false -%}
         {%- liquid
           assign occasion_ts = settings.occasion_date | date: '%s' | plus: 0
           assign lead_seconds = prod_seconds | plus: transit_seconds | plus: 259200
@@ -373,7 +387,11 @@
         <details>
           <summary>Shipping & returns</summary>
           <div class="accordion-body">
-            {% render 'delivery-details', same_day_shipping: same_day_shipping %}
+            {%- if is_bubble_necklace -%}
+              {% render 'pdp-bubble-delivery' %}
+            {%- else -%}
+              {% render 'delivery-details', same_day_shipping: same_day_shipping %}
+            {%- endif -%}
             {%- if same_day_shipping -%}
               <p>In stock and ships the same day when ordered by 12 PM ET. If it arrives damaged, contact us for help.</p>
             {%- elsif section.settings.show_engraving -%}
@@ -393,10 +411,14 @@
     <section class="page-width pdp-reviews" id="reviews" aria-labelledby="product-reviews-title">
       <div class="pdp-reviews__header">
         <div>
-          <p class="coord-eyebrow">From their coordinates</p>
+          <p class="coord-eyebrow">{% if is_bubble_necklace %}Their moments{% else %}From their coordinates{% endif %}</p>
           <h2 id="product-reviews-title">{{ product.title }} reviews</h2>
         </div>
-        <p>Real feedback on the engraving, fit, finish, and moments customers chose to keep close.</p>
+        {%- if is_bubble_necklace -%}
+          <p>Customer feedback on the necklace’s fit, finish, and gifting experience.</p>
+        {%- else -%}
+          <p>Real feedback on the engraving, fit, finish, and moments customers chose to keep close.</p>
+        {%- endif -%}
       </div>
       <div id="judgeme_product_reviews"
            class="jdgm-widget jdgm-review-widget"

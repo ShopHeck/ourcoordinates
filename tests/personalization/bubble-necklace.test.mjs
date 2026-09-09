@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import test from 'node:test';
+const read=p=>readFileSync(new URL('../../'+p,import.meta.url),'utf8');
+test('bubble necklace uses a dedicated non-personalized purchase contract',()=>{
+ const t=JSON.parse(read('templates/product.bubble-necklace.json'));
+ const s=t.sections.main.settings;
+ assert.equal(s.show_engraving,false);
+ assert.equal(s.engraving_required,false);
+ assert.equal(s.atc_label,'Add to cart');
+ assert.equal(s.review_style,'app');
+ assert.ok(!Object.values(t.sections).some(x=>x.type==='apps'));
+ const contract=JSON.parse(read('scripts/personalization/product-contracts.json')).products.find(x=>x.handle==='custom-3d-letter-bubble-necklace');
+ assert.equal(contract.templateSuffix,'bubble-necklace');
+ assert.equal(contract.contract,'none');
+ assert.deepEqual(contract.properties,[]);
+ assert.doesNotMatch(JSON.stringify(t),/Enter your name|How engraving works|photo proof|free engraving|waterproof|solid gold/i);
+});
+test('bubble-specific summary and delivery copy do not promise engraving or guaranteed arrival',()=>{
+ const s=read('sections/main-product.liquid');
+ assert.match(s,/product\.handle == 'custom-3d-letter-bubble-necklace'/);
+ assert.match(s,/if is_bubble_necklace[\s\S]*?render 'pdp-bubble-summary'/);
+ assert.match(s,/if is_bubble_necklace[\s\S]*?render 'pdp-bubble-delivery'/);
+ assert.match(s,/settings\.occasion_label != blank and settings\.occasion_date != blank and is_bubble_necklace == false/);
+ assert.doesNotMatch(read('snippets/pdp-bubble-delivery.liquid'),/photo proof|engraved|unwrap it in time|same.day/i);
+});
