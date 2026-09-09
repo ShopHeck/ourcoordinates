@@ -7,6 +7,9 @@ test('name counting preserves symbols, spaces and Unicode; trims only outer whit
   assert.equal(countCharacters('LAUREN'), 6);
   assert.equal(countCharacters('  ANNA MARIE  '), 10);
   assert.equal(countCharacters('ÉVA'), 3);
+  assert.equal(countCharacters('😀'.repeat(14)), 14);
+  assert.equal(validateName('😀'.repeat(14), '13-14 Letters'), '');
+  assert.match(validateName('😀'.repeat(15), '13-14 Letters'), /up to 14/);
 });
 test('name must fit the selected letter-count variant', () => {
   assert.equal(validateName('K&Y', '3-4 Letters'), '');
