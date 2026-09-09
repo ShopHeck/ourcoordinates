@@ -11,7 +11,7 @@
   <label class="buy-step" for="BubbleName-{{ section.id }}">Name / letters</label>
   <input type="text" id="BubbleName-{{ section.id }}" name="properties[Name]"
          data-bubble-name data-letters-option-index="{{ letters_option_index }}"
-         placeholder="e.g. LAUREN or K&amp;Y" required maxlength="14"
+         placeholder="e.g. LAUREN or K&amp;Y" required
          pattern="(?=.*\S).{ {{- selected_range.first -}},{{- selected_range.last -}}}"
          autocomplete="off" autocapitalize="off" spellcheck="false"
          aria-describedby="BubbleNameHelp-{{ section.id }} BubbleNameCount-{{ section.id }} BubbleNameFeedback-{{ section.id }}">

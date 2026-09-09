@@ -17,7 +17,9 @@ test('bubble necklace uses a dedicated name-only purchase contract',()=>{
  assert.equal(contract.javascript,true);
  const field=read('snippets/pdp-bubble-name.liquid');
  assert.match(field,/name="properties\[Name\]"/);
- assert.match(field,/required maxlength="14"/);
+ assert.match(field,/\brequired\b/);
+ assert.doesNotMatch(field,/\bmaxlength=/, 'native UTF-16 limits must not truncate valid Unicode input');
+ assert.match(field,/pattern="\(\?=\.\*\\S\)/);
  assert.doesNotMatch(field,/data-engrave|properties\[Engraving\]|<svg/);
  assert.doesNotMatch(JSON.stringify(t),/How engraving works|photo proof|free engraving|waterproof|solid gold/i);
 });
