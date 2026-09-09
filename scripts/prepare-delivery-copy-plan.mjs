@@ -1,3 +1,4 @@
+import { parseShopifyJson } from './shopify-json.mjs';
 // Offline review plan only. This script has no network or mutation capability.
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
@@ -48,7 +49,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const [snapshotPath, outputPath = '.product-admin-work/delivery-copy-plan.json'] = process.argv.slice(2);
   if (!snapshotPath) throw new Error('Usage: node scripts/prepare-delivery-copy-plan.mjs <catalog-backup.json> [review-plan.json]');
   const snapshot = JSON.parse(await readFile(resolve(snapshotPath), 'utf8'));
-  const locale = JSON.parse(await readFile(new URL('../locales/en.default.json', import.meta.url), 'utf8'));
+  const locale = parseShopifyJson(await readFile(new URL('../locales/en.default.json', import.meta.url), 'utf8'));
   const plan = prepareDeliveryCopyPlan(snapshot, locale.delivery);
   await mkdir(dirname(resolve(outputPath)), { recursive: true });
   await writeFile(resolve(outputPath), JSON.stringify(plan, null, 2) + '\n');

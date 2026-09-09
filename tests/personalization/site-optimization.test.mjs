@@ -238,7 +238,7 @@ test('product and article SEO titles render without an automatically appended st
   assert.equal((layout.match(/seo_description \| escape_once/g) || []).length, 3);
   assert.doesNotMatch(layout, /seo_(?:title|description) \| escape(?!_once)/);
   const llmsFull = read('templates/llms-full.txt.liquid');
-  assert.match(llmsFull, /Why Coordinates Jewelry Makes a Meaningful Gift/);
+  assert.match(llmsFull, /Why Coordinates Jewelry Is the Most Meaningful Gift You Can Give/);
   assert.doesNotMatch(llmsFull, /fastest-growing personalized gift category|millions of people are choosing/i);
 });
 

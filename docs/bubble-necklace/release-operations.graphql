@@ -1,0 +1,43 @@
+query BubbleReleaseSnapshot($handle: String!) {
+  productByIdentifier(identifier: {handle: $handle}) {
+    id handle title status updatedAt templateSuffix descriptionHtml
+    seo { title description }
+    variants(first:100) {
+      nodes { id title sku price compareAtPrice selectedOptions {name value} media(first:10) {nodes {id}} }
+      pageInfo {hasNextPage}
+    }
+    media(first:100) {
+      nodes {id alt mediaContentType preview {status} ... on MediaImage {image {url width height}}}
+      pageInfo {hasNextPage}
+    }
+  }
+}
+
+mutation BubbleContentUpdate($product: ProductUpdateInput!) {
+  productUpdate(product: $product) {product {id updatedAt templateSuffix} userErrors {field message}}
+}
+
+mutation BubbleVariantImages($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+  productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+    productVariants {id media(first:10) {nodes {id}}}
+    userErrors {field message}
+  }
+}
+
+mutation BubbleDetachOldGallery($files: [FileUpdateInput!]!) {
+  fileUpdate(files: $files) {files {id fileStatus} userErrors {field message}}
+}
+
+mutation BubbleGalleryOrder($id: ID!, $moves: [MoveInput!]!) {
+  productReorderMedia(id: $id, moves: $moves) {job {id done} mediaUserErrors {field message}}
+}
+
+query BubbleGalleryJob($id: ID!) { job(id: $id) {id done} }
+
+mutation CreateProductImageUploadTargets($input: [StagedUploadInput!]!) {
+  stagedUploadsCreate(input: $input) {stagedTargets {url resourceUrl parameters {name value}} userErrors {field message}}
+}
+
+mutation AddProductMedia($product: ProductUpdateInput!, $media: [CreateMediaInput!]) {
+  productUpdate(product: $product, media: $media) {product {id handle status updatedAt} userErrors {field message}}
+}

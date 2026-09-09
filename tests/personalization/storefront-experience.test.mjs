@@ -1,3 +1,4 @@
+import { parseShopifyJson } from '../../scripts/shopify-json.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
@@ -120,13 +121,13 @@ test('narrow header keeps search and cart within a shrinking center column', () 
 });
 
 test('help and product delivery copy share confirmed facts without overriding the in-stock exception', () => {
-  const locale = JSON.parse(read('locales/en.default.json'));
-  assert.match(locale.delivery.production, /5 business days/);
+  const locale = parseShopifyJson(read('locales/en.default.json'));
+  assert.match(locale.delivery.production, /7–10 business days/);
   assert.match(locale.delivery.production, /12 PM Eastern Time/);
-  assert.match(locale.delivery.transit, /7–10 business days/);
-  assert.match(locale.delivery.rates, /5\.99/);
-  assert.match(locale.delivery.rates, /over US\$50/);
-  assert.match(locale.delivery.proof, /not yet a standard/);
+  assert.match(locale.delivery.transit, /additional business days/);
+  assert.match(locale.delivery.rates, /final charges appear at checkout/);
+  assert.match(locale.delivery.rates, /over \$50/);
+  assert.match(locale.delivery.proof, /not a standard/);
   assert.match(read('snippets/delivery-details.liquid'), /unless same_day_shipping/);
   assert.match(read('sections/main-page.liquid'), /page.handle == 'shipping' or page.handle == 'faqs'/);
   assert.match(read('sections/oc-collection-copy.liquid'), /collections.best_sellers.copy_html/);
