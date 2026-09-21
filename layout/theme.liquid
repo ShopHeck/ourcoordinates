@@ -30,7 +30,7 @@
     endif
 
     if request.page_type == 'index'
-      assign seo_description = 'Personalize coordinates jewelry with the place that matters most. Preview your engraving, receive a photo proof, and enjoy free US shipping.'
+      assign seo_description = 'Personalize coordinates jewelry with the place that matters most. Preview your engraving on the product page, then we engrave in the USA — free US shipping over $50.'
     elsif request.page_type == 'article'
       if seo_title == blank
         assign seo_title = article.title
@@ -52,7 +52,7 @@
     elsif request.page_type == 'collection' and collection.handle == 'coordinates-sets' and seo_description == blank
       assign seo_description = 'Shop matching coordinates jewelry sets engraved with one meaningful place, including necklaces, bracelets, rings, and keepsakes made to share.'
     elsif request.page_type == 'collection' and collection.handle == 'in-stock' and seo_description == blank
-      assign seo_description = 'Browse personalized coordinates jewelry currently available to order, with engraving, clear delivery estimates, and a photo proof before shipping.'
+      assign seo_description = 'Browse personalized coordinates jewelry currently available to order — live engraving preview, clear 7–10 business day shipping estimates, and a 30-day Happiness Guarantee.'
     elsif request.page_type == 'blog' and blog.handle == 'ourcoordinates-journal' and seo_description == blank
       assign seo_description = 'Explore coordinates jewelry gift ideas, meaningful place stories, engraving guidance, and practical inspiration for anniversaries, travel, and milestones.'
     elsif request.page_type == 'page' and page.handle == 'gift-finder'
@@ -99,9 +99,9 @@
     elsif request.page_type == 'page' and page.handle == 'builder' and seo_description == blank
       assign seo_description = 'Build personalized coordinates jewelry step by step: choose a piece, enter a meaningful place, preview the engraving, and make it yours.'
     elsif request.page_type == 'page' and page.handle == 'christmas' and seo_description == blank
-      assign seo_description = 'Create personalized coordinates jewelry for Christmas with a meaningful place, custom engraving, and a photo proof before your gift ships.'
+      assign seo_description = 'Create personalized coordinates jewelry for Christmas with a meaningful place and custom USA engraving. Order by Dec 7 for the best shot under 7–10 business day shipping.'
     elsif request.page_type == 'page' and page.handle == 'how-it-works' and seo_description == blank
-      assign seo_description = 'See how OurCoordinates turns a meaningful place into personalized jewelry, from finding coordinates and previewing engraving to photo proof and shipping.'
+      assign seo_description = 'See how OurCoordinates turns a meaningful place into personalized jewelry — drop a pin, preview engraving on the product page, and we ship within 7–10 business days.'
     elsif request.page_type == 'page' and page.handle == 'memory-map' and seo_description == blank
       assign seo_description = 'Save meaningful places in a personal memory map, then turn a favorite location into custom coordinates jewelry engraved just for you.'
     elsif request.page_type == 'page' and page.handle == 'ring-size-chart' and seo_description == blank
