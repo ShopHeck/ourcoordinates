@@ -14,7 +14,7 @@
     "announcement": {
       "type": "announcement-bar",
       "settings": {
-        "custom_text": "Boss Day Oct 16 · Sweetest Day Oct 17 · Order by Sep 28 for the best shot at in-hand (we ship in 7–10 business days; transit after that)."
+        "custom_text": "<a href=\"/pages/christmas\" style=\"color:inherit;text-decoration:underline\">Christmas gifts</a> \u00b7 Order by Dec 7 \u00b7 Engraved in the USA \u00b7 ships in 7\u201310 business days"
       }
     },
     "header": {
