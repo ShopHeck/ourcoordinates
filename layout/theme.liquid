@@ -52,7 +52,7 @@
     elsif request.page_type == 'collection' and collection.handle == 'coordinates-sets' and seo_description == blank
       assign seo_description = 'Shop matching coordinates jewelry sets engraved with one meaningful place, including necklaces, bracelets, rings, and keepsakes made to share.'
     elsif request.page_type == 'collection' and collection.handle == 'in-stock' and seo_description == blank
-      assign seo_description = 'Browse personalized coordinates jewelry currently available to order — live engraving preview, clear 7–10 business day shipping estimates, and a 30-day Happiness Guarantee.'
+      assign seo_description = 'Browse personalized coordinates jewelry currently available to order — live engraving preview, clear 7–10 business day shipping estimates, and free remakes on engraving errors.'
     elsif request.page_type == 'blog' and blog.handle == 'ourcoordinates-journal' and seo_description == blank
       assign seo_description = 'Explore coordinates jewelry gift ideas, meaningful place stories, engraving guidance, and practical inspiration for anniversaries, travel, and milestones.'
     elsif request.page_type == 'page' and page.handle == 'gift-finder'
@@ -320,7 +320,7 @@
       "name": "Can I return a personalized piece?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "30-Day Happiness Guarantee: If something isn't right (an engraving error, a quality issue, or you're simply not happy), contact us within 30 days of delivery and we'll remake your piece or issue a refund. Custom pieces made correctly aren't eligible for 'changed my mind' returns after 30 days. Orders ship in 7–10 business days; carrier transit time is additional."
+        "text": "Personalized pieces are made to order and ship in 7–10 business days, plus carrier transit time. Because each one is custom, personalized orders are final sale and can't be refunded. If we make an engraving error or there's a quality issue, contact us within 30 days of delivery and we'll remake your piece free."
       }
     },
     {
@@ -389,4 +389,5 @@
   <div class="visually-hidden" aria-live="polite" role="status" data-cart-live></div>
 </body>
 </html>
+
 

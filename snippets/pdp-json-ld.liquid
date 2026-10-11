@@ -96,11 +96,16 @@
     "hasMerchantReturnPolicy": {
       "@type": "MerchantReturnPolicy",
       "applicableCountry": "US",
+      {%- if product.handle == 'magnetic-couples-bracelet-set' %}
       "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
       "merchantReturnDays": 30,
       "returnMethod": "https://schema.org/ReturnByMail",
       "returnFees": "https://schema.org/FreeReturn"
+      {%- else %}
+      "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+      {%- endif %}
     }
   }
 }
 </script>
+

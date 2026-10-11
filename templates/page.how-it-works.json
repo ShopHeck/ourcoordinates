@@ -57,8 +57,8 @@
         "p3": {
           "type": "promise",
           "settings": {
-            "title": "30-day guarantee",
-            "text": "Not right? We remake it or refund you."
+            "title": "Free remakes",
+            "text": "Engraving error or quality issue? We remake it free within 30 days of delivery."
           }
         },
         "f1": {
@@ -120,3 +120,4 @@
     "main"
   ]
 }
+

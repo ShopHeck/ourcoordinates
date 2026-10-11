@@ -20,7 +20,7 @@
   "collections": {
     "best_sellers": {
       "copy_html": "<h2>Find a piece for a place that matters<\/h2><p>Explore coordinates jewelry and other customer favorites, then choose the style, finish and personalization that suit the person wearing it. The Coordinates Cuff Bracelet supports one engraving line; check each product page for its own field limits, sizing and material details.<\/p><h3>Choosing a personalized gift<\/h3><p>Start with the jewelry they already wear and a place or message they will recognize. Use the available product preview and check every engraving detail before ordering. Photo proofs are not yet a standard part of our process.<\/p>",
-      "shipping_html": "<h3>Shipping and returns<\/h3><p>Standard US shipping is US$5.99, with free standard shipping on US orders over US$50. Tracking is included on every order. Production and transit are separate: see our <a href=\"\/pages\/shipping\">shipping details<\/a> for the current timeline. Personalized pieces are final sale for change of mind; our <a href=\"\/policies\/refund-policy\">return policy<\/a> explains support for engraving errors, damage and eligible non-personalized returns.<\/p><p>Not sure where to start? Use the <a href=\"\/pages\/gift-finder\">gift finder<\/a> to narrow the available pieces by recipient, story and budget.<\/p>"
+      "shipping_html": "<h3>Shipping and returns<\/h3><p>Standard US shipping is US$5.99, with free standard shipping on US orders over US$50. Tracking is included on every order. Production and transit are separate: see our <a href=\"\/pages\/shipping\">shipping details<\/a> for the current timeline. Personalized pieces are final sale and can't be refunded; we remake them free if we make an engraving error or there's a quality issue. Our <a href=\"\/policies\/refund-policy\">return policy<\/a> covers eligible non-personalized returns.<\/p><p>Not sure where to start? Use the <a href=\"\/pages\/gift-finder\">gift finder<\/a> to narrow the available pieces by recipient, story and budget.<\/p>"
     },
     "general": {
       "about_collection": "About {{ title }}",
@@ -51,7 +51,7 @@
     "gifts_heading": "Can I add a gift note?",
     "gifts": "Yes. Add a free gift note in the cart before checkout. Check the selected product and any packaging options to see what is included.",
     "returns_heading": "Can personalized pieces be returned?",
-    "returns": "30-Day Happiness Guarantee: If something isn't right (an engraving error, a quality issue, or you're simply not happy), contact us within 30 days of delivery and we'll remake your piece or issue a refund. Custom pieces made correctly aren't eligible for 'changed my mind' returns after 30 days. Orders ship in 7–10 business days; carrier transit time is additional.",
+    "returns": "Personalized pieces are made to order and ship in 7–10 business days, plus carrier transit time. Because each one is custom, personalized orders are final sale and can't be refunded. If we make an engraving error or there's a quality issue, contact us within 30 days of delivery and we'll remake your piece free.",
     "return_policy": "Read the return policy",
     "contact": "Contact us",
     "shop": "Shop best sellers"

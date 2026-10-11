@@ -126,7 +126,7 @@
           {%- endif -%}
 
           <p class="cart-footer__subtotal">Subtotal: {{ cart.total_price | money }}</p>
-          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Orders ship in 7–10 business days · 30-day happiness guarantee.</p>
+          <p style="font-size:0.82rem;color:var(--c-ink-soft);margin:0">Taxes and shipping calculated at checkout. Orders ship in 7–10 business days · Free remake on engraving errors.</p>
           <button type="submit" name="checkout" class="btn">Check out</button>
           {%- comment -%} Accelerated checkout wallets — see cart-drawer.liquid. {%- endcomment -%}
           {%- if additional_checkout_buttons -%}
@@ -152,3 +152,4 @@
   ]
 }
 {% endschema %}
+
