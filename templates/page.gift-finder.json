@@ -35,7 +35,7 @@
         "ring": {
           "type": "recommendation",
           "settings": {
-            "product": "coordinates-flat-band-ring",
+            "product": "coordinates-flat-band-ring-old",
             "audiences": "partner,self,friend",
             "occasions": "couple,memorial,milestone",
             "budget": "under-40",
