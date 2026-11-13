@@ -25,7 +25,7 @@
         "keychain": {
           "type": "recommendation",
           "settings": {
-            "product": "coordinates-keychain",
+            "product": "coordinates-keychain-old",
             "audiences": "partner,parent,friend,self,all",
             "occasions": "home,birthplace,milestone,memorial",
             "budget": "under-40",
