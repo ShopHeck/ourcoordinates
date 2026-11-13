@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -46,7 +55,7 @@
         "star_map": {
           "type": "recommendation",
           "settings": {
-            "product": "star-map-necklace",
+            "product": "star-map-necklace-old",
             "audiences": "partner,parent,friend,self",
             "occasions": "couple,birthplace,milestone",
             "budget": "40-75",
@@ -74,9 +83,19 @@
           }
         }
       },
-      "block_order": ["bracelet", "keychain", "ring", "leather", "star_map", "matching", "complete"],
+      "block_order": [
+        "bracelet",
+        "keychain",
+        "ring",
+        "leather",
+        "star_map",
+        "matching",
+        "complete"
+      ],
       "settings": {}
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
