@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -16,18 +25,27 @@
       ],
       "settings": {
         "preview_type": "horizontal-bar",
+        "review_style": "app",
         "show_engraving": false,
         "engraving_required": false,
         "engraving_placeholder": "",
         "engraving_max": 30,
-        "atc_label": "Add to cart"
+        "atc_label": "Add to cart",
+        "show_dynamic_checkout": true,
+        "show_recently_viewed": true,
+        "set_pieces": "auto",
+        "set_necklace_style": "bar",
+        "set_upsell_product": "",
+        "set_upsell_heading": "Make it a set"
       }
     },
     "cross": {
       "type": "featured-collection",
       "settings": {
+        "compact": false,
         "eyebrow": "Complete the set",
         "heading": "You may also like",
+        "subheading": "",
         "collection": "necklaces",
         "limit": 4,
         "hide_sold_out": true

@@ -34,25 +34,17 @@
       "settings": {
         "preview_type": "horizontal-bar",
         "review_style": "app",
-        "show_engraving": true,
-        "engraving_required": true,
+        "show_engraving": false,
+        "engraving_required": false,
         "engraving_placeholder": "27.7676° N, 82.6403° W",
         "engraving_max": 30,
         "atc_label": "Add to cart — free engraving",
+        "show_dynamic_checkout": true,
         "show_recently_viewed": true,
         "set_pieces": "auto",
-        "set_necklace_style": "bar"
-      }
-    },
-    "cross": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Complete the set",
-        "heading": "Pairs well with",
-        "subheading": "",
-        "collection": "necklaces",
-        "limit": 4,
-        "hide_sold_out": true
+        "set_necklace_style": "bar",
+        "set_upsell_product": "",
+        "set_upsell_heading": "Make it a set"
       }
     },
     "1787152543b7442b7b": {
@@ -70,11 +62,23 @@
         "ownprint_print_on_demand_personalization_Drfi8Q"
       ],
       "settings": {}
+    },
+    "cross": {
+      "type": "featured-collection",
+      "settings": {
+        "compact": false,
+        "eyebrow": "Complete the set",
+        "heading": "Pairs well with",
+        "subheading": "",
+        "collection": "necklaces",
+        "limit": 4,
+        "hide_sold_out": true
+      }
     }
   },
   "order": [
     "main",
-    "cross",
-    "1787152543b7442b7b"
+    "1787152543b7442b7b",
+    "cross"
   ]
 }
