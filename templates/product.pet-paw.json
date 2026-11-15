@@ -40,7 +40,7 @@
         "engraving_max": 30,
         "atc_label": "Add to cart — free engraving",
         "show_dynamic_checkout": true,
-        "show_recently_viewed": true,
+        "show_recently_viewed": false,
         "set_pieces": "auto",
         "set_necklace_style": "bar",
         "set_upsell_product": "",
