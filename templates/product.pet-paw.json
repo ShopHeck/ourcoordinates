@@ -12,13 +12,6 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "ownprint_print_on_demand_personalization_iYDzUr": {
-          "type": "shopify://apps/ownprint-print-on-demand/blocks/personalization/019f127b-26d5-72c8-9932-2dd463caf3a6",
-          "settings": {
-            "margin_top": 12,
-            "margin_bottom": 12
-          }
-        },
         "details": {
           "type": "accordion",
           "settings": {
@@ -35,7 +28,6 @@
         }
       },
       "block_order": [
-        "ownprint_print_on_demand_personalization_iYDzUr",
         "details",
         "how"
       ],
@@ -55,12 +47,29 @@
         "set_upsell_heading": "Make it a set"
       }
     },
+    "apps_9aYdF8": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_JgpRcF": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_JgpRcF"
+      ],
+      "settings": {}
+    },
     "1787152543b7442b7b": {
       "type": "apps",
       "blocks": {
         "ownprint_print_on_demand_personalization_Drfi8Q": {
           "type": "shopify://apps/ownprint-print-on-demand/blocks/personalization/019f127b-26d5-72c8-9932-2dd463caf3a6",
-          "disabled": true,
           "settings": {
             "margin_top": 0,
             "margin_bottom": 0
@@ -87,6 +96,7 @@
   },
   "order": [
     "main",
+    "apps_9aYdF8",
     "1787152543b7442b7b",
     "cross"
   ]
