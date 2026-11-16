@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -24,20 +33,45 @@
       ],
       "settings": {
         "preview_type": "star-map",
+        "review_style": "app",
         "show_engraving": true,
         "engraving_required": false,
         "engraving_placeholder": "The night we met",
         "engraving_max": 20,
         "atc_label": "Add to cart — free star map engraving",
-        "review_style": "app",
-        "show_recently_viewed": true
+        "show_dynamic_checkout": true,
+        "show_recently_viewed": false,
+        "set_pieces": "auto",
+        "set_necklace_style": "bar",
+        "set_upsell_product": "",
+        "set_upsell_heading": "Make it a set"
       }
+    },
+    "apps_8MW7hP": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_w9trTD": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_w9trTD"
+      ],
+      "settings": {}
     },
     "cross": {
       "type": "featured-collection",
       "settings": {
+        "compact": false,
         "eyebrow": "Under the same sky",
         "heading": "Pairs well with",
+        "subheading": "",
         "collection": "necklaces",
         "limit": 4,
         "hide_sold_out": true
@@ -46,6 +80,7 @@
   },
   "order": [
     "main",
+    "apps_8MW7hP",
     "cross"
   ]
 }
