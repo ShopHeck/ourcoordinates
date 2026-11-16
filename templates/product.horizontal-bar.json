@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -24,18 +33,45 @@
       ],
       "settings": {
         "preview_type": "horizontal-bar",
+        "review_style": "app",
         "show_engraving": true,
         "engraving_required": true,
-        "engraving_placeholder": "27.7676\u00b0 N, 82.6403\u00b0 W",
+        "engraving_placeholder": "27.7676° N, 82.6403° W",
         "engraving_max": 30,
-        "atc_label": "Add to cart \u2014 free engraving"
+        "atc_label": "Add to cart — free engraving",
+        "show_dynamic_checkout": true,
+        "show_recently_viewed": false,
+        "set_pieces": "auto",
+        "set_necklace_style": "bar",
+        "set_upsell_product": "",
+        "set_upsell_heading": "Make it a set"
       }
+    },
+    "apps_giNkjf": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_cVDciK": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_cVDciK"
+      ],
+      "settings": {}
     },
     "cross": {
       "type": "featured-collection",
       "settings": {
+        "compact": false,
         "eyebrow": "Complete the set",
         "heading": "Pairs well with",
+        "subheading": "",
         "collection": "necklaces",
         "limit": 4,
         "hide_sold_out": true
@@ -44,6 +80,7 @@
   },
   "order": [
     "main",
+    "apps_giNkjf",
     "cross"
   ]
 }
