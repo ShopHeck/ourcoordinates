@@ -32,12 +32,30 @@
         "engraving_max": 30,
         "atc_label": "Add to cart",
         "show_dynamic_checkout": true,
-        "show_recently_viewed": true,
+        "show_recently_viewed": false,
         "set_pieces": "auto",
         "set_necklace_style": "bar",
         "set_upsell_product": "",
         "set_upsell_heading": "Make it a set"
       }
+    },
+    "apps_mTE6aG": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_fLQjhg": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_fLQjhg"
+      ],
+      "settings": {}
     },
     "cross": {
       "type": "featured-collection",
@@ -54,6 +72,7 @@
   },
   "order": [
     "main",
+    "apps_mTE6aG",
     "cross"
   ]
 }
