@@ -12,6 +12,13 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "ownprint_print_on_demand_personalization_iYDzUr": {
+          "type": "shopify://apps/ownprint-print-on-demand/blocks/personalization/019f127b-26d5-72c8-9932-2dd463caf3a6",
+          "settings": {
+            "margin_top": 12,
+            "margin_bottom": 12
+          }
+        },
         "details": {
           "type": "accordion",
           "settings": {
@@ -28,6 +35,7 @@
         }
       },
       "block_order": [
+        "ownprint_print_on_demand_personalization_iYDzUr",
         "details",
         "how"
       ],
@@ -52,6 +60,7 @@
       "blocks": {
         "ownprint_print_on_demand_personalization_Drfi8Q": {
           "type": "shopify://apps/ownprint-print-on-demand/blocks/personalization/019f127b-26d5-72c8-9932-2dd463caf3a6",
+          "disabled": true,
           "settings": {
             "margin_top": 0,
             "margin_bottom": 0
