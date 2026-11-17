@@ -12,6 +12,13 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "ownprint_print_on_demand_personalization_qW7mNC": {
+          "type": "shopify://apps/ownprint-print-on-demand/blocks/personalization/019f127b-26d5-72c8-9932-2dd463caf3a6",
+          "settings": {
+            "margin_top": 12,
+            "margin_bottom": 12
+          }
+        },
         "details": {
           "type": "accordion",
           "settings": {
@@ -28,6 +35,7 @@
         }
       },
       "block_order": [
+        "ownprint_print_on_demand_personalization_qW7mNC",
         "details",
         "how"
       ],
@@ -65,22 +73,6 @@
       ],
       "settings": {}
     },
-    "1787152543b7442b7b": {
-      "type": "apps",
-      "blocks": {
-        "ownprint_print_on_demand_personalization_Drfi8Q": {
-          "type": "shopify://apps/ownprint-print-on-demand/blocks/personalization/019f127b-26d5-72c8-9932-2dd463caf3a6",
-          "settings": {
-            "margin_top": 0,
-            "margin_bottom": 0
-          }
-        }
-      },
-      "block_order": [
-        "ownprint_print_on_demand_personalization_Drfi8Q"
-      ],
-      "settings": {}
-    },
     "cross": {
       "type": "featured-collection",
       "settings": {
@@ -97,7 +89,6 @@
   "order": [
     "main",
     "apps_9aYdF8",
-    "1787152543b7442b7b",
     "cross"
   ]
 }
