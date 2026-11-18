@@ -12,6 +12,17 @@
         <h1>{{ page.title }}</h1>
       {%- endunless -%}
       <div class="rte">{{ page.content }}</div>
+      {%- assign gift_products = page.metafields.custom.holiday_gifts.value -%}
+      {%- if gift_products != blank -%}
+        <h2>Shop {{ page.title | escape }} gifts</h2>
+        <div class="product-grid">
+          {%- for gift_product in gift_products -%}
+            {%- if gift_product.available -%}
+              {%- render 'product-card', card_product: gift_product -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
   </section>
 {%- endif -%}
