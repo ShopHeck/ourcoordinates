@@ -1,5 +1,8 @@
 {%- liquid
   assign article_body = article.content
+  for fix in article.metafields.custom.storefront_link_fixes.value
+    assign article_body = article_body | replace: fix.original, fix.replacement
+  endfor
   assign article_had_embedded_h1 = false
   if article_body contains '<h1' or article_body contains '<H1'
     assign article_had_embedded_h1 = true
