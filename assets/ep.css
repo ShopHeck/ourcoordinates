@@ -132,3 +132,6 @@
  .collection-controls__sort, .collection-controls__sort select { width: 100%; }
  .collection-filter__body { position: fixed; z-index: 70; inset: auto 16px 16px; max-height: 62vh; }
 }
+
+/* Upgraded recessed engraving bevel for fallback SVG previews */
+.ep .ep__engrave-text { filter: url(#ep-engraved-depth); }

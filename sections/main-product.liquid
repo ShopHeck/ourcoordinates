@@ -126,6 +126,9 @@
              sizes="(max-width: 880px) calc(100vw - 32px), min(52vw, 640px)"
              alt="{{ product.featured_image.alt | default: product.title | escape }}" width="1200" height="1200"
              fetchpriority="high" decoding="async">
+             {%- if has_live_preview -%}
+          {% render 'oc-realistic-preview', product: product, current_variant: current_variant, preview_type: preview_type %}
+        {%- endif -%}
       </div>
       {%- if product.images.size > 1 -%}
         {%- liquid
@@ -191,20 +194,28 @@
 
           <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
             <defs>
-              <linearGradient id="ep-metal-black" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#3a3a42"/><stop offset="0.5" stop-color="#1c1c24"/><stop offset="1" stop-color="#101016"/>
+              <linearGradient id="ep-metal-black" x1="0" y1="0" x2="1" y2="0.35">
+                <stop offset="0" stop-color="#22232a"/><stop offset="0.28" stop-color="#454752"/>
+                <stop offset="0.48" stop-color="#191a21"/><stop offset="0.78" stop-color="#2e303a"/><stop offset="1" stop-color="#0f1015"/>
               </linearGradient>
-              <linearGradient id="ep-metal-gold" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#e7cd8f"/><stop offset="0.45" stop-color="#c4a26d"/><stop offset="1" stop-color="#997a4e"/>
+              <linearGradient id="ep-metal-gold" x1="0" y1="0" x2="1" y2="0.35">
+                <stop offset="0" stop-color="#b9934c"/><stop offset="0.26" stop-color="#f7e3ab"/>
+                <stop offset="0.50" stop-color="#cfa65c"/><stop offset="0.76" stop-color="#efd48c"/><stop offset="1" stop-color="#8f6c30"/>
               </linearGradient>
-              <linearGradient id="ep-metal-rose-gold" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#f0c8b2"/><stop offset="0.45" stop-color="#d49b84"/><stop offset="1" stop-color="#b0765f"/>
+              <linearGradient id="ep-metal-rose-gold" x1="0" y1="0" x2="1" y2="0.35">
+                <stop offset="0" stop-color="#bd816c"/><stop offset="0.26" stop-color="#fad9c8"/>
+                <stop offset="0.50" stop-color="#d89b85"/><stop offset="0.76" stop-color="#f0c1ae"/><stop offset="1" stop-color="#9c624d"/>
               </linearGradient>
-              <linearGradient id="ep-metal-silver" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#f0f0f4"/><stop offset="0.45" stop-color="#c9c9d1"/><stop offset="1" stop-color="#a2a2ac"/>
+              <linearGradient id="ep-metal-silver" x1="0" y1="0" x2="1" y2="0.35">
+                <stop offset="0" stop-color="#b4b6be"/><stop offset="0.26" stop-color="#ffffff"/>
+                <stop offset="0.50" stop-color="#cfd1d8"/><stop offset="0.76" stop-color="#eceef2"/><stop offset="1" stop-color="#8d909b"/>
               </linearGradient>
+              <filter id="ep-engraved-depth" x="-5%" y="-15%" width="110%" height="130%">
+                <feDropShadow dx="0.4" dy="0.6" stdDeviation="0.35" flood-color="#ffffff" flood-opacity="0.45"/>
+              </filter>
             </defs>
           </svg>
+
 
           {%- if preview_type == 'padlock' -%}
             {% render 'pdp-preview-padlock', engraving_max: section.settings.engraving_max, engraving_required: section.settings.engraving_required %}

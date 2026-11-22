@@ -1,0 +1,324 @@
+{%- liquid
+  assign preview_config = product.metafields.custom.preview_config.value
+  assign oc_3d_shape = ''
+  assign oc_set_pieces = ''
+
+  if preview_config != blank and preview_config.model3d != blank
+    if preview_config.model3d != 'none'
+      assign oc_3d_shape = preview_config.model3d
+    endif
+  else
+    assign handle_down = product.handle | downcase
+    assign title_down = product.title | downcase
+    if preview_type == 'coordinates-set'
+      assign oc_3d_shape = 'set'
+    elsif preview_type == 'four-sided'
+      assign oc_3d_shape = 'four-sided'
+    elsif preview_type == 'dog-tag' or template.suffix == 'dog-tag' or handle_down contains 'dog-tag'
+      assign oc_3d_shape = 'dog-tag'
+    elsif template.suffix == 'keychain' or handle_down contains 'keychain' or product.type == 'Keychain'
+      assign oc_3d_shape = 'keychain'
+    elsif handle_down contains 'braided-cord-bar'
+      assign oc_3d_shape = 'horizontal-bar-cord'
+    elsif handle_down contains 'chain-link-bracelet'
+      assign oc_3d_shape = 'horizontal-bar-chain'
+    elsif preview_type == 'horizontal-bar' and template.suffix == 'horizontal-bar'
+      assign oc_3d_shape = 'horizontal-bar'
+    elsif preview_type == 'bracelet'
+      if handle_down == 'coordinates-bracelet' or handle_down contains 'cuff' or title_down contains 'cuff'
+        assign oc_3d_shape = 'cuff'
+      endif
+    elsif preview_type == 'ring' or preview_type == 'couple-rings'
+      unless handle_down contains 'onyx' or handle_down contains 'signet'
+        assign oc_3d_shape = 'ring'
+      endunless
+    endif
+  endif
+
+  if oc_3d_shape == 'set'
+    if preview_config != blank and preview_config.setPieces != blank
+      assign oc_set_pieces = preview_config.setPieces | join: ','
+    elsif section.settings.set_pieces != blank and section.settings.set_pieces != 'auto'
+      assign oc_set_pieces = section.settings.set_pieces
+    else
+      assign oc_set_pieces = 'necklace,bracelet'
+    endif
+  endif
+
+  assign has_oc_preview = false
+  if preview_config != blank or oc_3d_shape != blank
+    assign has_oc_preview = true
+  endif
+-%}
+
+{%- if has_oc_preview -%}
+  <div class="oc-preview-overlay{% if oc_3d_shape != blank %} oc-mode-3d{% endif %}"
+       data-oc-preview-stage
+       data-oc-3d-shape="{{ oc_3d_shape }}"
+       {% if oc_set_pieces != blank %}data-oc-set-pieces="{{ oc_set_pieces }}"{% endif %}
+       data-design-mode="{% if request.design_mode %}true{% else %}false{% endif %}">
+    <canvas class="oc-preview-canvas" data-oc-canvas aria-label="Realistic live engraving preview"></canvas>
+
+    {%- if oc_3d_shape != blank -%}
+      <canvas class="oc-preview-3d-canvas" data-oc-3d-canvas aria-label="Interactive 360 degree 3D engraving preview"></canvas>
+      <div class="oc-3d-drag-hint" data-oc-3d-hint>
+        <span>↻ {% if oc_3d_shape == 'four-sided' %}Drag to spin all 4 sides{% elsif oc_3d_shape == 'set' %}Switch pieces · Drag to spin 360°{% else %}Drag to spin 360°{% endif %}</span>
+      </div>
+    {%- endif -%}
+
+    <div class="oc-preview-hud">
+      <div class="oc-preview-pills oc-preview-pills--pieces" data-oc-piece-tabs hidden></div>
+      <div class="oc-preview-pills" data-oc-side-tabs hidden></div>
+      <div class="oc-preview-bar">
+        {%- if oc_3d_shape != blank -%}
+          <div class="oc-mode-group" data-oc-mode-group>
+            <button type="button" class="oc-preview-toggle is-active" data-oc-mode="3d">3D 360°</button>
+            {%- if oc_3d_shape != 'set' -%}
+              <button type="button" class="oc-preview-toggle" data-oc-mode="photo">Photo Preview</button>
+            {%- endif -%}
+            <button type="button" class="oc-preview-toggle" data-oc-mode="raw">Photo Only</button>
+          </div>
+          <div class="oc-preview-actions">
+            {%- if oc_3d_shape != 'set' -%}
+              <button type="button" class="oc-preview-toggle" data-oc-cal-btn{% unless request.design_mode %} hidden{% endunless %}>Calibrate</button>
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <span class="oc-preview-badge" data-oc-badge>Live Engraving Preview</span>
+          <div class="oc-preview-actions">
+            <button type="button" class="oc-preview-toggle" data-oc-cal-btn{% unless request.design_mode %} hidden{% endunless %}>Calibrate</button>
+            <button type="button" class="oc-preview-toggle" data-oc-toggle>View photo only</button>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <script type="application/json" data-oc-preview-config>
+      {%- if preview_config != blank -%}
+        {{ preview_config | json }}
+      {%- else -%}
+        {"model3d":{{ oc_3d_shape | json }},"geometry":"planar","defaultFinish":"gold","fontFamily":"'IBM Plex Mono', 'Inter', sans-serif","fontWeight":"500","letterSpacing":1.5,"maxChars":30,"lightAngleDeg":-45,"eraseSampleText":true,"renderAllSides":false,"sides":[{"id":"front","label":"Front","x":0.5,"y":0.56,"w":0.34,"h":0.048,"rotationDeg":0,"skewX":0,"taper":0}]}
+      {%- endif -%}
+    </script>
+  </div>
+
+  <style>
+    /* Remove duplicate flat schematic SVG in the Buy Box once photo/3D preview is active */
+    [data-product].oc-has-photo-preview .ep {
+      display: none !important;
+    }
+    .pdp__main-image {
+      position: relative;
+    }
+    .oc-preview-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .oc-preview-overlay.oc-is-ready {
+      opacity: 1;
+    }
+    .oc-preview-canvas,
+    .oc-preview-3d-canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 200ms ease;
+    }
+    .oc-preview-3d-canvas {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .oc-preview-overlay.oc-mode-3d .oc-preview-canvas {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .oc-preview-overlay.oc-mode-3d .oc-preview-3d-canvas {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .oc-preview-overlay.oc-preview-paused .oc-preview-canvas,
+    .oc-preview-overlay.oc-preview-paused .oc-preview-3d-canvas {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .oc-3d-drag-hint {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 260ms ease;
+    }
+    .oc-preview-overlay.oc-mode-3d .oc-3d-drag-hint {
+      opacity: 1;
+    }
+    .oc-preview-overlay.oc-mode-3d .oc-3d-drag-hint.is-hidden {
+      opacity: 0;
+    }
+    .oc-3d-drag-hint span {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: rgba(244, 244, 246, 0.88);
+      background: rgba(12, 13, 18, 0.74);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 5px 11px;
+    }
+    .oc-preview-hud {
+      position: absolute;
+      inset: auto 12px 12px 12px;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      pointer-events: auto;
+    }
+    .oc-preview-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .oc-preview-actions,
+    .oc-mode-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .oc-preview-badge,
+    .oc-preview-toggle,
+    .oc-pill {
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: #f4f4f6;
+      background: rgba(12, 13, 18, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 5px 11px;
+      line-height: 1.2;
+    }
+    .oc-preview-pills--pieces .oc-pill--piece {
+      border-color: rgba(212, 175, 55, 0.42);
+      font-weight: 500;
+    }
+    .oc-preview-toggle,
+    .oc-pill {
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .oc-pill.is-muted {
+      opacity: 0.62;
+    }
+    .oc-preview-toggle:hover,
+    .oc-preview-toggle.is-active,
+    .oc-pill:hover,
+    .oc-pill.is-active {
+      background: rgba(212, 175, 55, 0.94);
+      border-color: rgba(212, 175, 55, 1);
+      color: #0e0f13;
+      font-weight: 600;
+      opacity: 1;
+    }
+    .oc-preview-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .oc-preview-overlay.oc-preview-paused .oc-preview-pills {
+      display: none;
+    }
+    @media (max-width: 880px) {
+      .pdp__gallery.oc-mobile-sticky {
+        position: sticky;
+        top: 0;
+        z-index: 45;
+        background: #0d0e12;
+        padding-bottom: 6px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+      }
+      .pdp__gallery.oc-mobile-sticky .pdp__main-image {
+        max-height: 36vh;
+        overflow: hidden;
+      }
+      .pdp__gallery.oc-mobile-sticky .pdp__main-image img,
+      .pdp__gallery.oc-mobile-sticky .oc-preview-canvas,
+      .pdp__gallery.oc-mobile-sticky .oc-preview-3d-canvas {
+        max-height: 36vh;
+        object-fit: contain;
+        margin: 0 auto;
+      }
+      .pdp__gallery.oc-mobile-sticky .pdp__thumbs,
+      .pdp__gallery.oc-mobile-sticky .pdp__gallery-toggle {
+        display: none;
+      }
+    }
+    .oc-cal-hud {
+      position: fixed;
+      right: 16px;
+      bottom: 64px;
+      z-index: 9999;
+      width: 274px;
+      padding: 12px 14px;
+      background: rgba(14, 15, 20, 0.96);
+      color: #f4f4f6;
+      border: 1px solid rgba(0, 245, 212, 0.52);
+      border-radius: 10px;
+      font: 12px/1.4 system-ui, -apple-system, sans-serif;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .oc-cal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .oc-cal-head button {
+      background: #00f5d4;
+      color: #091012;
+      border: 0;
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .oc-cal-hud label {
+      display: grid;
+      grid-template-columns: 52px 46px 1fr;
+      align-items: center;
+      gap: 6px;
+    }
+    .oc-cal-hud label.oc-cal-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .oc-cal-hud input[type="range"] {
+      width: 100%;
+      accent-color: #00f5d4;
+    }
+  </style>
+
+  {%- if oc_3d_shape != blank -%}
+    <script src="{{ 'ourcoordinates-preview-3d.js' | asset_url }}" defer></script>
+  {%- endif -%}
+  <script src="{{ 'ourcoordinates-preview.js' | asset_url }}" defer></script>
+{%- endif -%}
