@@ -47,7 +47,7 @@
         "engraving_placeholder": "27.7676° N, 82.6403° W",
         "engraving_max": 30,
         "atc_label": "Add to cart — free engraving",
-        "show_dynamic_checkout": true,
+        "show_dynamic_checkout": false,
         "show_recently_viewed": false,
         "set_pieces": "auto",
         "set_necklace_style": "bar",

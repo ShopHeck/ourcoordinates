@@ -39,11 +39,11 @@
         "engraving_placeholder": "27.7676° N",
         "engraving_max": 20,
         "atc_label": "Add to cart — free engraving",
-        "show_dynamic_checkout": true,
+        "show_dynamic_checkout": false,
         "show_recently_viewed": false,
         "set_pieces": "auto",
         "set_necklace_style": "bar",
-        "set_upsell_product": "",
+        "set_upsell_product": "coordinates-bracelet-necklace-set",
         "set_upsell_heading": "Make it a set"
       }
     },

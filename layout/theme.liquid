@@ -200,10 +200,25 @@
     PERFORMANCE STRATEGY (target: 90+ PageSpeed)
     1. Critical CSS inlined below - zero render-blocking stylesheets.
     2. Full stylesheet loaded async via preload swap.
-    3. Fonts: Fraunces + Inter + IBM Plex Mono + Instrument Serif (Atelier display),
-       display=swap, loaded async. System fonts paint first; brand fonts swap in.
-    4. Sitewide JS is one small deferred file; product-only tools load only where needed.
+    3. Fonts: Fraunces + Inter, display=swap, loaded async. System fonts paint
+       first; brand fonts swap in.
+    4. Preload the LCP image on index and product pages so it starts fetching
+       in parallel with CSS/fonts instead of waiting for HTML parse.
+    5. Sitewide JS is one small deferred file; product-only tools load only where needed.
   {%- endcomment -%}
+
+  {% # theme-check-disable AssetPreload %}
+  {%- if request.page_type == 'index' -%}
+    <link rel="preload" as="image" href="{{ 'hero-necklace-mobile-v2.webp' | asset_url }}" type="image/webp" media="(max-width: 700px)" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ 'hero-necklace-v2.webp' | asset_url }}" type="image/webp" media="(min-width: 701px)" fetchpriority="high">
+  {%- elsif request.page_type == 'product' and product.featured_image != blank -%}
+    <link rel="preload" as="image"
+          href="{{ product.featured_image | image_url: width: 800 }}"
+          imagesrcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 800 }} 800w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
+          imagesizes="(max-width: 880px) calc(100vw - 32px), min(52vw, 640px)"
+          fetchpriority="high">
+  {%- endif -%}
+  {% # theme-check-enable AssetPreload %}
 
   {% style %}
     :root {
@@ -247,8 +262,8 @@
   {% # theme-check-disable RemoteAsset %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap"></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap"></noscript>
   {% # theme-check-enable RemoteAsset %}
   {% # theme-check-enable AssetPreload %}
 
@@ -261,10 +276,23 @@
   {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
     "name": {{ shop.name | json }},
     "url": "{{ shop.url }}",
     "logo": "{{ shop.url }}/cdn/shop/files/OurCoordinates_Logo.png",
-    "description": {{ shop.description | json }},
+    "description": "Family-owned online jewelry brand in Saint Petersburg, FL specializing in custom GPS coordinates jewelry, star map necklaces, and engraved keepsakes made to order in the USA.",
+    "founder": {
+      "@type": "Person",
+      "name": "Michael Heckert",
+      "url": "{{ shop.url }}/pages/about-michael-heckert-founder-creator"
+    },
+    "areaServed": "US",
+    "knowsAbout": [
+      "Custom Coordinates Jewelry",
+      "Laser-Engraved Latitude and Longitude Jewelry",
+      "Custom Star Map Necklaces",
+      "Personalized Engraved Keepsakes"
+    ],
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
@@ -288,8 +316,12 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "{{ shop.url }}/#website",
     "name": {{ shop.name | json }},
     "url": "{{ shop.url }}",
+    "publisher": {
+      "@id": "{{ shop.url }}/#organization"
+    },
     "potentialAction": {
       "@type": "SearchAction",
       "target": {

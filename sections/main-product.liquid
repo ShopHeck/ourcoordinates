@@ -99,7 +99,6 @@
       </p>
       {%- if section.settings.show_engraving and is_bubble_necklace == false -%}
         <p class="pdp__cta-line" style="margin:6px 0 0;font-size:0.92em;opacity:0.9">Drop your pin. We’ll engrave the coordinates in the USA.</p>
-        <p class="pdp__engrave-tip-global" style="margin:6px 0 0;font-size:0.85em;opacity:0.85;line-height:1.4">Engraving tip: use decimal degrees with N/S and E/W. Example: 40.7128° N, 74.0060° W. Stay within the character limit shown next to the field — longer strings may truncate on the piece.</p>
       {%- endif -%}
 
       {%- if settings.occasion_label != blank and settings.occasion_date != blank and is_bubble_necklace == false -%}
@@ -122,7 +121,7 @@
       <div class="pdp__main-image">
         <img data-main-image
              src="{{ product.featured_image | image_url: width: 1200 }}"
-             srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
+             srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 800 }} 800w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
              sizes="(max-width: 880px) calc(100vw - 32px), min(52vw, 640px)"
              alt="{{ product.featured_image.alt | default: product.title | escape }}" width="1200" height="1200"
              fetchpriority="high" decoding="async">
@@ -430,10 +429,10 @@
             {%- endif -%}
             {%- if same_day_shipping -%}
               <p>In stock and ships the same day when ordered by 12 PM ET. If it arrives damaged, contact us for help.</p>
-            {%- elsif section.settings.show_engraving and is_bubble_necklace == false -%}
+            {%- elsif section.settings.show_engraving -%}
               <p>Personalized pieces are made to order and ship in 7–10 business days, plus carrier transit time. Because each one is custom, personalized orders are final sale and can&#39;t be refunded. If we make an engraving error or there&#39;s a quality issue, contact us within 30 days of delivery and we&#39;ll remake your piece free. Please double-check your shipping address at checkout. If a package is lost or undeliverable because of an incorrect address, the customer is responsible, and we can&#39;t offer a refund or remake.</p>
             {%- else -%}
-              <p>Personalized pieces are made to order and ship in 7–10 business days, plus carrier transit time. Because each one is custom, personalized orders are final sale and can&#39;t be refunded. If we make an engraving error or there&#39;s a quality issue, contact us within 30 days of delivery and we&#39;ll remake your piece free. Please double-check your shipping address at checkout. If a package is lost or undeliverable because of an incorrect address, the customer is responsible, and we can&#39;t offer a refund or remake.</p>
+              <p>Non-personalized items can be returned unworn within 30 days of delivery. If your order arrives damaged or defective, contact us within 30 days and we&#39;ll replace or refund it. Please double-check your shipping address at checkout.</p>
             {%- endif -%}
           </div>
         </details>
@@ -551,7 +550,7 @@
   </button>
 </div>
 
-  {% render 'pdp-json-ld' %}
+  {% render 'pdp-json-ld', is_personalized: section.settings.show_engraving %}
 
 {%- if preview_type == 'matching-necklaces' or preview_type == 'couple-rings' or preview_type == 'charm-name-necklace' -%}
   <script src="{{ 'personalization-dynamic.js' | asset_url }}" defer></script>
@@ -611,7 +610,7 @@
     { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "27.7676° N, 82.6403° W" },
     { "type": "range", "id": "engraving_max", "label": "Max engraving characters", "min": 5, "max": 60, "step": 1, "default": 30 },
     { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart — free engraving" },
-    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout buttons", "default": true, "info": "Shop Pay, PayPal, Apple Pay and Google Pay under Add to cart. Shopify renders whichever wallets the store has enabled." },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout buttons", "default": false, "info": "Shop Pay, PayPal, Apple Pay and Google Pay under Add to cart. Leave off on personalized PDPs to keep mobile load times fast — wallets remain available in the Cart Drawer and Checkout." },
     { "type": "checkbox", "id": "show_recently_viewed", "label": "Show 'Recently viewed' strip", "default": true },
     { "type": "text", "id": "set_pieces", "label": "Set pieces (auto or comma-separated: bracelet,necklace,ring,keychain)", "default": "auto" },
     {

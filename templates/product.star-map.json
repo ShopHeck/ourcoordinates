@@ -39,7 +39,7 @@
         "engraving_placeholder": "The night we met",
         "engraving_max": 20,
         "atc_label": "Add to cart — free star map engraving",
-        "show_dynamic_checkout": true,
+        "show_dynamic_checkout": false,
         "show_recently_viewed": false,
         "set_pieces": "auto",
         "set_necklace_style": "bar",
