@@ -110,7 +110,7 @@
             {%- liquid
               assign card_loading = 'lazy'
               assign card_priority = 'auto'
-              if paginate.current_page == 1 and rendered_products <= 2
+              if paginate.current_page == 1 and rendered_products <= 4
                 assign card_loading = 'eager'
                 assign card_priority = 'high'
               endif

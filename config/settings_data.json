@@ -15,7 +15,7 @@
     "color_graphite": "#3E3E3E",
     "shipping_promise": "Free US shipping on orders over $50",
     "free_shipping_threshold": 50,
-    "production_days": 11,
+    "production_days": 10,
     "transit_days": 5,
     "guarantee_1": "Free remake on engraving errors",
     "guarantee_2": "Live engraving preview",
@@ -24,7 +24,7 @@
     "gift_wrap_product": "",
     "upsell_collection": "best-sellers",
     "social_instagram": "https://www.instagram.com/ourcoordinates/",
-    "social_facebook": "https://www.facebook.com/ourcoordinate",
+    "social_facebook": "https://www.facebook.com/ourcoordinates/",
     "social_pinterest": "https://www.pinterest.com/ourcoordinates/",
     "sections": {
       "cart-drawer": {
@@ -50,7 +50,7 @@
         "settings": {}
       }
     },
-    "occasion_label": "",
-    "occasion_date": ""
+    "occasion_label": "Christmas",
+    "occasion_date": "2026-12-25"
   }
 }

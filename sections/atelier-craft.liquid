@@ -68,16 +68,16 @@
   }
   #shopify-section-{{ sid }} .ac-eyebrow::before{content:"";width:36px;height:1px;background:rgba(121,94,63,.45)}
   #shopify-section-{{ sid }} .ac-h2{
-    font-family:'Instrument Serif', Georgia, serif;font-weight:400;
+    font-family:var(--f-display);font-weight:400;
     font-size:clamp(34px,4.2vw,60px);line-height:1.04;letter-spacing:-.015em;margin:0;color:{{ s.color_text }};
   }
   #shopify-section-{{ sid }} .ac-h2 em{font-style:italic}
   #shopify-section-{{ sid }} .ac-steps{margin-top:40px;display:flex;flex-direction:column}
   #shopify-section-{{ sid }} .ac-step{display:grid;grid-template-columns:60px 1fr;gap:22px;padding:26px 0;border-top:1px solid rgba(121,94,63,.15);opacity:.45;transition:opacity .4s}
   #shopify-section-{{ sid }} .ac-step.ac-lit{opacity:1}
-  #shopify-section-{{ sid }} .ac-num{font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:28px;color:rgba(121,94,63,.45)}
+  #shopify-section-{{ sid }} .ac-num{font-family:var(--f-display);font-style:italic;font-size:28px;color:rgba(121,94,63,.45)}
   #shopify-section-{{ sid }} .ac-step.ac-lit .ac-num{color:{{ s.color_text }}}
-  #shopify-section-{{ sid }} .ac-step-h{font-family:'Instrument Serif', Georgia, serif;font-weight:400;font-size:23px;margin:0 0 7px}
+  #shopify-section-{{ sid }} .ac-step-h{font-family:var(--f-display);font-weight:400;font-size:23px;margin:0 0 7px}
   #shopify-section-{{ sid }} .ac-step-p{color:rgba(121,94,63,.7);max-width:46ch;font-size:14px;margin:0}
   #shopify-section-{{ sid }} .ac-rail{display:flex;gap:6px;margin-top:32px}
   #shopify-section-{{ sid }} .ac-rail span{height:2px;width:14px;background:rgba(121,94,63,.15);transition:width .35s,background .35s}
@@ -90,7 +90,7 @@
   #shopify-section-{{ sid }} .ac-frame .ac-img.ac-show{opacity:1;position:relative}
   #shopify-section-{{ sid }} .ac-frame .ac-ph svg{width:100%;height:100%;object-fit:cover}
   #shopify-section-{{ sid }} .ac-laser{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
-  #shopify-section-{{ sid }} .ac-note{margin:18px 0 0;font-family:'Instrument Serif', Georgia, serif;font-style:italic;font-size:16px;color:rgba(121,94,63,.7);display:flex;gap:10px;align-items:baseline}
+  #shopify-section-{{ sid }} .ac-note{margin:18px 0 0;font-family:var(--f-display);font-style:italic;font-size:16px;color:rgba(121,94,63,.7);display:flex;gap:10px;align-items:baseline}
   #shopify-section-{{ sid }} .ac-note b{font-family:'Inter', -apple-system, sans-serif;font-style:normal;font-weight:500;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:{{ s.color_text }}}
 
   /* no-JS / reduced-motion fallback: everything visible and static */

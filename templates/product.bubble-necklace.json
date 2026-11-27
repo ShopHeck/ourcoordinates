@@ -12,7 +12,7 @@
         "engraving_max": 14,
         "atc_label": "Add to cart",
         "review_style": "app",
-        "show_dynamic_checkout": true,
+        "show_dynamic_checkout": false,
         "show_recently_viewed": true
       }
     },

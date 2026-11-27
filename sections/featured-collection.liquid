@@ -42,7 +42,7 @@
             continue
           endif
           assign card_loading = 'lazy'
-          if section.settings.compact and shown < 2
+          if section.settings.compact and shown < 4
             assign card_loading = 'eager'
           endif
           render 'product-card', card_product: product, image_loading: card_loading

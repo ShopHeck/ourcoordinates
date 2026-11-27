@@ -39,7 +39,7 @@
         "engraving_placeholder": "27.7676° N, 82.6403° W",
         "engraving_max": 30,
         "atc_label": "Add to cart — free engraving on every piece",
-        "show_dynamic_checkout": true,
+        "show_dynamic_checkout": false,
         "show_recently_viewed": false,
         "set_pieces": "necklace,bracelet",
         "set_necklace_style": "four-sided",

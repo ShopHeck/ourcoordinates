@@ -18,13 +18,23 @@
   assign ld_rating_value = product.metafields.reviews.rating.value.rating | default: 0 | plus: 0
   assign ld_prod_min = 7
   assign ld_prod_max = 10
-  assign ld_transit_min = settings.transit_days | default: 4
+  assign ld_transit_min = settings.transit_days | default: 5
   assign ld_transit_max = ld_transit_min | plus: 3
+  assign ld_free_threshold_cents = settings.free_shipping_threshold | default: 50 | times: 100
+  assign ld_is_free_shipping = false
+  if ld_variant.price >= ld_free_threshold_cents
+    assign ld_is_free_shipping = true
+  endif
+  assign ld_returnable = false
+  if product.handle == 'magnetic-couples-bracelet-set' or product.template_suffix == 'non-custom' or is_personalized == false
+    assign ld_returnable = true
+  endif
 -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Product",
+  "@id": "{{ shop.url }}{{ product.url }}#product",
   "name": {{ product.title | json }},
   "description": {{ product.description | strip_html | truncate: 5000 | json }},
   "url": "{{ shop.url }}{{ product.url }}",
@@ -69,10 +79,16 @@
     "url": "{{ shop.url }}{{ product.url }}",
     "seller": {
       "@type": "Organization",
+      "@id": "{{ shop.url }}/#organization",
       "name": {{ shop.name | json }}
     },
     "shippingDetails": {
       "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "{% if ld_is_free_shipping %}0.00{% else %}5.99{% endif %}",
+        "currency": "{{ cart.currency.iso_code }}"
+      },
       "shippingDestination": {
         "@type": "DefinedRegion",
         "addressCountry": "US"
@@ -96,7 +112,7 @@
     "hasMerchantReturnPolicy": {
       "@type": "MerchantReturnPolicy",
       "applicableCountry": "US",
-      {%- if product.handle == 'magnetic-couples-bracelet-set' %}
+      {%- if ld_returnable %}
       "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
       "merchantReturnDays": 30,
       "returnMethod": "https://schema.org/ReturnByMail",
