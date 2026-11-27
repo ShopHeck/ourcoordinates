@@ -53,7 +53,7 @@
   <script src="{{ 'bubble-necklace.js' | asset_url }}" defer></script>
 {%- endif -%}
 
-<section class="section" data-product
+<section class="section{% if section.settings.review_style == 'app' %} section--has-reviews{% endif %}" data-product
          {% if is_bubble_necklace %}data-bubble-necklace{% endif %}
          data-preview-type="{{ preview_type }}"
          {% if initial_metal != blank %}data-metal="{{ initial_metal }}"{% endif %}
@@ -94,11 +94,11 @@
         {%- elsif is_bubble_necklace -%}
           &nbsp;Ships in 7–10 business days · Free remake on engraving errors
         {%- else -%}
-          Ships in 7–10 business days · Free remake on engraving errors
+          &nbsp;Ships in 7–10 business days · Free remake on engraving errors
         {%- endif -%}
       </p>
       {%- if section.settings.show_engraving and is_bubble_necklace == false -%}
-        <p class="pdp__cta-line" style="margin:6px 0 0;font-size:0.92em;opacity:0.9">Drop your pin. We’ll engrave the coordinates in the USA.</p>
+        <p class="pdp__cta-line" style="margin:10px 0 0;font-size:0.92em;opacity:0.9">Drop your pin. We’ll engrave the coordinates in the USA.</p>
       {%- endif -%}
 
       {%- if settings.occasion_label != blank and settings.occasion_date != blank and is_bubble_necklace == false -%}
@@ -110,7 +110,7 @@
         {%- if occasion_ts > ships_by and order_by_ts >= ships_by -%}
           <p class="pdp__occasion">
             <span class="pdp__occasion-dot" aria-hidden="true">◆</span>
-            Ordering for {{ settings.occasion_label }}? Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to unwrap it in time.
+            <span>Ordering for {{ settings.occasion_label }}? Order by <strong>{{ order_by_ts | date: '%A, %b %-d' }}</strong> to unwrap it in time.</span>
           </p>
         {%- endif -%}
       {%- endif -%}
@@ -455,14 +455,16 @@
           <p>Real feedback on the engraving, fit, finish, and moments customers chose to keep close.</p>
         {%- endif -%}
       </div>
-      <div id="judgeme_product_reviews"
-           class="jdgm-widget jdgm-review-widget"
-           data-id="{{ product.id }}"
-           data-product-title="{{ product.title | escape }}"
-           data-auto-install="false"
-           aria-labelledby="product-reviews-title">
-        {{ product.metafields.judgeme.widget }}
-      </div>
+      {%- if product.metafields.judgeme.widget != blank -%}
+        <div id="judgeme_product_reviews"
+             class="jdgm-widget jdgm-review-widget"
+             data-id="{{ product.id }}"
+             data-product-title="{{ product.title | escape }}"
+             data-auto-install="false"
+             aria-labelledby="product-reviews-title">
+          {{ product.metafields.judgeme.widget }}
+        </div>
+      {%- endif -%}
     </section>
   {%- endif -%}
 
